@@ -1,0 +1,824 @@
+{
+  "result": "OK",
+  "lst": [
+    {
+      "result": "OK",
+      "number": "016М",
+      "number2": "016М",
+      "defShowTime": "local",
+      "date0": "15.09.2023",
+      "time0": "12:50",
+      "date1": "15.09.2023",
+      "time1": "16:52",
+      "type": "СК",
+      "virtual": false,
+      "bus": false,
+      "boat": false,
+      "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
+      "code0": "2000002",
+      "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+      "code1": "2010001",
+      "timeSt0": "",
+      "timeSt1": "00:10",
+      "route0": "МОСКВА ЯР",
+      "route1": "АРХАНГЕЛ Г",
+      "cars": [
+        {
+          "cnumber": "05",
+          "type": "Плац",
+          "catLabelLoc": "Плацкартный",
+          "typeLoc": "Плацкартный",
+          "catCode": "Плацкартный",
+          "ctypei": 1,
+          "ctype": 3,
+          "letter": "М",
+          "clsType": "3Э",
+          "subType": "41П",
+          "clsName": "Вагон открытого типа (плацкартный). <p><strong>Кондиционер, биотуалет в вагоне.</strong></p>",
+          "services": [
+            {
+              "id": 2,
+              "name": "[иконка сайта] Биотуалет",
+              "description": "Биотуалет",
+              "hasImage": true
+            },
+            {
+              "id": 3,
+              "name": "[иконка сайта] Кондиционер",
+              "description": "Кондиционер работает в летний период",
+              "hasImage": true
+            },
+            {
+              "id": 14,
+              "name": "[иконка сайта] Провоз животных запрещен",
+              "description": "Провоз животных запрещен",
+              "hasImage": true
+            }
+          ],
+          "tariff": "1379",
+          "tariff2": null,
+          "tariffServ": null,
+          "addSigns": "",
+          "carrier": "ФПК",
+          "carrierId": 1,
+          "insuranceFlag": true,
+          "insuranceTypeId": 1,
+          "owner": "РЖД/ОКТ",
+          "elReg": true,
+          "food": false,
+          "selFood": false,
+          "equippedSIOP": true,
+          "regularFoodService": false,
+          "noSmok": false,
+          "inetSaleOff": false,
+          "bVip": false,
+          "conferenceRoomFlag": false,
+          "bDeck2": false,
+          "intServiceClass": null,
+          "specialSeatTypes": null,
+          "deferredPayment": false,
+          "varPrice": false,
+          "ferry": false,
+          "seniorTariff": 0,
+          "bedding": true,
+          "nonRefundable": false,
+          "addTour": false,
+          "addGoods": true,
+          "addHandLuggage": true,
+          "youth": true,
+          "unior": false,
+          "seats": [
+            {
+              "type": "dn",
+              "code": "Н",
+              "label": "Нижнее",
+              "tariff": "1379",
+              "tariff2": null,
+              "tariffServ": "189",
+              "free": 3,
+              "placesNonRef": null,
+              "freeRef": 3,
+              "placesRef": "002,004,006,008,010,012,014,016-018,020,022,024,026,028,030,032-038,040-052,054",
+              "places": "002,004,006,008,010,012,014,016-018,020,022,024,026,028,030,032-038,040-052,054"
+            },
+            {
+              "type": "up",
+              "code": "В",
+              "label": "Верхнее",
+              "tariff": "1379",
+              "tariff2": null,
+              "tariffServ": "189",
+              "free": 18,
+              "placesNonRef": null,
+              "freeRef": 18,
+              "placesRef": "002,004,006,008,010,012,014,016-018,020,022,024,026,028,030,032-038,040-052,054",
+              "places": "002,004,006,008,010,012,014,016-018,020,022,024,026,028,030,032-038,040-052,054"
+            }
+          ],
+          "places": "002,004,006,008,010,012,014,016-018,020,022,024,026,028,030,032-038,040-052,054",
+          "schemeId": 326,
+          "schemeInfo": {
+            "dir": "/dbmm/images/61/28209/82",
+            "dirVert": "/dbmm/images/61/28216/82",
+            "legend": ""
+          },
+          "forcedBedding": true,
+          "policyEnabled": false,
+          "msr": true,
+          "medic": true
+        },
+        {
+          "cnumber": "09",
+          "type": "Купе",
+          "catLabelLoc": "Купе",
+          "typeLoc": "Купе",
+          "catCode": "Купе",
+          "ctypei": 4,
+          "ctype": 4,
+          "letter": "М",
+          "clsType": "2К",
+          "subType": "66К",
+          "clsName": "4-местные купе.<p><strong>Кондиционер, биотуалет в вагоне.</strong></p> <p><strong> Белье входит в стоимость проезда.</strong></p><p>Вагон с услугой перевозки животных.</p>",
+          "services": [
+            {
+              "id": 2,
+              "name": "[иконка сайта] Биотуалет",
+              "description": "Биотуалет",
+              "hasImage": true
+            },
+            {
+              "id": 3,
+              "name": "[иконка сайта] Кондиционер",
+              "description": "Кондиционер работает в летний период",
+              "hasImage": true
+            },
+            {
+              "id": 20,
+              "name": "[иконка сайта] Животные 2K, 2У, 2Л, 2Н",
+              "description": "Возможен провоз мелких животных или крупных собак. За провоз мелких животных взимается плата и оформляется перевозочный документ. Возможно оформление на сайте в личном кабинете. Для провоза крупных собак необходим выкуп всего купе.",
+              "hasImage": true
+            },
+            {
+              "id": 30,
+              "name": "[иконка сайта] Постель",
+              "description": "Постельное белье",
+              "hasImage": true
+            }
+          ],
+          "tariff": "1325",
+          "tariff2": "1953",
+          "tariffServ": null,
+          "addSigns": "МЖ Ж",
+          "carrier": "ФПК",
+          "carrierId": 1,
+          "insuranceFlag": true,
+          "insuranceTypeId": 1,
+          "owner": "РЖД/ОКТ",
+          "elReg": true,
+          "food": false,
+          "selFood": false,
+          "equippedSIOP": true,
+          "regularFoodService": false,
+          "noSmok": false,
+          "inetSaleOff": false,
+          "bVip": false,
+          "conferenceRoomFlag": false,
+          "bDeck2": false,
+          "intServiceClass": null,
+          "specialSeatTypes": null,
+          "deferredPayment": false,
+          "varPrice": false,
+          "ferry": false,
+          "seniorTariff": 0,
+          "bedding": false,
+          "nonRefundable": true,
+          "addTour": false,
+          "addGoods": true,
+          "addHandLuggage": true,
+          "youth": false,
+          "unior": false,
+          "seats": [
+            {
+              "type": "dn",
+              "code": "Н",
+              "label": "Нижнее",
+              "tariff": "1604",
+              "tariff2": "1953",
+              "tariffServ": "208",
+              "free": 6,
+              "tariffNonRef": "1325",
+              "tariff2NonRef": "1953",
+              "freeNonRef": 2,
+              "placesNonRef": "033-036Ц",
+              "freeRef": 4,
+              "placesRef": "014Ж,016Ж,017-020Ц,022С,024С,026С,029-032Ц",
+              "places": "014Ж,016Ж,017-020Ц,022С,024С,026С,029-036Ц"
+            },
+            {
+              "type": "up",
+              "code": "В",
+              "label": "Верхнее",
+              "tariff": "1604",
+              "tariff2": "1953",
+              "tariffServ": "208",
+              "free": 11,
+              "tariffNonRef": "1325",
+              "tariff2NonRef": "1953",
+              "freeNonRef": 2,
+              "placesNonRef": "033-036Ц",
+              "freeRef": 9,
+              "placesRef": "014Ж,016Ж,017-020Ц,022С,024С,026С,029-032Ц",
+              "places": "014Ж,016Ж,017-020Ц,022С,024С,026С,029-036Ц"
+            }
+          ],
+          "places": "014Ж,016Ж,017-020Ц,022С,024С,026С,029-036Ц",
+          "schemeId": 24,
+          "schemeInfo": {
+            "dir": "/dbmm/images/61/28209/14",
+            "dirVert": "/dbmm/images/61/28216/14",
+            "legend": ""
+          },
+          "forcedBedding": true,
+          "policyEnabled": false,
+          "msr": true,
+          "medic": true
+        },
+        {
+          "cnumber": "10",
+          "type": "Люкс",
+          "catLabelLoc": "СВ",
+          "typeLoc": "СВ",
+          "catCode": "СВ",
+          "ctypei": 6,
+          "ctype": 6,
+          "letter": "М",
+          "clsType": "1У",
+          "subType": "01Л",
+          "clsName": "2-местные купе. <strong>Кондиционер, биотуалет в вагоне.</strong> Белье входит в стоимость проезда.  Вагон с услугой перевозки животных. 1/1-купе с 1-местным размещением, 1/2 -купе с 2-местным размещением.",
+          "services": [
+            {
+              "id": 2,
+              "name": "[иконка сайта] Биотуалет",
+              "description": "Биотуалет",
+              "hasImage": true
+            },
+            {
+              "id": 3,
+              "name": "[иконка сайта] Кондиционер",
+              "description": "Кондиционер работает в летний период",
+              "hasImage": true
+            },
+            {
+              "id": 30,
+              "name": "[иконка сайта] Постель",
+              "description": "Постельное белье",
+              "hasImage": true
+            },
+            {
+              "id": 18,
+              "name": "[иконка сайта] Животные 1Э, 1У, 1Л, 2Э, 2Б, 1Б",
+              "description": "Возможен провоз мелких животных или одной крупной собаки. Для провоза необходим выкуп всего купе.",
+              "hasImage": true
+            }
+          ],
+          "tariff": "3437",
+          "tariff2": null,
+          "tariffServ": null,
+          "addSigns": "МЖ",
+          "carrier": "ФПК",
+          "carrierId": 1,
+          "insuranceFlag": true,
+          "insuranceTypeId": 1,
+          "owner": "РЖД/ОКТ",
+          "elReg": true,
+          "food": false,
+          "selFood": false,
+          "equippedSIOP": true,
+          "regularFoodService": false,
+          "noSmok": false,
+          "inetSaleOff": false,
+          "bVip": false,
+          "conferenceRoomFlag": false,
+          "bDeck2": false,
+          "intServiceClass": null,
+          "specialSeatTypes": null,
+          "deferredPayment": false,
+          "varPrice": false,
+          "ferry": false,
+          "seniorTariff": 0,
+          "bedding": false,
+          "nonRefundable": false,
+          "addTour": false,
+          "addGoods": true,
+          "addHandLuggage": true,
+          "youth": false,
+          "unior": false,
+          "seats": [
+            {
+              "type": "dn",
+              "code": "Н",
+              "label": "Нижнее",
+              "tariff": "3437",
+              "tariff2": null,
+              "tariffServ": "384",
+              "free": 11,
+              "placesNonRef": null,
+              "freeRef": 11,
+              "placesRef": "001Ц,002Ц,010-018",
+              "places": "001Ц,002Ц,010-018"
+            }
+          ],
+          "places": "001Ц,002Ц,010-018",
+          "schemeId": 956,
+          "schemeInfo": {
+            "dir": "/dbmm/images/61/28209/28",
+            "dirVert": "/dbmm/images/61/28216/28",
+            "legend": ""
+          },
+          "forcedBedding": true,
+          "policyEnabled": false,
+          "medic": true
+        },
+        {
+          "cnumber": "11",
+          "type": "Купе",
+          "catLabelLoc": "Купе",
+          "typeLoc": "Купе",
+          "catCode": "Купе",
+          "ctypei": 4,
+          "ctype": 4,
+          "letter": "М",
+          "clsType": "2У",
+          "subType": "35К",
+          "clsName": "4-местные купе.<p><strong>Кондиционер в вагоне.</strong></p><p><strong>Биотуалет отсутствует.</strong></p><p>Белье входит в стоимость проезда.</p><p>Вагон с услугой перевозки животных.</p>",
+          "services": [
+            {
+              "id": 3,
+              "name": "[иконка сайта] Кондиционер",
+              "description": "Кондиционер работает в летний период",
+              "hasImage": true
+            },
+            {
+              "id": 30,
+              "name": "[иконка сайта] Постель",
+              "description": "Постельное белье",
+              "hasImage": true
+            },
+            {
+              "id": 13,
+              "name": "[иконка сайта] Нет биотуалета",
+              "description": "Нет биотуалета",
+              "hasImage": true
+            },
+            {
+              "id": 20,
+              "name": "[иконка сайта] Животные 2K, 2У, 2Л, 2Н",
+              "description": "Возможен провоз мелких животных или крупных собак. За провоз мелких животных взимается плата и оформляется перевозочный документ. Возможно оформление на сайте в личном кабинете. Для провоза крупных собак необходим выкуп всего купе.",
+              "hasImage": true
+            }
+          ],
+          "tariff": "1081",
+          "tariff2": null,
+          "tariffServ": null,
+          "addSigns": "* И Ж",
+          "carrier": "ФПК",
+          "carrierId": 1,
+          "insuranceFlag": true,
+          "insuranceTypeId": 1,
+          "owner": "РЖД/ОКТ",
+          "elReg": true,
+          "food": false,
+          "selFood": false,
+          "equippedSIOP": true,
+          "regularFoodService": false,
+          "noSmok": false,
+          "inetSaleOff": false,
+          "bVip": false,
+          "conferenceRoomFlag": false,
+          "bDeck2": false,
+          "intServiceClass": null,
+          "specialSeatTypes": null,
+          "deferredPayment": false,
+          "varPrice": false,
+          "ferry": false,
+          "seniorTariff": 0,
+          "bedding": false,
+          "nonRefundable": false,
+          "addTour": false,
+          "addGoods": true,
+          "addHandLuggage": true,
+          "youth": false,
+          "unior": false,
+          "seats": [
+            {
+              "type": "undef",
+              "code": "undef",
+              "label": "Свободные места",
+              "tariff": "1081",
+              "tariff2": null,
+              "tariffServ": "208",
+              "free": 2,
+              "placesNonRef": null,
+              "freeRef": 2,
+              "placesRef": "025,026",
+              "places": "025,026"
+            }
+          ],
+          "places": "025,026",
+          "schemeId": 1931,
+          "schemeInfo": {
+            "dir": "/dbmm/images/61/28209/6",
+            "dirVert": "/dbmm/images/61/28216/6",
+            "legend": ""
+          },
+          "forcedBedding": true,
+          "policyEnabled": false,
+          "msr": true,
+          "medic": true
+        },
+        {
+          "cnumber": "12",
+          "type": "Сид",
+          "catLabelLoc": "Сидячий",
+          "typeLoc": "Сидячий",
+          "catCode": "Сидячий",
+          "ctypei": 3,
+          "ctype": 2,
+          "letter": "М",
+          "clsType": "3С",
+          "subType": "74С",
+          "clsName": "Вагон с местами для сидения стандартной компоновки. Биотуалет и кондиционер отсутствуют.",
+          "services": [
+            {
+              "id": 12,
+              "name": "[иконка сайта] Нет кондиционера",
+              "description": "Нет кондиционера",
+              "hasImage": true
+            },
+            {
+              "id": 13,
+              "name": "[иконка сайта] Нет биотуалета",
+              "description": "Нет биотуалета",
+              "hasImage": true
+            },
+            {
+              "id": 14,
+              "name": "[иконка сайта] Провоз животных запрещен",
+              "description": "Провоз животных запрещен",
+              "hasImage": true
+            }
+          ],
+          "tariff": "689",
+          "tariff2": null,
+          "tariffServ": null,
+          "addSigns": "",
+          "carrier": "ФПК",
+          "carrierId": 1,
+          "insuranceFlag": true,
+          "insuranceTypeId": 1,
+          "owner": "РЖД/ОКТ",
+          "elReg": true,
+          "food": false,
+          "selFood": false,
+          "equippedSIOP": true,
+          "regularFoodService": false,
+          "noSmok": false,
+          "inetSaleOff": false,
+          "bVip": false,
+          "conferenceRoomFlag": false,
+          "bDeck2": false,
+          "intServiceClass": null,
+          "specialSeatTypes": null,
+          "deferredPayment": false,
+          "varPrice": false,
+          "ferry": false,
+          "seniorTariff": 0,
+          "bedding": false,
+          "nonRefundable": false,
+          "addTour": false,
+          "addGoods": true,
+          "addHandLuggage": true,
+          "youth": true,
+          "unior": false,
+          "seats": [
+            {
+              "type": "undef",
+              "code": "undef",
+              "label": "Свободные места",
+              "tariff": "689",
+              "tariff2": null,
+              "tariffServ": null,
+              "free": 47,
+              "placesNonRef": null,
+              "freeRef": 47,
+              "placesRef": "001,005,006,009,010,015-056",
+              "places": "001,005,006,009,010,015-056"
+            }
+          ],
+          "places": "001,005,006,009,010,015-056",
+          "schemeId": 4915,
+          "forcedBedding": true,
+          "policyEnabled": false,
+          "msr": true,
+          "medic": true
+        },
+        {
+          "cnumber": "13",
+          "type": "Плац",
+          "catLabelLoc": "Плацкартный",
+          "typeLoc": "Плацкартный",
+          "catCode": "Плацкартный",
+          "ctypei": 1,
+          "ctype": 3,
+          "letter": "М",
+          "clsType": "3Б",
+          "subType": "41П",
+          "clsName": "Вагон открытого типа(плацкартный).<p><strong>Кондиционер и биотуалет в вагоне.</strong></p><p>Вагон с услугой перевозки животных.</p>",
+          "services": [
+            {
+              "id": 2,
+              "name": "[иконка сайта] Биотуалет",
+              "description": "Биотуалет",
+              "hasImage": true
+            },
+            {
+              "id": 3,
+              "name": "[иконка сайта] Кондиционер",
+              "description": "Кондиционер работает в летний период",
+              "hasImage": true
+            },
+            {
+              "id": 23,
+              "name": "[иконка сайта] Животные 2В, 2Ж, 3Ж,3O, 3Д, 3У",
+              "description": "Возможен провоз мелких животных. За провоз мелких животных взимается плата и оформляется перевозочный документ. Возможно оформление на сайте в личном кабинете.",
+              "hasImage": true
+            }
+          ],
+          "tariff": "1379",
+          "tariff2": null,
+          "tariffServ": null,
+          "addSigns": "Ж",
+          "carrier": "ФПК",
+          "carrierId": 1,
+          "insuranceFlag": true,
+          "insuranceTypeId": 1,
+          "owner": "РЖД/ОКТ",
+          "elReg": true,
+          "food": false,
+          "selFood": false,
+          "equippedSIOP": true,
+          "regularFoodService": false,
+          "noSmok": false,
+          "inetSaleOff": false,
+          "bVip": false,
+          "conferenceRoomFlag": false,
+          "bDeck2": false,
+          "intServiceClass": null,
+          "specialSeatTypes": null,
+          "deferredPayment": false,
+          "varPrice": false,
+          "ferry": false,
+          "seniorTariff": 0,
+          "bedding": true,
+          "nonRefundable": false,
+          "addTour": false,
+          "addGoods": true,
+          "addHandLuggage": true,
+          "youth": true,
+          "unior": false,
+          "seats": [
+            {
+              "type": "dn",
+              "code": "Н",
+              "label": "Нижнее",
+              "tariff": "1379",
+              "tariff2": null,
+              "tariffServ": "189",
+              "free": 1,
+              "placesNonRef": null,
+              "freeRef": 1,
+              "placesRef": "002,004,014,016,022,024,026,028,030,032,035-044,047-054",
+              "places": "002,004,014,016,022,024,026,028,030,032,035-044,047-054"
+            },
+            {
+              "type": "up",
+              "code": "В",
+              "label": "Верхнее",
+              "tariff": "1379",
+              "tariff2": null,
+              "tariffServ": "189",
+              "free": 11,
+              "placesNonRef": null,
+              "freeRef": 11,
+              "placesRef": "002,004,014,016,022,024,026,028,030,032,035-044,047-054",
+              "places": "002,004,014,016,022,024,026,028,030,032,035-044,047-054"
+            }
+          ],
+          "places": "002,004,014,016,022,024,026,028,030,032,035-044,047-054",
+          "schemeId": 326,
+          "schemeInfo": {
+            "dir": "/dbmm/images/61/28209/82",
+            "dirVert": "/dbmm/images/61/28216/82",
+            "legend": ""
+          },
+          "forcedBedding": true,
+          "policyEnabled": false,
+          "msr": true,
+          "medic": true
+        }
+      ],
+      "addCompLuggage": false,
+      "functionBlocks": [
+        {
+          "className": "s-type-lo",
+          "name": "Нижнее место"
+        },
+        {
+          "className": "s-type-mid",
+          "name": "Среднее место"
+        },
+        {
+          "className": "s-type-up",
+          "name": "Верхнее место"
+        },
+        {
+          "className": "s-type-jumpseat",
+          "name": "Откидное место"
+        },
+        {
+          "className": "s-type-seatrot",
+          "name": "Место с изменением направления по ходу движения"
+        },
+        {
+          "className": "s-type-seat",
+          "name": "Сидячее место"
+        },
+        {
+          "className": "s-prop-undef",
+          "name": "Мужское / Женское / Смешанное - признак не определен"
+        },
+        {
+          "className": "s-prop-man",
+          "name": "Мужское купе"
+        },
+        {
+          "className": "s-prop-woman",
+          "name": "Женское купе"
+        },
+        {
+          "className": "s-prop-mixed",
+          "name": "Смешанное купе"
+        },
+        {
+          "className": "s-type-bicycle",
+          "name": "Место для пассажира с велосипедом"
+        },
+        {
+          "className": "s-type-pet",
+          "name": "Место для проезда с мелким домашним животным"
+        },
+        {
+          "className": "s-type-infant",
+          "name": "Место матери и ребенка"
+        },
+        {
+          "className": "s-type-kid",
+          "name": "Место пассажира с детьми"
+        },
+        {
+          "className": "s-type-cripple",
+          "name": "Место для пассажиров с ограниченными физическими возможностями"
+        },
+        {
+          "className": "s-type-table",
+          "name": "Стол"
+        },
+        {
+          "className": "s-type-luggage",
+          "name": "Тумба/багаж"
+        },
+        {
+          "className": "s-type-wardrobe",
+          "name": "Шкаф/гардероб"
+        },
+        {
+          "className": "s-type-buffet",
+          "name": "Буфет"
+        },
+        {
+          "className": "s-type-toilet",
+          "name": "Туалет"
+        },
+        {
+          "className": "s-type-shower",
+          "name": "Душевая кабина"
+        },
+        {
+          "className": "s-type-conf",
+          "name": "Переговорная"
+        },
+        {
+          "className": "s-type-playroom",
+          "name": "Детская площадка"
+        },
+        {
+          "className": "s-type-ac",
+          "name": "Электрическая розетка"
+        },
+        {
+          "className": "s-type-stairs",
+          "name": "Лестничный пролет"
+        },
+        {
+          "className": "s-type-exit",
+          "name": "Выход"
+        },
+        {
+          "className": "s-type-cashbox",
+          "name": "Касса"
+        },
+        {
+          "className": "s-type-water",
+          "name": "Вода"
+        },
+        {
+          "className": "s-prop-kid",
+          "name": "Купе для пассажиров с детьми"
+        },
+        {
+          "className": "s-type-kofe-bar",
+          "name": "Кафе-бар"
+        },
+        {
+          "className": "s-type-babycarriage",
+          "name": "Детские коляски"
+        }
+      ],
+      "timestamp": "21.07.2023 23:10:55.440"
+    }
+  ],
+  "schemes": [
+    {
+      "id": 4915,
+      "html": "{\"len\":34,\"cells\":[{\"type\":\"wc\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":1},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":3},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":5},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":7},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":9},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":11},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":13},{\"type\":\"XX\",\"style\":\"border-right-color:#000\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":15},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":17},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":19},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":21},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":23},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":25},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":27},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":29},{\"type\":\"XX\"},{\"type\":\"wc\"},{\"type\":\"wc\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":2},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":4},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":6},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":8},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":10},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":12},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":14},{\"type\":\"XX\",\"style\":\"border-right-color:#000\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":16},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":18},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":20},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":22},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":24},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":26},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":28},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":30},{\"type\":\"XX\"},{\"type\":\"wc\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":56},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":54},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":52},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":50},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":48},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":46},{\"type\":\"XX\",\"style\":\"border-right-color:#000\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":44},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":42},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":40},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":38},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":36},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":34},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":32},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":55},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":53},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":51},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":49},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":47},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":45},{\"type\":\"XX\",\"style\":\"border-right-color:#000\"},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":43},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":41},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":39},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":37},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":35},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":33},{\"type\":\"XX\"},{\"type\":\"si\",\"number\":31},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"}]}",
+      "image": null
+    },
+    {
+      "id": 326,
+      "html": "{\"len\":29,\"cells\":[{\"type\":\"wc\",\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":2},{\"type\":\"st\"},{\"type\":\"up\",\"number\":4,\"style\":\"border-right-color:#000;border-right-color:#000;border-right-color:#000\"},{\"type\":\"up\",\"number\":6,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":8,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":10,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":12,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":14,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":16,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":18,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":20,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":22,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":24,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":26,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":28,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":30,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":32,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":34,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":36,\"style\":\"border-right-color:#000\"},{\"type\":\"wc\"},{\"type\":\"wc\",\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":1},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":3,\"style\":\"border-right-color:#000;border-right-color:#000;border-right-color:#000\"},{\"type\":\"dn\",\"number\":5,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":7,\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":9,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":11,\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":13,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":15,\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":17,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":19,\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":21,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":23,\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":25,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":27,\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":29,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":31,\"style\":\"border-right-color:#000\"},{\"type\":\"dn\",\"number\":33,\"style\":\"border-left-color:#000\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":35,\"style\":\"border-right-color:#000\"},{\"type\":\"wc\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"up\",\"number\":54,\"style\":\"border-left-color:#000;border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":53,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":52,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":51,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":50,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":49,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":48,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":47,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":46,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":45,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":44,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":43,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":42,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":41,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":40,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":39,\"style\":\"border-right-color:#000\"},{\"type\":\"up\",\"number\":38,\"style\":\"border-left-color:#000\"},{\"type\":\"st\"},{\"type\":\"dn\",\"number\":37,\"style\":\"border-right-color:#000\"},{\"type\":\"XX\"}]}",
+      "image": null
+    },
+    {
+      "id": 24,
+      "html": "{\"len\":31,\"cells\":[{\"type\":\"wc\",\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"st\",\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":38,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":2,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":4,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":6,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":8,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":10,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":12,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":14,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":16,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":18,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":20,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":22,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":24,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":26,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":28,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":30,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":32,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":34,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":36,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"wc\",\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"wc\",\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"XX\",\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":37,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":1,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":3,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":5,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":7,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":9,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":11,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":13,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":15,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":17,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":19,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":21,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":23,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":25,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":27,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":29,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":31,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":33,\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":35,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"wc\",\"style\":\"border-left-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"}]}",
+      "image": null
+    },
+    {
+      "id": 1931,
+      "html": "{\"len\":24,\"cells\":[{\"type\":\"wc\",\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"st\"},{\"type\":\"up\",\"number\":18,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":2},{\"type\":\"st\"},{\"type\":\"up\",\"number\":4,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":6},{\"type\":\"st\"},{\"type\":\"up\",\"number\":8,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":10},{\"type\":\"st\"},{\"type\":\"up\",\"number\":12,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"up\",\"number\":14},{\"type\":\"st\"},{\"type\":\"up\",\"number\":16,\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"wc\",\"style\":\"border-right-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":17,\"style\":\"border-right-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":1,\"style\":\"border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":3,\"style\":\"border-right-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":5,\"style\":\"border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":7,\"style\":\"border-right-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":9,\"style\":\"border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":11,\"style\":\"border-right-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"dn\",\"number\":13,\"style\":\"border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"XX\"},{\"type\":\"dn\",\"number\":15,\"style\":\"border-right-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"},{\"type\":\"bu\"}]}",
+      "image": null
+    },
+    {
+      "id": 956,
+      "html": "{\"len\":29,\"cells\":[{\"type\":\"wc\",\"style\":\";border-right-color:#000;border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":1,\"style\":\";border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":2,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":3,\"style\":\";border-left-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":4,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":5,\"style\":\";border-left-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":6,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":7,\"style\":\";border-left-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":8,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":9,\"style\":\";border-left-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":10,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":11,\"style\":\";border-left-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":12,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":13,\"style\":\";border-left-color:#000;border-bottom-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":14,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":15,\"style\":\";border-left-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":16,\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":17,\"style\":\"border-left-color:#000;border-bottom-color:#000\"},{\"type\":\"st\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"dn\",\"number\":18,\"style\":\"border-bottom-color:#000;border-right-color:#000\"},{\"type\":\"wc\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\",\"style\":\"border-bottom-color:#000\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"},{\"type\":\"XX\"}]}",
+      "image": null
+    }
+  ],
+  "insuranceCompany": [
+    {
+      "id": 1,
+      "shortName": "АО «СОГАЗ»",
+      "offerUrl": "https://shop.sogaz.ru/prw/ITC.pdf",
+      "insuranceCost": 150,
+      "insuranceBenefit": 1500000,
+      "sortOrder": 2
+    }
+  ],
+  "insuranceCompanyTypes": [
+    {
+      "typeId": 1,
+      "insuranceTariffs": [
+        {
+          "id": 1,
+          "name": "Базовый",
+          "insuranceCost": 150,
+          "insuranceBenefit": 1500000,
+          "default": false,
+          "InsurancePrograms": [
+            {
+              "id": 1,
+              "offerUrl": "https://shop.sogaz.ru/prw/ITC.pdf",
+              "sortOrder": 2,
+              "shortName": "АО «СОГАЗ»"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "psaction": null,
+  "childrenAge": 10,
+  "motherAndChildAge": 1,
+  "partialPayment": false,
+  "timestamp": "21.07.2023 23:10:55.450"
+}
