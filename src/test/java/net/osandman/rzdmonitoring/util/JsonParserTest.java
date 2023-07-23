@@ -24,7 +24,7 @@ class JsonParserTest {
     @Test
     void parseTrain() throws IOException {
         RootTrain rootTrain = JsonParser.parse(Objects.requireNonNull(JsonParserTest.class.getClassLoader()
-                        .getResource("json/tickets016M.json")).openStream(),
+                        .getResource("json/tickets061SH.json")).openStream(),
                 RootTrain.class);
         rootTrain.lst.stream().collect(Collectors.toMap(el -> el.number, el -> el))
                 .values().forEach(el -> el.cars.forEach(car -> car.seats
