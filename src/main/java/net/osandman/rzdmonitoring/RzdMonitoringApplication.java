@@ -13,6 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -22,33 +25,40 @@ import java.util.Scanner;
 public class RzdMonitoringApplication {
     private static RestResponseParser restResponseParser;
     private final static String END_POINT = "";
+    private final static String PERM_2 = "2030400";
+    private final static String MOSCOW_YAR = "2000002";
+    private final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
 
     private static final Map<String, String> baseParams = new HashMap<>() {{
         put("dir", "0");
         put("tfl", "3");
         put("checkSeats", "1");
-        put("code0", "2030400");
-        put("code1", "2000002");
-        put("dt0", "25.07.2023");
-        put("md", "0");
+//        put("md", "0");
+        put("code0", PERM_2);
+        put("code1", MOSCOW_YAR);
     }};
 
     public RzdMonitoringApplication(RestResponseParser restResponseParser) {
         RzdMonitoringApplication.restResponseParser = restResponseParser;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         SpringApplication.run(RzdMonitoringApplication.class, args);
 
         Scanner scanner = new Scanner(System.in);
         String data = "";
-        System.out.println("Введите дату отправления");
+        System.out.println("Введите дату отправления в формате " + DATE_FORMAT_PATTERN);
         while (!Objects.equals(data = scanner.nextLine(), "q")) {
-            baseParams.put("dt0", data);
-            RootRoute rootRoute = getRootRoute();
-            findTickets(rootRoute);
-            System.out.println("Введите дату отправления");
+            try {
+                LocalDate.parse(data, DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
+                baseParams.put("dt0", data);
+                RootRoute rootRoute = getRootRoute();
+                findTickets(rootRoute);
+                System.out.println("Введите дату отправления");
+            } catch (DateTimeParseException e) {
+                System.out.println("Введите правильную дату");
+            }
         }
         System.out.println("До свидания");
     }
@@ -58,8 +68,12 @@ public class RzdMonitoringApplication {
         for (Tp tp : rootRoute.tp) {
             for (Route route : tp.list) {
                 baseParams.put("tnum0", route.number);
-                System.out.println("Ищем для поезда " + route.number);
-                RootTrain rootTrain = JsonParser.parse(getBodyFromResponse(baseParams), RootTrain.class);
+                System.out.println("Ищем свободные места для поезда " + route.number);
+                RootTrain rootTrain = JsonParser.parse(getBodyFromResponse(), RootTrain.class);
+                if (rootTrain == null) {
+                    System.out.println("Поезд " + route.number + " не обработан\n");
+                    continue;
+                }
                 Printer.printTickets(rootTrain);
             }
         }
@@ -67,22 +81,25 @@ public class RzdMonitoringApplication {
 
     private static RootRoute getRootRoute() {
         baseParams.put("layer_id", "5827");
-        RootRoute rootRoute = JsonParser.parse(getBodyFromResponse(baseParams), RootRoute.class);
-        Printer.printRoute(rootRoute);
-        return rootRoute;
+        RootRoute rootRoute = JsonParser.parse(getBodyFromResponse(), RootRoute.class);
+        if (rootRoute != null) {
+            Printer.printRoute(rootRoute);
+            return rootRoute;
+        }
+        return new RootRoute();
     }
 
-    private static String getBodyFromResponse(Map<String, String> routeMap) {
+    private static String getBodyFromResponse() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.setAll(routeMap);
+        params.setAll(baseParams);
 
-        sleep(1000);
+        sleep(100);
         FirstResponse firstResponse = restResponseParser.callSecondGetRequest(END_POINT, params, FirstResponse.class);
         System.out.println(firstResponse);
 
         sleep(1000);
         params.clear();
-        params.add("layer_id", routeMap.get("layer_id"));
+        params.add("layer_id", baseParams.get("layer_id"));
         params.add("rid", String.valueOf(firstResponse.RID));
         return restResponseParser.callSecondGetRequest(END_POINT, params);
     }

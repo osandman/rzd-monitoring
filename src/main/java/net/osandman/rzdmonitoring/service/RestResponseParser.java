@@ -1,17 +1,18 @@
 package net.osandman.rzdmonitoring.service;
 
-import org.eclipse.jetty.util.UrlEncoded;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import reactor.core.publisher.Mono;
 
 @Service
 public class RestResponseParser {
 
     private final WebClient webClient;
+
+    private final Logger logger = LoggerFactory.getLogger(RestResponseParser.class);
 
     public RestResponseParser(WebClient webClient) {
         this.webClient = webClient;
@@ -36,6 +37,8 @@ public class RestResponseParser {
 //                .cookie("lang", "ru")
                 .retrieve()
                 .bodyToMono(clazz)
+                .doOnError(error -> logger.error("An error has occurred {}", error.getMessage()))
+                .onErrorResume(error -> Mono.just((T) new Object()))
                 .block();
     }
 
@@ -49,6 +52,8 @@ public class RestResponseParser {
                 .header("Host", "pass.rzd.ru")
                 .retrieve()
                 .bodyToMono(String.class)
+                .doOnError(error -> logger.error("An error has occurred {}", error.getMessage()))
+                .onErrorResume(error -> Mono.just(error.getMessage()))
                 .block();
     }
 }

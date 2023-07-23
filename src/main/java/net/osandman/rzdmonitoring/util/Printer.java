@@ -1,5 +1,6 @@
 package net.osandman.rzdmonitoring.util;
 
+import lombok.NonNull;
 import net.osandman.rzdmonitoring.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.dto.train.RootTrain;
 
