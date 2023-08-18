@@ -1,7 +1,10 @@
 package net.osandman.rzdmonitoring.dto.train;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class Lst {
     public String result;
     public String number;
@@ -11,9 +14,12 @@ public class Lst {
     public String time0;
     public String localDate0;
     public String localTime0;
+    public String timeDeltaString0;
     public String date1;
     public String time1;
-    public String timeDeltaString0;
+    public String localDate1;
+    public String localTime1;
+    public String timeDeltaString1;
     public String type;
     public boolean virtual;
     public boolean bus;

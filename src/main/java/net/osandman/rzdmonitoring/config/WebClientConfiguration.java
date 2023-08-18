@@ -1,28 +1,18 @@
-package net.osandman.rzdmonitoring.service;
+package net.osandman.rzdmonitoring.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.netty.channel.ChannelOption;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.eclipse.jetty.client.HttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.JettyClientHttpConnector;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.ClientCodecConfigurer;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-
-import static org.springframework.http.MediaType.*;
+import static org.springframework.http.MediaType.ALL;
 
 @Configuration
 public class WebClientConfiguration {

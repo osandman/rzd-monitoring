@@ -1,11 +1,13 @@
 package net.osandman.rzdmonitoring.dto.route;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
 public class Car {
     public int carDataType;
-    public int itype;
+    @JsonProperty("itype")
+    public int iType;
     public String type;
     public String typeLoc;
     public int freeSeats;

@@ -5,6 +5,7 @@ import net.osandman.rzdmonitoring.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.dto.route.Route;
 import net.osandman.rzdmonitoring.dto.route.Tp;
 import net.osandman.rzdmonitoring.dto.train.RootTrain;
+import net.osandman.rzdmonitoring.entity.Station;
 import net.osandman.rzdmonitoring.service.RestResponseParser;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import net.osandman.rzdmonitoring.util.Printer;
@@ -21,12 +22,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
+import static net.osandman.rzdmonitoring.entity.Station.*;
+
 @SpringBootApplication
 public class RzdMonitoringApplication {
     private static RestResponseParser restResponseParser;
     private final static String END_POINT = "";
-    private final static String PERM_2 = "2030400";
-    private final static String MOSCOW_YAR = "2000002";
     private final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
 
     private static final Map<String, String> baseParams = new HashMap<>() {{
@@ -34,8 +35,8 @@ public class RzdMonitoringApplication {
         put("tfl", "3");
         put("checkSeats", "1");
 //        put("md", "0");
-        put("code0", PERM_2);
-        put("code1", MOSCOW_YAR);
+        put("code0", MOSCOW_ALL.code());
+        put("code1", PERM_ALL.code());
     }};
 
     public RzdMonitoringApplication(RestResponseParser restResponseParser) {
@@ -64,6 +65,10 @@ public class RzdMonitoringApplication {
     }
 
     private static void findTickets(RootRoute rootRoute) {
+        if (rootRoute == null) {
+            System.out.println("rootRoute is null");
+            return;
+        }
         baseParams.put("layer_id", "5764");
         for (Tp tp : rootRoute.tp) {
             for (Route route : tp.list) {
