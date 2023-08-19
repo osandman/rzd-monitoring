@@ -14,7 +14,7 @@ public enum Station {
 
     @Override
     public String toString() {
-        return code;
+        return this.name();
     }
 
     public String code() {

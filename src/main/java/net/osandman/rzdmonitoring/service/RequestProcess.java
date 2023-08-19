@@ -8,17 +8,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
-public class RestResponseParser {
-
+public class RequestProcess {
     private final WebClient webClient;
 
-    private final Logger logger = LoggerFactory.getLogger(RestResponseParser.class);
+    private final Logger logger = LoggerFactory.getLogger(RequestProcess.class);
 
-    public RestResponseParser(WebClient webClient) {
+    public RequestProcess(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public <T> T callSecondGetRequest(String url, MultiValueMap<String, String> params, Class<T> clazz) {
+    public <T> T callGetRequest(String url, MultiValueMap<String, String> params, Class<T> clazz) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
@@ -38,11 +37,11 @@ public class RestResponseParser {
                 .retrieve()
                 .bodyToMono(clazz)
                 .doOnError(error -> logger.error("An error has occurred {}", error.getMessage()))
-                .onErrorResume(error -> Mono.just((T) new Object()))
+                .onErrorResume(error -> Mono.just((T) new Object())) // TODO сделать правильно обработку ошибок
                 .block();
     }
 
-    public String callSecondGetRequest(String url, MultiValueMap<String, String> params) {
+    public String callGetRequest(String url, MultiValueMap<String, String> params) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)

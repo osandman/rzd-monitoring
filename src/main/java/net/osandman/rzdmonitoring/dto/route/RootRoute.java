@@ -18,4 +18,5 @@ public class RootRoute {
     public boolean autoTransferMode;
     public Discounts discounts;
     public String timestamp;
+    public long RID; //TODO разобраться когда это поле здесь появляется
 }
