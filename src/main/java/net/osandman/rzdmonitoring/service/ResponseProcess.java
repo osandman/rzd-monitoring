@@ -53,13 +53,17 @@ public class ResponseProcess {
         System.out.println("Введите дату отправления в формате " + DATE_FORMAT_PATTERN);
         String date = scanner.nextLine();
         while (true) {
+            baseParams.put("dt0", date);
             System.out.printf("Ищем билеты для поездов: %s\n",
                     findRoute.length == 0 ? "всех маршрутов" : Arrays.asList(findRoute));
-            baseParams.put("dt0", date);
             RootRoute rootRoute = getRootRoute();
+            if (findRoute.length == 0) {
+                findRoute = rootRoute.getTp()
+                        .stream().flatMap(route -> route.list.stream().map(r -> r.number)).toArray(String[]::new);
+            }
             findTickets(rootRoute, findRoute);
-            int pause = 1000 * 60;
-            System.out.println("Пауза ..." + pause / 1000 + " cекунд");
+            int pause = 1000 * 300;
+            System.out.println("Пауза ..." + pause / 1000 / 60 + " минут");
             sleep(pause);
         }
     }

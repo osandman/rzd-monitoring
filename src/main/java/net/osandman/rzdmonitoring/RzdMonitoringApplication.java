@@ -19,6 +19,7 @@ public class RzdMonitoringApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        responseProcess.autoLoop("294Ж", "070Ч");
+//        responseProcess.autoLoop("294Ж", "070Ч");
+        responseProcess.autoLoop();
     }
 }

@@ -39,13 +39,15 @@ public class ConsolePrinter implements Printer {
     @Override
     public void printTickets(RootTrain rootTrain) {
         Map<String, Integer> findBottomSeat = new HashMap<>();
-        final String[] trainNumber = {""};
+        Map<String, String> trainParams = new HashMap<>();
         rootTrain.lst.stream().collect(Collectors.toMap(el -> el.number, el -> el))
                 .values().forEach(train -> train.cars.forEach(car -> car.seats
                         .forEach(seat -> {
                             String seatLabel = seat.label;
-                            trainNumber[0] = train.number;
                             if (seat.label.equalsIgnoreCase("нижнее")) {
+                                trainParams.put("поезд №", train.number);
+                                trainParams.put("дата: ", train.date0);
+                                trainParams.put("время: ", train.time0);
 //                                Beeper.Beep();
                                 seatLabel = GREEN + seat.label + RESET;
                                 findBottomSeat.put(car.cnumber, seat.free);
@@ -56,16 +58,19 @@ public class ConsolePrinter implements Printer {
                                     seat.free, seat.places, seat.tariff);
                         })));
         if (!findBottomSeat.isEmpty()) {
-            sendNotifier(findBottomSeat, trainNumber);
+            sendNotifier(findBottomSeat, trainParams);
         }
         System.out.println();
     }
 
-    private void sendNotifier(Map<String, Integer> findBottomSeat, String[] trainNumber) {
+    private void sendNotifier(Map<String, Integer> findBottomSeat, Map<String, String> trainParams) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Поезд ").append(trainNumber[0]).append("\n");
+        builder.append(String.join(", ",
+                        trainParams.entrySet().stream()
+                                .map(entry -> entry.getKey() + entry.getValue()).toList()))
+                .append("\n");
         findBottomSeat.forEach((car, count) -> builder
-                .append("Вагон: ").append(car)
+                .append("вагон: ").append(car)
                 .append(", нижних мест: ").append(count)
                 .append("\n"));
         notifier.sendMessage(builder.toString());
