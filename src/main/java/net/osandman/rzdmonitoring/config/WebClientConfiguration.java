@@ -2,6 +2,7 @@ package net.osandman.rzdmonitoring.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.jetty.client.HttpClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ClientHttpConnector;
@@ -16,7 +17,9 @@ import static org.springframework.http.MediaType.ALL;
 
 @Configuration
 public class WebClientConfiguration {
-    public static final String BASE_URL = "https://pass.rzd.ru/timetable/public/ru?";
+
+    @Value("${rzd.base-url}")
+    public String baseUrl;
     //    public static final String BASE_URL = "https://httpbin.org/ip";
     public static final int TIMEOUT = 10_000;
 
@@ -32,7 +35,7 @@ public class WebClientConfiguration {
         HttpClient httpClient = new HttpClient();
         ClientHttpConnector connector = new JettyClientHttpConnector(httpClient);
         return WebClient.builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
                 .clientConnector(connector)
                 .exchangeStrategies(ExchangeStrategies.builder().codecs(this::acceptedCodecs).build())
                 .build();

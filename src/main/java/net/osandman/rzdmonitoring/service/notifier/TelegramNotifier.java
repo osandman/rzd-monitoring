@@ -1,5 +1,6 @@
 package net.osandman.rzdmonitoring.service.notifier;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -10,18 +11,22 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 public class TelegramNotifier implements Notifier {
-    private final String BOT_TOKEN = "6668327388:AAHlwE8ho1gfEhyNg5UhF5rdl_vDKgAHz1w";
-    private final String CHAT_ID = "282026575";
+
+    @Value("${bot.token}")
+    private String botToken;
+
+    @Value("${bot.chat-id}")
+    private String chatId;
 
     @Override
     public void sendMessage(String message) {
         try {
-            URL url = new URL("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage");
+            URL url = new URL("https://api.telegram.org/bot" + botToken + "/sendMessage");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
-            String params = "chat_id=" + CHAT_ID + "&text=" + message;
+            String params = "chat_id=" + chatId + "&text=" + message;
             byte[] postData = params.getBytes(StandardCharsets.UTF_8);
             try (OutputStream os = connection.getOutputStream()) {
                 os.write(postData);

@@ -1,17 +1,15 @@
 package net.osandman.rzdmonitoring.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class RequestProcess {
     private final WebClient webClient;
-
-    private final Logger logger = LoggerFactory.getLogger(RequestProcess.class);
 
     public RequestProcess(WebClient webClient) {
         this.webClient = webClient;
@@ -37,7 +35,7 @@ public class RequestProcess {
 //                .cookie("lang", "ru")
                 .retrieve()
                 .bodyToMono(clazz)
-                .doOnError(error -> logger.error("An error has occurred {}", error.getMessage()))
+                .doOnError(error -> log.error("An error has occurred {}", error.getMessage()))
                 .onErrorResume(error -> Mono.just((T) new Object())) // TODO сделать правильно обработку ошибок
                 .block();
     }
@@ -52,7 +50,7 @@ public class RequestProcess {
                 .header("Host", "pass.rzd.ru")
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnError(error -> logger.error("An error has occurred {}", error.getMessage()))
+                .doOnError(error -> log.error("An error has occurred {}", error.getMessage()))
                 .onErrorResume(error -> Mono.just(error.getMessage()))
                 .block();
     }
