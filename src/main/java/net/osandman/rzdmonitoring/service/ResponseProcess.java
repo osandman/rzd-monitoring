@@ -1,5 +1,6 @@
 package net.osandman.rzdmonitoring.service;
 
+import net.osandman.rzdmonitoring.client.RequestProcess;
 import net.osandman.rzdmonitoring.dto.FirstResponse;
 import net.osandman.rzdmonitoring.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.dto.route.Route;
