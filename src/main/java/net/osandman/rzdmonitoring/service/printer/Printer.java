@@ -5,8 +5,7 @@ import net.osandman.rzdmonitoring.dto.train.RootTrain;
 
 public interface Printer {
 
-    void printRoute(RootRoute route);
+    String printRoute(RootRoute route);
 
     void printTickets(RootTrain train);
-
 }

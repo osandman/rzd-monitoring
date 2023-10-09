@@ -13,6 +13,8 @@ public class Route {
     public String number2;
     public int type;
     public int typeEx;
+    public int subt;
+    public String subtrainCatName;
     public int depth;
     @JsonProperty("new")
     public boolean myNew;
@@ -45,6 +47,14 @@ public class Route {
     public String timeDeltaString1;
     public String timeInWay;
     public int flMsk;
+    public String stList;
+    public String stListX;
+    public String mvMode;
+    public boolean chWarn;
+    public boolean relev;
+    public boolean onWay;
+    public String suburbanTrainName;
+    public int subTabloVisible;
     public int train_id;
     public List<Car> cars;
     public String test;

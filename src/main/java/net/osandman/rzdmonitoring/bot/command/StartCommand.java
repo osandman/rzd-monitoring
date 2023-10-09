@@ -1,7 +1,6 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
@@ -23,11 +22,12 @@ public class StartCommand extends TelegramCommand {
     }
 
     @Override
-    public void handleCommand(TelegramLongPollingBot sender, Update update) {
-        super.handleCommand(sender, update);
+    public void handleCommand(Update update) {
+        long chatId = update.getMessage().getChatId();
+        String userName = update.getMessage().getChat().getUserName();
         String allCommands = String.join(System.lineSeparator(),
                 commands.stream().map(TelegramCommand::getCommand).toList());
         String message = MESSAGE.formatted(userName, allCommands);
-        super.sendMessage(sender, message);
+        sendMessage(chatId, message);
     }
 }
