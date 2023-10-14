@@ -19,19 +19,10 @@ import static org.springframework.http.MediaType.ALL;
 public class WebClientConfiguration {
 
     @Value("${rzd.base-url}")
-    public String baseUrl;
-    //    public static final String BASE_URL = "https://httpbin.org/ip";
-    public static final int TIMEOUT = 10_000;
+    private String baseUrl;
 
     @Bean
     WebClient webClient() {
-//        HttpClient httpClient = HttpClient.create()
-//                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)
-//                .responseTimeout(Duration.ofMillis(TIMEOUT))
-//                .doOnConnected(conn ->
-//                        conn.addHandlerLast(new ReadTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS))
-//                                .addHandlerLast(new WriteTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS)));
-
         HttpClient httpClient = new HttpClient();
         ClientHttpConnector connector = new JettyClientHttpConnector(httpClient);
         return WebClient.builder()
@@ -45,5 +36,4 @@ public class WebClientConfiguration {
         clientCodecConfigurer.customCodecs().register(new Jackson2JsonEncoder(new ObjectMapper(), ALL));
         clientCodecConfigurer.customCodecs().register(new Jackson2JsonDecoder(new ObjectMapper(), ALL));
     }
-
 }

@@ -2,7 +2,7 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import net.osandman.rzdmonitoring.bot.UserState;
 import net.osandman.rzdmonitoring.entity.Station;
-import net.osandman.rzdmonitoring.service.RzdMonitoringService;
+import net.osandman.rzdmonitoring.service.RouteService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,10 +16,10 @@ import static net.osandman.rzdmonitoring.bot.command.ParamEnum.*;
 
 @Component
 public class FindRoutesCommand extends TelegramCommand {
-    private final RzdMonitoringService monitoringService;
+    private final RouteService routeService;
 
-    public FindRoutesCommand(RzdMonitoringService monitoringService) {
-        this.monitoringService = monitoringService;
+    public FindRoutesCommand(RouteService routeService) {
+        this.routeService = routeService;
         command = CommandEnum.ROUTES.name;
     }
 
@@ -76,7 +76,7 @@ public class FindRoutesCommand extends TelegramCommand {
     }
 
     private String getRoutes(UserState.CommandState commandState) {
-        String routesStr = monitoringService.getRoutes(
+        String routesStr = routeService.getRoutes(
                 Station.valueOf(commandState.getParams().get(FROM_STATION)),
                 Station.valueOf(commandState.getParams().get(TO_STATION)),
                 commandState.getParams().get(DATE));

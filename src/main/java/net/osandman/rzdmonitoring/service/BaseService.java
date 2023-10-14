@@ -3,46 +3,45 @@ package net.osandman.rzdmonitoring.service;
 import net.osandman.rzdmonitoring.client.RequestProcess;
 import net.osandman.rzdmonitoring.dto.FirstResponse;
 import net.osandman.rzdmonitoring.dto.route.RootRoute;
-import net.osandman.rzdmonitoring.entity.Station;
 import net.osandman.rzdmonitoring.service.printer.ConsolePrinter;
 import net.osandman.rzdmonitoring.util.JsonParser;
-import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static net.osandman.rzdmonitoring.util.Utils.sleep;
 
-@Service
-public class RzdMonitoringService {
+public abstract class BaseService {
+    protected final RequestProcess requestProcess;
+    protected final ConsolePrinter printer;
+    protected final static String END_POINT = ""; //"/timetable/public/ru";
 
-    private final RequestProcess requestProcess;
-    private final ConsolePrinter printer;
-    private final static String END_POINT = "";
-
-    private final Map<String, String> baseParams = new ConcurrentHashMap<>() {{
+    protected final Map<String, String> baseParams = new HashMap<>() {{
         put("dir", "0");
         put("tfl", "3");
         put("checkSeats", "1");
     }};
 
-    public RzdMonitoringService(RequestProcess requestProcess, ConsolePrinter printer) {
+    public BaseService(RequestProcess requestProcess, ConsolePrinter printer) {
         this.requestProcess = requestProcess;
         this.printer = printer;
     }
 
-    public String getRoutes(Station fromStation, Station toStation, String date) {
-        baseParams.put("code0", fromStation.code());
-        baseParams.put("code1", toStation.code());
-        baseParams.put("dt0", date);
-        return getRootRoute();
+    protected String getRootRoute(Map<String, String> specialParams) {
+        RootRoute rootRoute = JsonParser.parse(getBodyFromResponse(specialParams), RootRoute.class);
+        if (rootRoute != null) {
+            return printer.printRoute(rootRoute);
+        }
+        return "not found";
     }
 
-    private String getBodyFromResponse() {
+    private String getBodyFromResponse(Map<String, String> specialParams) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.setAll(baseParams);
+        params.addAll(toMultiValueMap(specialParams));
 
         sleep(500);
         FirstResponse firstResponse;
@@ -56,17 +55,14 @@ public class RzdMonitoringService {
 
         sleep(1000);
         params.clear();
-        params.add("layer_id", baseParams.get("layer_id"));
+        params.add("layer_id", specialParams.get("layer_id"));
         params.add("rid", String.valueOf(firstResponse.RID));
         return requestProcess.callGetRequest(END_POINT, params);
     }
 
-    private String getRootRoute() {
-        baseParams.put("layer_id", "5827");
-        RootRoute rootRoute = JsonParser.parse(getBodyFromResponse(), RootRoute.class);
-        if (rootRoute != null) {
-            return printer.printRoute(rootRoute);
-        }
-        return "not found";
+    private MultiValueMap<String, String> toMultiValueMap(Map<String, String> addParams) {
+        MultiValueMap<String, String> result = new LinkedMultiValueMap<>();
+        addParams.keySet().forEach(key -> result.put(key, List.of(addParams.get(key))));
+        return result;
     }
 }
