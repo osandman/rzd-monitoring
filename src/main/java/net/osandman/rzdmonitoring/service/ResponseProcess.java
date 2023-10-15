@@ -6,7 +6,7 @@ import net.osandman.rzdmonitoring.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.dto.route.Route;
 import net.osandman.rzdmonitoring.dto.route.Tp;
 import net.osandman.rzdmonitoring.dto.train.RootTrain;
-import net.osandman.rzdmonitoring.entity.Station;
+import net.osandman.rzdmonitoring.entity.StationEnum;
 import net.osandman.rzdmonitoring.service.printer.ConsolePrinter;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-import static net.osandman.rzdmonitoring.entity.Station.MOSCOW_ALL;
-import static net.osandman.rzdmonitoring.entity.Station.PERM_ALL;
+import static net.osandman.rzdmonitoring.entity.StationEnum.MOSCOW_ALL;
+import static net.osandman.rzdmonitoring.entity.StationEnum.PERM_ALL;
 import static net.osandman.rzdmonitoring.util.Utils.sleep;
 
 @Service
@@ -30,8 +30,8 @@ public class ResponseProcess {
     private final static String END_POINT = "";
     private final Scanner scanner;
     public final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
-    public final static Station START_STATION = MOSCOW_ALL;
-    public final static Station FINISH_STATION = PERM_ALL;
+    public final static StationEnum START_STATION = MOSCOW_ALL;
+    public final static StationEnum FINISH_STATION = PERM_ALL;
 
     @Autowired
     public ResponseProcess(RequestProcess requestProcess, ConsolePrinter printer) {

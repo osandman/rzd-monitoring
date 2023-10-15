@@ -27,8 +27,7 @@ public class ConsolePrinter implements Printer {
         rootRoute.tp.stream().collect(Collectors.toMap(tp -> tp.from, tp -> tp))
                 .values().forEach(el -> el.list
                         .forEach(route -> routes.add(
-                                        String.format("Поезд %s(%s), отправление из %s - %s в %s," +
-                                                        " прибытие в %s - %s в %s\n",
+                                        String.format("Поезд %s(%s), из %s - %s в %s, прибытие в %s - %s в %s\n",
                                                 route.number, route.brand,
                                                 route.station0,
                                                 route.localDate0 != null ? route.localDate0 : route.date0,

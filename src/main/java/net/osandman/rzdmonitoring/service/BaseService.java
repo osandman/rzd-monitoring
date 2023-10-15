@@ -15,9 +15,9 @@ import java.util.Map;
 import static net.osandman.rzdmonitoring.util.Utils.sleep;
 
 public abstract class BaseService {
+    private final String endPoint; //"/timetable/public/ru";
     protected final RequestProcess requestProcess;
     protected final ConsolePrinter printer;
-    protected final static String END_POINT = ""; //"/timetable/public/ru";
 
     protected final Map<String, String> baseParams = new HashMap<>() {{
         put("dir", "0");
@@ -25,7 +25,8 @@ public abstract class BaseService {
         put("checkSeats", "1");
     }};
 
-    public BaseService(RequestProcess requestProcess, ConsolePrinter printer) {
+    public BaseService(String endPoint, RequestProcess requestProcess, ConsolePrinter printer) {
+        this.endPoint = endPoint;
         this.requestProcess = requestProcess;
         this.printer = printer;
     }
@@ -35,7 +36,7 @@ public abstract class BaseService {
         if (rootRoute != null) {
             return printer.printRoute(rootRoute);
         }
-        return "not found";
+        return "Route not found";
     }
 
     private String getBodyFromResponse(Map<String, String> specialParams) {
@@ -46,18 +47,18 @@ public abstract class BaseService {
         sleep(500);
         FirstResponse firstResponse;
         try {
-            firstResponse = requestProcess.callGetRequest(END_POINT, params, FirstResponse.class);
+            firstResponse = requestProcess.callGetRequest(endPoint, params, FirstResponse.class);
             System.out.println(firstResponse);
         } catch (Exception e) {
             // в случае если запрос сразу возвращает конечный результат, судя по тестам это маршруты с билетам без мест
-            return requestProcess.callGetRequest(END_POINT, params);
+            return requestProcess.callGetRequest(endPoint, params);
         }
 
         sleep(1000);
         params.clear();
         params.add("layer_id", specialParams.get("layer_id"));
         params.add("rid", String.valueOf(firstResponse.RID));
-        return requestProcess.callGetRequest(END_POINT, params);
+        return requestProcess.callGetRequest(endPoint, params);
     }
 
     private MultiValueMap<String, String> toMultiValueMap(Map<String, String> addParams) {

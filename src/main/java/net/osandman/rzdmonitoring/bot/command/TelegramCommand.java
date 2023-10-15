@@ -1,6 +1,7 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import net.osandman.rzdmonitoring.bot.UserState;
+import net.osandman.rzdmonitoring.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -8,6 +9,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,12 +33,25 @@ public abstract class TelegramCommand {
     protected abstract void handleCommand(Update update);
 
     public void sendMessage(long chatId, String message) {
-        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
-        try {
-            sender.execute(sendMessage);
-            log.info("Сообщение '{}' отправлено пользователю, chatId={}", sendMessage.getText(), chatId);
-        } catch (TelegramApiException e) {
-            log.error("Ошибка отправки сообщения", e);
+        int maxLength = 4096;
+        List<String> messageBlocks = new ArrayList<>();
+        while (message.length() > maxLength) {
+            String block = message.substring(0, maxLength);
+            messageBlocks.add(block);
+            message = message.substring(maxLength);
+        }
+        if (!message.isEmpty()) {
+            messageBlocks.add(message);
+        }
+        for (String block : messageBlocks) {
+            SendMessage sendMessage = new SendMessage(String.valueOf(chatId), block);
+            try {
+                sender.execute(sendMessage);
+                log.info("Сообщение '{}' отправлено пользователю, chatId={}", sendMessage.getText(), chatId);
+                Utils.sleep(1000);
+            } catch (TelegramApiException e) {
+                log.error("Ошибка отправки сообщения", e);
+            }
         }
     }
 }

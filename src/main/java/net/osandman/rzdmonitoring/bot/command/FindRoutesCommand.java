@@ -1,8 +1,10 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import net.osandman.rzdmonitoring.bot.UserState;
-import net.osandman.rzdmonitoring.entity.Station;
+import net.osandman.rzdmonitoring.dto.StationDto;
+import net.osandman.rzdmonitoring.entity.StationEnum;
 import net.osandman.rzdmonitoring.service.RouteService;
+import net.osandman.rzdmonitoring.service.StationService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,9 +19,11 @@ import static net.osandman.rzdmonitoring.bot.command.ParamEnum.*;
 @Component
 public class FindRoutesCommand extends TelegramCommand {
     private final RouteService routeService;
+    private final StationService stationService;
 
-    public FindRoutesCommand(RouteService routeService) {
+    public FindRoutesCommand(RouteService routeService, StationService stationService) {
         this.routeService = routeService;
+        this.stationService = stationService;
         command = CommandEnum.ROUTES.name;
     }
 
@@ -39,24 +43,26 @@ public class FindRoutesCommand extends TelegramCommand {
                 commandState.incrementStep();
             }
             case 2 -> {
-                Station from = parseStation(messageText);
-                if (from == null) {
+                StationDto fromStationDto = stationService.findStation(messageText.toUpperCase());
+                if (fromStationDto.name() == null) {
                     commandState.setStep(2);
                     sendMessage(chatId, "Станция отправления '%s' не найдена, введите заново".formatted(messageText));
                     return;
                 }
-                commandState.addKey(FROM_STATION, from.name());
+                commandState.addKey(FROM_STATION_CODE, fromStationDto.code());
+                commandState.addKey(FROM_STATION, fromStationDto.name());
                 sendMessage(chatId, "Введите станцию назначения");
                 commandState.incrementStep();
             }
             case 3 -> {
-                Station to = parseStation(messageText);
-                if (to == null) {
+                StationDto toStationDto = stationService.findStation(messageText.toUpperCase());
+                if (toStationDto.name() == null) {
                     commandState.setStep(3);
                     sendMessage(chatId, "Станция назначения '%s' не найдена, введите заново".formatted(messageText));
                     return;
                 }
-                commandState.addKey(TO_STATION, to.name());
+                commandState.addKey(TO_STATION_CODE, toStationDto.code());
+                commandState.addKey(TO_STATION, toStationDto.name());
                 sendMessage(chatId, "Введите дату отправления, в формате " + DATE_FORMAT_PATTERN);
                 commandState.incrementStep();
             }
@@ -67,9 +73,11 @@ public class FindRoutesCommand extends TelegramCommand {
                     return;
                 }
                 commandState.addKey(DATE, messageText);
-                String allValues = String.join(", ", commandState.getParams().values());
-                sendMessage(chatId, allValues + ", ищем ...");
-                sendMessage(chatId, getRoutes(commandState));
+                sendMessage(chatId, "Ищу маршруты от %s до %s, на %s".formatted(
+                        commandState.getParams().get(FROM_STATION),
+                        commandState.getParams().get(TO_STATION),
+                        commandState.getParams().get(DATE)));
+                sendMessage(chatId, getRoutesNew(commandState));
                 userStates.remove(chatId);
             }
         }
@@ -77,8 +85,8 @@ public class FindRoutesCommand extends TelegramCommand {
 
     private String getRoutes(UserState.CommandState commandState) {
         String routesStr = routeService.getRoutes(
-                Station.valueOf(commandState.getParams().get(FROM_STATION)),
-                Station.valueOf(commandState.getParams().get(TO_STATION)),
+                StationEnum.valueOf(commandState.getParams().get(FROM_STATION_CODE)),
+                StationEnum.valueOf(commandState.getParams().get(TO_STATION_CODE)),
                 commandState.getParams().get(DATE));
         if (!StringUtils.hasLength(routesStr)) {
             routesStr = "маршруты не найдены";
@@ -87,8 +95,20 @@ public class FindRoutesCommand extends TelegramCommand {
         return routesStr;
     }
 
-    private Station parseStation(String stationStr) {
-        return Arrays.stream(Station.values())
+    private String getRoutesNew(UserState.CommandState commandState) {
+        String routesStr = routeService.getRoutes(
+                commandState.getParams().get(FROM_STATION_CODE),
+                commandState.getParams().get(TO_STATION_CODE),
+                commandState.getParams().get(DATE));
+        if (!StringUtils.hasLength(routesStr)) {
+            routesStr = "Маршруты не найдены";
+            log.error("Ошибка при получении маршрута");
+        }
+        return routesStr;
+    }
+
+    private StationEnum parseStation(String stationStr) {
+        return Arrays.stream(StationEnum.values())
                 .filter(st -> st.name().toLowerCase().contains(stationStr.toLowerCase()))
                 .findAny()
                 .orElse(null);

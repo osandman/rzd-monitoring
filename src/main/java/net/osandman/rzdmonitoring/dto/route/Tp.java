@@ -3,6 +3,7 @@ package net.osandman.rzdmonitoring.dto.route;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Tp {
@@ -15,5 +16,5 @@ public class Tp {
     public String defShowTime;
     public String state;
     public List<Route> list;
-    public List<Object> msgList;
+    public List<Map<String, String>> msgList;
 }

@@ -1,6 +1,6 @@
 package net.osandman.rzdmonitoring.entity;
 
-public enum Station {
+public enum StationEnum {
     PERM_2("2030400"),
     PERM_ALL("2030120"),
     MOSCOW_YAR("2000002"),
@@ -11,7 +11,7 @@ public enum Station {
 
     private final String code;
 
-    Station(String code) {
+    StationEnum(String code) {
         this.code = code;
     }
 

@@ -25,7 +25,9 @@ public class Route {
     public int code1;
     public boolean bEntire;
     public String trainName;
+    public boolean brandLogo;
     public String brand;
+    public int brandId;
     public String carrier;
     public String route0;
     public String route1;
@@ -57,6 +59,7 @@ public class Route {
     public int subTabloVisible;
     public int train_id;
     public List<Car> cars;
+    public List<SeatCar> seatCars;
     public String test;
     public int testSize;
     public List<CarType> carTypes;
