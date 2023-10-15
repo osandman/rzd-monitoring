@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonParser {
@@ -37,10 +38,10 @@ public class JsonParser {
 
     public static <T> List<T> parseValues(String jsonString, Class<T> clazz) {
         ObjectReader reader = objectMapper.readerFor(clazz);
-        List<T> resultList = null;
+        List<T> resultList = new ArrayList<>();
         try {
             resultList = reader.<T>readValues(jsonString).readAll();
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             logger.error("Invalid read value from JSON, {}", e.getMessage());
         }
         return resultList;

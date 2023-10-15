@@ -26,8 +26,9 @@ public class StartCommand extends TelegramCommand {
         long chatId = update.getMessage().getChatId();
         String userName = update.getMessage().getChat().getUserName();
         String allCommands = String.join(System.lineSeparator(),
-                commands.stream().map(TelegramCommand::getCommand).toList());
+                commands.stream().map(TelegramCommand::getCommandName).toList());
         String message = MESSAGE.formatted(userName, allCommands);
         sendMessage(chatId, message);
+        sendButtons(chatId, "Выберите опцию:", commands);
     }
 }

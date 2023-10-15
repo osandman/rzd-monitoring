@@ -29,7 +29,7 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().isCommand()) {
             String messageText = update.getMessage().getText();
             for (TelegramCommand command : commands) {
-                if (messageText.equalsIgnoreCase(command.getCommand())) {
+                if (messageText.equalsIgnoreCase(command.getCommandName())) {
                     TelegramCommand.userStates.remove(chatId);
                     command.handleCommand(this, update);
                     return;
@@ -39,7 +39,7 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
         } else if (update.hasMessage() && update.getMessage().hasText()) {
             for (TelegramCommand command : commands) {
                 if (!TelegramCommand.userStates.isEmpty() &&
-                        TelegramCommand.userStates.get(chatId).getUserStates().containsKey(command.getCommand())) {
+                        TelegramCommand.userStates.get(chatId).getUserStates().containsKey(command.getCommandName())) {
                     command.handleCommand(this, update);
                 }
             }

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.*;
 
@@ -36,17 +37,22 @@ public class FindRoutesCommand extends TelegramCommand {
         log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
 
         UserState userState = userStates.computeIfAbsent(chatId, k -> new UserState());
-        UserState.CommandState commandState = userState.getCommandState(command);
+        UserState.CommandState commandState = userState.getCommandState(command); // устанавливает команду если ее не было
+
         switch (commandState.getStep()) {
-            case 1 -> {
+            case 1 -> { // начало команды
                 sendMessage(chatId, "Введите станцию отправления");
                 commandState.incrementStep();
             }
-            case 2 -> {
-                StationDto fromStationDto = stationService.findStation(messageText.toUpperCase());
-                if (fromStationDto.name() == null) {
-                    commandState.setStep(2);
-                    sendMessage(chatId, "Станция отправления '%s' не найдена, введите заново".formatted(messageText));
+            case 2 -> { // ввод вручную станции отправления
+                findStations(messageText, commandState, 2, chatId);
+            }
+            case 3 -> { // выбор станции отправления из найденных
+                // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
+                StationDto fromStationDto = getStationDto(messageText, stationService.findStations(messageText));
+                if (fromStationDto == null) {
+                    commandState.setStep(3);
+                    sendMessage(chatId, "Станция отправления '%s' не найдена, выберите из списка".formatted(messageText));
                     return;
                 }
                 commandState.addKey(FROM_STATION_CODE, fromStationDto.code());
@@ -54,11 +60,15 @@ public class FindRoutesCommand extends TelegramCommand {
                 sendMessage(chatId, "Введите станцию назначения");
                 commandState.incrementStep();
             }
-            case 3 -> {
-                StationDto toStationDto = stationService.findStation(messageText.toUpperCase());
-                if (toStationDto.name() == null) {
-                    commandState.setStep(3);
-                    sendMessage(chatId, "Станция назначения '%s' не найдена, введите заново".formatted(messageText));
+            case 4 -> { // ввод вручную станции назначения
+                findStations(messageText, commandState, 4, chatId);
+            }
+            case 5 -> { // выбор станции назначения из найденных
+                // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
+                StationDto toStationDto = getStationDto(messageText, stationService.findStations(messageText));
+                if (toStationDto == null) {
+                    commandState.setStep(5);
+                    sendMessage(chatId, "Станция назначения '%s' не найдена, выберите из списка".formatted(messageText));
                     return;
                 }
                 commandState.addKey(TO_STATION_CODE, toStationDto.code());
@@ -66,9 +76,9 @@ public class FindRoutesCommand extends TelegramCommand {
                 sendMessage(chatId, "Введите дату отправления, в формате " + DATE_FORMAT_PATTERN);
                 commandState.incrementStep();
             }
-            case 4 -> {
+            case 6 -> { // ввод даты
                 if (parseDate(messageText) == null) {
-                    commandState.setStep(4);
+                    commandState.setStep(6);
                     sendMessage(chatId, "Не верный формат даты '%s', введите заново".formatted(messageText));
                     return;
                 }
@@ -77,25 +87,31 @@ public class FindRoutesCommand extends TelegramCommand {
                         commandState.getParams().get(FROM_STATION),
                         commandState.getParams().get(TO_STATION),
                         commandState.getParams().get(DATE)));
-                sendMessage(chatId, getRoutesNew(commandState));
+                sendMessage(chatId, getRoutes(commandState));
                 userStates.remove(chatId);
             }
         }
     }
 
-    private String getRoutes(UserState.CommandState commandState) {
-        String routesStr = routeService.getRoutes(
-                StationEnum.valueOf(commandState.getParams().get(FROM_STATION_CODE)),
-                StationEnum.valueOf(commandState.getParams().get(TO_STATION_CODE)),
-                commandState.getParams().get(DATE));
-        if (!StringUtils.hasLength(routesStr)) {
-            routesStr = "маршруты не найдены";
-            log.error("Ошибка при получении маршрута");
+    private void findStations(String messageText, UserState.CommandState commandState, int step, long chatId) {
+        List<StationDto> fromStationDtos = stationService.findStations(messageText);
+        if (fromStationDtos.size() == 0) {
+            commandState.setStep(step);
+            sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
+            return;
         }
-        return routesStr;
+        sendButtons(chatId, "Выберите станцию:", fromStationDtos);
+        commandState.incrementStep();
     }
 
-    private String getRoutesNew(UserState.CommandState commandState) {
+    private StationDto getStationDto(String messageText, List<StationDto> toStationDtos) {
+        return toStationDtos == null ? null :
+                toStationDtos.stream()
+                        .filter(stationDto -> stationDto.name().equalsIgnoreCase(messageText))
+                        .findAny().orElse(null);
+    }
+
+    private String getRoutes(UserState.CommandState commandState) {
         String routesStr = routeService.getRoutes(
                 commandState.getParams().get(FROM_STATION_CODE),
                 commandState.getParams().get(TO_STATION_CODE),

@@ -24,10 +24,6 @@ public class UserState {
             this.step++;
         }
 
-        public void decrementStep() {
-            this.step--;
-        }
-
         public void addKey(ParamEnum key, String value) {
             params.put(key, value);
         }
