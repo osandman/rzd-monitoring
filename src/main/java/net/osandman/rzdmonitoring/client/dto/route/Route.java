@@ -1,4 +1,4 @@
-package net.osandman.rzdmonitoring.dto.route;
+package net.osandman.rzdmonitoring.client.dto.route;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;

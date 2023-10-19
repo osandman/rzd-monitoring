@@ -1,7 +1,7 @@
 package net.osandman.rzdmonitoring.util;
 
-import net.osandman.rzdmonitoring.dto.route.RootRoute;
-import net.osandman.rzdmonitoring.dto.train.RootTrain;
+import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
+import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

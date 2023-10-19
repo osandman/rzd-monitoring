@@ -1,4 +1,4 @@
-package net.osandman.rzdmonitoring.dto.train;
+package net.osandman.rzdmonitoring.client.dto.train;
 
 import java.util.List;
 

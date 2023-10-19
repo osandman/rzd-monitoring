@@ -2,7 +2,7 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import net.osandman.rzdmonitoring.bot.UserState;
 import net.osandman.rzdmonitoring.dto.StationDto;
-import net.osandman.rzdmonitoring.entity.StationEnum;
+import net.osandman.rzdmonitoring.repository.StationEnum;
 import net.osandman.rzdmonitoring.service.RouteService;
 import net.osandman.rzdmonitoring.service.StationService;
 import org.springframework.stereotype.Component;

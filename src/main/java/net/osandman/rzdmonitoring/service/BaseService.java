@@ -1,9 +1,9 @@
 package net.osandman.rzdmonitoring.service;
 
 import net.osandman.rzdmonitoring.client.RequestProcess;
-import net.osandman.rzdmonitoring.dto.FirstResponse;
-import net.osandman.rzdmonitoring.dto.route.RootRoute;
-import net.osandman.rzdmonitoring.service.printer.ConsolePrinter;
+import net.osandman.rzdmonitoring.client.dto.FirstResponse;
+import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
+import net.osandman.rzdmonitoring.mapping.MapperImpl;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,7 +17,7 @@ import static net.osandman.rzdmonitoring.util.Utils.sleep;
 public abstract class BaseService {
     private final String endPoint; //"/timetable/public/ru";
     protected final RequestProcess requestProcess;
-    protected final ConsolePrinter printer;
+    protected final MapperImpl printer;
 
     protected final Map<String, String> baseParams = new HashMap<>() {{
         put("dir", "0");
@@ -25,7 +25,7 @@ public abstract class BaseService {
         put("checkSeats", "1");
     }};
 
-    public BaseService(String endPoint, RequestProcess requestProcess, ConsolePrinter printer) {
+    public BaseService(String endPoint, RequestProcess requestProcess, MapperImpl printer) {
         this.endPoint = endPoint;
         this.requestProcess = requestProcess;
         this.printer = printer;
@@ -34,7 +34,7 @@ public abstract class BaseService {
     protected String getRootRoute(Map<String, String> specialParams) {
         RootRoute rootRoute = JsonParser.parse(getBodyFromResponse(specialParams), RootRoute.class);
         if (rootRoute != null) {
-            return printer.printRoute(rootRoute);
+            return printer.routesMapping(rootRoute);
         }
         return "Route not found";
     }

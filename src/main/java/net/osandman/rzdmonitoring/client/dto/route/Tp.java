@@ -1,4 +1,4 @@
-package net.osandman.rzdmonitoring.dto.route;
+package net.osandman.rzdmonitoring.client.dto.route;
 
 import lombok.Data;
 

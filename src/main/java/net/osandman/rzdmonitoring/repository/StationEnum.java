@@ -1,4 +1,4 @@
-package net.osandman.rzdmonitoring.entity;
+package net.osandman.rzdmonitoring.repository;
 
 public enum StationEnum {
     PERM_2("2030400"),

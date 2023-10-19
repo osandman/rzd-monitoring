@@ -1,8 +1,8 @@
 package net.osandman.rzdmonitoring.service;
 
 import net.osandman.rzdmonitoring.client.RequestProcess;
-import net.osandman.rzdmonitoring.entity.StationEnum;
-import net.osandman.rzdmonitoring.service.printer.ConsolePrinter;
+import net.osandman.rzdmonitoring.repository.StationEnum;
+import net.osandman.rzdmonitoring.mapping.MapperImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class RouteService extends BaseService {
     public static final String ROUTE_ENDPOINT = "";
 
-    public RouteService(RequestProcess requestProcess, ConsolePrinter printer) {
+    public RouteService(RequestProcess requestProcess, MapperImpl printer) {
         super(ROUTE_ENDPOINT, requestProcess, printer);
     }
 

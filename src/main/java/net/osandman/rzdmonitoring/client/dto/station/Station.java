@@ -1,4 +1,4 @@
-package net.osandman.rzdmonitoring.dto.station;
+package net.osandman.rzdmonitoring.client.dto.station;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

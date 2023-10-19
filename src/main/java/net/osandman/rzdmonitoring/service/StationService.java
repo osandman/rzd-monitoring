@@ -2,8 +2,8 @@ package net.osandman.rzdmonitoring.service;
 
 import net.osandman.rzdmonitoring.client.RequestProcess;
 import net.osandman.rzdmonitoring.dto.StationDto;
-import net.osandman.rzdmonitoring.dto.station.Station;
-import net.osandman.rzdmonitoring.service.printer.ConsolePrinter;
+import net.osandman.rzdmonitoring.client.dto.station.Station;
+import net.osandman.rzdmonitoring.mapping.MapperImpl;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 public class StationService extends BaseService {
     public static final String STATION_ENDPOINT = "/suggester";
 
-    public StationService(RequestProcess requestProcess, ConsolePrinter printer) {
+    public StationService(RequestProcess requestProcess, MapperImpl printer) {
         super(STATION_ENDPOINT, requestProcess, printer);
     }
 

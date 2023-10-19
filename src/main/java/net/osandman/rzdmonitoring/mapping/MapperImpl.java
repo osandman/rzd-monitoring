@@ -1,7 +1,7 @@
-package net.osandman.rzdmonitoring.service.printer;
+package net.osandman.rzdmonitoring.mapping;
 
-import net.osandman.rzdmonitoring.dto.route.RootRoute;
-import net.osandman.rzdmonitoring.dto.train.RootTrain;
+import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
+import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class ConsolePrinter implements Printer {
+public class MapperImpl implements Mapper {
 
     @Autowired
     Notifier notifier;
@@ -22,7 +22,7 @@ public class ConsolePrinter implements Printer {
     private static final String RESET = "\033[0m";
 
     @Override
-    public String printRoute(RootRoute rootRoute) {
+    public String routesMapping(RootRoute rootRoute) {
         List<String> routes = new ArrayList<>();
         rootRoute.tp.stream().collect(Collectors.toMap(tp -> tp.from, tp -> tp))
                 .values().forEach(el -> el.list
@@ -37,12 +37,11 @@ public class ConsolePrinter implements Printer {
                                                 route.localTime1 != null ? route.localTime1 : route.time1)
                                 )
                         ));
-        System.out.println();
         return String.join(System.lineSeparator(), routes);
     }
 
     @Override
-    public void printTickets(RootTrain rootTrain) {
+    public void ticketsMapping(RootTrain rootTrain) {
         Map<String, Integer> findBottomSeat = new HashMap<>();
         Map<String, String> trainParams = new HashMap<>();
         rootTrain.lst.stream().collect(Collectors.toMap(el -> el.number, el -> el))
