@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class Route {
     public String number;
+    public List<String> hints;
     public String number2;
     public int type;
     public int typeEx;
@@ -49,6 +50,8 @@ public class Route {
     public String timeDeltaString1;
     public String timeInWay;
     public int flMsk;
+    public boolean bWifi;
+    public String inetInfo;
     public String stList;
     public String stListX;
     public String mvMode;

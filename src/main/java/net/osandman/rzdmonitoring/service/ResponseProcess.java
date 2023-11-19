@@ -6,8 +6,9 @@ import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Route;
 import net.osandman.rzdmonitoring.client.dto.route.Tp;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
+import net.osandman.rzdmonitoring.mapping.RouteMapper;
 import net.osandman.rzdmonitoring.repository.StationEnum;
-import net.osandman.rzdmonitoring.mapping.MapperImpl;
+import net.osandman.rzdmonitoring.mapping.Printer;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,11 @@ import static net.osandman.rzdmonitoring.repository.StationEnum.PERM_ALL;
 import static net.osandman.rzdmonitoring.util.Utils.sleep;
 
 @Service
+@Deprecated
 public class ResponseProcess {
     private final RequestProcess requestProcess;
-    private final MapperImpl printer;
+    private final RouteMapper routeMapper;
+    private final Printer printer;
     private final static String END_POINT = "";
     private final Scanner scanner;
     public final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
@@ -34,8 +37,9 @@ public class ResponseProcess {
     public final static StationEnum FINISH_STATION = PERM_ALL;
 
     @Autowired
-    public ResponseProcess(RequestProcess requestProcess, MapperImpl printer) {
+    public ResponseProcess(RequestProcess requestProcess, RouteMapper routeMapper, Printer printer) {
         this.requestProcess = requestProcess;
+        this.routeMapper = routeMapper;
         this.printer = printer;
         this.scanner = new Scanner(System.in);
     }
@@ -115,7 +119,7 @@ public class ResponseProcess {
         baseParams.put("layer_id", "5827");
         RootRoute rootRoute = JsonParser.parse(getBodyFromResponse(), RootRoute.class);
         if (rootRoute != null) {
-            printer.routesMapping(rootRoute);
+            routeMapper.mapping(rootRoute);
             return rootRoute;
         }
         return new RootRoute();

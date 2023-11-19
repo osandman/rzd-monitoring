@@ -1,10 +1,12 @@
 package net.osandman.rzdmonitoring.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.experimental.UtilityClass;
+import lombok.extern.log4j.Log4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +43,8 @@ public class JsonParser {
     public static <T> List<T> parseValues(String jsonString, Class<T> clazz) {
         ObjectReader reader = objectMapper.readerFor(clazz);
         List<T> resultList = new ArrayList<>();
-        try {
-            resultList = reader.<T>readValues(jsonString).readAll();
+        try (MappingIterator<T> mappingIterator = reader.readValues(jsonString)) {
+            resultList = mappingIterator.readAll();
         } catch (IOException | IllegalArgumentException e) {
             logger.error("Invalid read value from JSON, {}", e.getMessage());
         }

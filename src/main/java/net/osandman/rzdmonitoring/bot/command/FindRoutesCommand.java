@@ -6,7 +6,6 @@ import net.osandman.rzdmonitoring.repository.StationEnum;
 import net.osandman.rzdmonitoring.service.RouteService;
 import net.osandman.rzdmonitoring.service.StationService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDate;
@@ -95,7 +94,7 @@ public class FindRoutesCommand extends TelegramCommand {
 
     private void findStations(String messageText, UserState.CommandState commandState, int step, long chatId) {
         List<StationDto> fromStationDtos = stationService.findStations(messageText);
-        if (fromStationDtos.size() == 0) {
+        if (fromStationDtos.isEmpty()) {
             commandState.setStep(step);
             sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
             return;
@@ -112,22 +111,10 @@ public class FindRoutesCommand extends TelegramCommand {
     }
 
     private String getRoutes(UserState.CommandState commandState) {
-        String routesStr = routeService.getRoutes(
+        return routeService.findRoutes(
                 commandState.getParams().get(FROM_STATION_CODE),
                 commandState.getParams().get(TO_STATION_CODE),
                 commandState.getParams().get(DATE));
-        if (!StringUtils.hasLength(routesStr)) {
-            routesStr = "Маршруты не найдены";
-            log.error("Ошибка при получении маршрута");
-        }
-        return routesStr;
-    }
-
-    private StationEnum parseStation(String stationStr) {
-        return Arrays.stream(StationEnum.values())
-                .filter(st -> st.name().toLowerCase().contains(stationStr.toLowerCase()))
-                .findAny()
-                .orElse(null);
     }
 
     private LocalDate parseDate(String dateStr) {

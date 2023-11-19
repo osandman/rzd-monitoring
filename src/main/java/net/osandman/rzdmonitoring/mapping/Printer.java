@@ -1,19 +1,16 @@
 package net.osandman.rzdmonitoring.mapping;
 
-import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class MapperImpl implements Mapper {
+public class Printer {
 
     @Autowired
     Notifier notifier;
@@ -21,26 +18,6 @@ public class MapperImpl implements Mapper {
     private static final String GREEN = "\033[42m";
     private static final String RESET = "\033[0m";
 
-    @Override
-    public String routesMapping(RootRoute rootRoute) {
-        List<String> routes = new ArrayList<>();
-        rootRoute.tp.stream().collect(Collectors.toMap(tp -> tp.from, tp -> tp))
-                .values().forEach(el -> el.list
-                        .forEach(route -> routes.add(
-                                        String.format("Поезд %s(%s), из %s - %s в %s, прибытие в %s - %s в %s\n",
-                                                route.number, route.brand,
-                                                route.station0,
-                                                route.localDate0 != null ? route.localDate0 : route.date0,
-                                                route.localTime0 != null ? route.localTime0 : route.time0,
-                                                route.station1,
-                                                route.localDate1 != null ? route.localDate1 : route.date1,
-                                                route.localTime1 != null ? route.localTime1 : route.time1)
-                                )
-                        ));
-        return String.join(System.lineSeparator(), routes);
-    }
-
-    @Override
     public void ticketsMapping(RootTrain rootTrain) {
         Map<String, Integer> findBottomSeat = new HashMap<>();
         Map<String, String> trainParams = new HashMap<>();

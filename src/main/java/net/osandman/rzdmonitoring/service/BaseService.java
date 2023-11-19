@@ -2,9 +2,6 @@ package net.osandman.rzdmonitoring.service;
 
 import net.osandman.rzdmonitoring.client.RequestProcess;
 import net.osandman.rzdmonitoring.client.dto.FirstResponse;
-import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
-import net.osandman.rzdmonitoring.mapping.MapperImpl;
-import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -17,7 +14,6 @@ import static net.osandman.rzdmonitoring.util.Utils.sleep;
 public abstract class BaseService {
     private final String endPoint; //"/timetable/public/ru";
     protected final RequestProcess requestProcess;
-    protected final MapperImpl printer;
 
     protected final Map<String, String> baseParams = new HashMap<>() {{
         put("dir", "0");
@@ -25,21 +21,12 @@ public abstract class BaseService {
         put("checkSeats", "1");
     }};
 
-    public BaseService(String endPoint, RequestProcess requestProcess, MapperImpl printer) {
+    public BaseService(String endPoint, RequestProcess requestProcess) {
         this.endPoint = endPoint;
         this.requestProcess = requestProcess;
-        this.printer = printer;
     }
 
-    protected String getRootRoute(Map<String, String> specialParams) {
-        RootRoute rootRoute = JsonParser.parse(getBodyFromResponse(specialParams), RootRoute.class);
-        if (rootRoute != null) {
-            return printer.routesMapping(rootRoute);
-        }
-        return "Route not found";
-    }
-
-    private String getBodyFromResponse(Map<String, String> specialParams) {
+    protected String getBodyFromResponse(Map<String, String> specialParams) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.setAll(baseParams);
         params.addAll(toMultiValueMap(specialParams));
@@ -48,7 +35,6 @@ public abstract class BaseService {
         FirstResponse firstResponse;
         try {
             firstResponse = requestProcess.callGetRequest(endPoint, params, FirstResponse.class);
-            System.out.println(firstResponse);
         } catch (Exception e) {
             // в случае если запрос сразу возвращает конечный результат, судя по тестам это маршруты с билетам без мест
             return requestProcess.callGetRequest(endPoint, params);
