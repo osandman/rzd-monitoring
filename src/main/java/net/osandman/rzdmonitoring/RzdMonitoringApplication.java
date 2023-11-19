@@ -19,7 +19,7 @@ public class RzdMonitoringApplication implements ApplicationRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(RzdMonitoringApplication.class, args);
-        logger.info("Привет! Приложение {} запущено успешно", logger.getName());
+        logger.info("Привет! Успешный запуск приложения {}", logger.getName());
     }
 
     @Override
