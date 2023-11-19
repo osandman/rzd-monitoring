@@ -21,7 +21,7 @@ public class RouteService extends BaseService {
 
     public String findRoutes(String fromStationCode, String toStationCode, String date) {
         Map<String, String> addParams = new HashMap<>() {{
-            put("layer_id", "5827"); // код получения списка маршрутов
+            put("layer_id", LayerId.ROUTE_ID.value); // код получения списка маршрутов
             put("code0", fromStationCode);
             put("code1", toStationCode);
             put("dt0", date);

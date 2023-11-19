@@ -16,8 +16,8 @@ public abstract class BaseService {
     protected final RequestProcess requestProcess;
 
     protected final Map<String, String> baseParams = new HashMap<>() {{
-        put("dir", "0");
-        put("tfl", "3");
+        put("dir", Direction.ONE_WAY.value);
+        put("tfl", Train.ALL.value);
         put("checkSeats", "1");
     }};
 

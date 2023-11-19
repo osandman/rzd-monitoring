@@ -98,7 +98,7 @@ public class ResponseProcess {
             System.out.println(rootRoute);
             return;
         }
-        baseParams.put("layer_id", "5764");
+        baseParams.put("layer_id", LayerId.DETAIL_ID.value);
         for (Tp tp : rootRoute.tp) {
             for (Route route : tp.list) {
                 if (routeNumber.length != 0 && Arrays.asList(routeNumber).contains(route.number)) {

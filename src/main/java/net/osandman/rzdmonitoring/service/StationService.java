@@ -30,7 +30,6 @@ public class StationService extends BaseService {
                 .toList();
     }
 
-
     private List<Station> getStations(String namePart) {
         String lang = detectLang(namePart);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>() {{
