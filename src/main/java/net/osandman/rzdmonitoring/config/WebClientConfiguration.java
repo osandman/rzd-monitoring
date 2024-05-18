@@ -1,6 +1,8 @@
 package net.osandman.rzdmonitoring.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.eclipse.jetty.client.HttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,7 @@ import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 import static org.springframework.http.MediaType.ALL;
 
 @Configuration
@@ -21,19 +24,30 @@ public class WebClientConfiguration {
     @Value("${rzd.base-url}")
     private String baseUrl;
 
+    /**
+     * Конфигурация ObjectMapper.
+     */
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .registerModule(new JavaTimeModule())
+            .configure(WRITE_DATES_AS_TIMESTAMPS, false);
+    }
+
     @Bean
     WebClient webClient() {
         HttpClient httpClient = new HttpClient();
         ClientHttpConnector connector = new JettyClientHttpConnector(httpClient);
         return WebClient.builder()
-                .baseUrl(baseUrl)
-                .clientConnector(connector)
-                .exchangeStrategies(ExchangeStrategies.builder().codecs(this::acceptedCodecs).build())
-                .build();
+            .baseUrl(baseUrl)
+            .clientConnector(connector)
+            .exchangeStrategies(ExchangeStrategies.builder().codecs(this::acceptedCodecs).build())
+            .build();
     }
 
     private void acceptedCodecs(ClientCodecConfigurer clientCodecConfigurer) {
-        clientCodecConfigurer.customCodecs().register(new Jackson2JsonEncoder(new ObjectMapper(), ALL));
-        clientCodecConfigurer.customCodecs().register(new Jackson2JsonDecoder(new ObjectMapper(), ALL));
+        clientCodecConfigurer.customCodecs().register(new Jackson2JsonEncoder(objectMapper(), ALL));
+        clientCodecConfigurer.customCodecs().register(new Jackson2JsonDecoder(objectMapper(), ALL));
     }
 }

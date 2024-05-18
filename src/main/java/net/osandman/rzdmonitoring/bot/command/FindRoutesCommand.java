@@ -2,36 +2,33 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import net.osandman.rzdmonitoring.bot.UserState;
 import net.osandman.rzdmonitoring.dto.StationDto;
-import net.osandman.rzdmonitoring.repository.StationEnum;
 import net.osandman.rzdmonitoring.service.RouteService;
 import net.osandman.rzdmonitoring.service.StationService;
+import net.osandman.rzdmonitoring.service.TicketService;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.List;
-
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.*;
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION;
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION;
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
 
 @Component
 public class FindRoutesCommand extends TelegramCommand {
-    private final RouteService routeService;
-    private final StationService stationService;
 
-    public FindRoutesCommand(RouteService routeService, StationService stationService) {
-        this.routeService = routeService;
-        this.stationService = stationService;
-        command = CommandEnum.ROUTES.name;
+    protected FindRoutesCommand(TicketService ticketService, RouteService routeService,
+                                StationService stationService) {
+        super(ticketService, routeService, stationService, CommandEnum.ROUTES.name);
     }
 
     @Override
     public void handleCommand(Update update) {
-        long chatId = update.getMessage().getChatId();
-        String messageText = update.getMessage().getText();
-        String userName = update.getMessage().getChat().getUserName();
+        Message message = update.getMessage();
+        long chatId = message.getChatId();
+        String messageText = message.getText();
+        String userName = message.getChat().getFirstName() + " " + message.getChat().getLastName();
 
         log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
 
@@ -83,46 +80,12 @@ public class FindRoutesCommand extends TelegramCommand {
                 }
                 commandState.addKey(DATE, messageText);
                 sendMessage(chatId, "Ищу маршруты от %s до %s, на %s".formatted(
-                        commandState.getParams().get(FROM_STATION),
-                        commandState.getParams().get(TO_STATION),
-                        commandState.getParams().get(DATE)));
+                    commandState.getParams().get(FROM_STATION),
+                    commandState.getParams().get(TO_STATION),
+                    commandState.getParams().get(DATE)));
                 sendMessage(chatId, getRoutes(commandState));
                 userStates.remove(chatId);
             }
-        }
-    }
-
-    private void findStations(String messageText, UserState.CommandState commandState, int step, long chatId) {
-        List<StationDto> fromStationDtos = stationService.findStations(messageText);
-        if (fromStationDtos.isEmpty()) {
-            commandState.setStep(step);
-            sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
-            return;
-        }
-        sendButtons(chatId, "Выберите станцию:", fromStationDtos);
-        commandState.incrementStep();
-    }
-
-    private StationDto getStationDto(String messageText, List<StationDto> toStationDtos) {
-        return toStationDtos == null ? null :
-                toStationDtos.stream()
-                        .filter(stationDto -> stationDto.name().equalsIgnoreCase(messageText))
-                        .findAny().orElse(null);
-    }
-
-    private String getRoutes(UserState.CommandState commandState) {
-        return routeService.findRoutes(
-                commandState.getParams().get(FROM_STATION_CODE),
-                commandState.getParams().get(TO_STATION_CODE),
-                commandState.getParams().get(DATE));
-    }
-
-    private LocalDate parseDate(String dateStr) {
-        try {
-            return LocalDate.parse(dateStr,
-                    DateTimeFormatter.ofPattern(TelegramCommand.DATE_FORMAT_PATTERN));
-        } catch (DateTimeParseException e) {
-            return null;
         }
     }
 }

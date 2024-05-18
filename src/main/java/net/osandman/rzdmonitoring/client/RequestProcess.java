@@ -17,34 +17,34 @@ public class RequestProcess {
 
     public <T> T callGetRequest(String url, MultiValueMap<String, String> params, Class<T> clazz) {
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParams(params)
-                        .build())
-                .header("Host", "pass.rzd.ru")
-                .header("Content-Type", "text/javascript;charset=utf-8")
-                .header("Connection", "keep-alive")
-                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-                        "(KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
-                .header("Accept-Language", "ru")
-                .retrieve()
-                .bodyToMono(clazz)
-                .doOnError(error -> log.error("An error has occurred {}", error.getMessage()))
-                .onErrorResume(error -> Mono.just((T) new Object())) // TODO сделать правильно обработку ошибок
-                .block();
+            .uri(uriBuilder -> uriBuilder
+                .path(url)
+                .queryParams(params)
+                .build())
+            .header("Host", "pass.rzd.ru")
+            .header("Content-Type", "text/javascript;charset=utf-8")
+            .header("Connection", "keep-alive")
+            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                                  "(KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
+            .header("Accept-Language", "ru")
+            .retrieve()
+            .bodyToMono(clazz)
+            .doOnError(error -> log.error("An error has occurred {}", error.getMessage()))
+            .onErrorResume(error -> Mono.just((T) new Object())) // TODO сделать правильно обработку ошибок
+            .block();
     }
 
     public String callGetRequest(String url, MultiValueMap<String, String> params) {
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParams(params)
-                        .build())
-                .header("Host", "pass.rzd.ru")
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnError(error -> log.error("An error has occurred {}", error.getMessage()))
-                .onErrorResume(error -> Mono.just(error.getMessage()))
-                .block();
+            .uri(uriBuilder -> uriBuilder
+                .path(url)
+                .queryParams(params)
+                .build())
+            .header("Host", "pass.rzd.ru")
+            .retrieve()
+            .bodyToMono(String.class)
+            .doOnError(error -> log.error("An error has occurred {}", error.getMessage()))
+            .onErrorResume(error -> Mono.just(error.getMessage()))
+            .block();
     }
 }

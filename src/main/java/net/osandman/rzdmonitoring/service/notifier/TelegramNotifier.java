@@ -1,6 +1,7 @@
 package net.osandman.rzdmonitoring.service.notifier;
 
-import  org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 @Service
+@Slf4j
 public class TelegramNotifier implements Notifier {
 
     @Value("${bot.token}")
@@ -33,12 +35,12 @@ public class TelegramNotifier implements Notifier {
             }
 
             int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
+            log.info("В телеграм чат отправлено уведомление: '{}'. Response Code: '{}'", params, responseCode);
 
             // Здесь можно обработать ответ от сервера, если это необходимо
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error from telegram notify: '{}'", e.getMessage());
         }
     }
 }

@@ -1,6 +1,11 @@
 package net.osandman.rzdmonitoring.bot.command;
 
+import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.bot.UserState;
+import net.osandman.rzdmonitoring.dto.StationDto;
+import net.osandman.rzdmonitoring.service.RouteService;
+import net.osandman.rzdmonitoring.service.StationService;
+import net.osandman.rzdmonitoring.service.TicketService;
 import net.osandman.rzdmonitoring.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,16 +17,29 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
+
+@RequiredArgsConstructor
 public abstract class TelegramCommand {
-    protected TelegramLongPollingBot sender;
+
+    protected final TicketService ticketService;
+    protected final RouteService routeService;
+    protected final StationService stationService;
+    protected final String command;
     protected final Logger log = LoggerFactory.getLogger(getClass().getName());
-    protected String command;
-    public static Map<Long, UserState> userStates = new ConcurrentHashMap<>();
+    protected TelegramLongPollingBot sender;
+    public final static Map<Long, UserState> userStates = new ConcurrentHashMap<>();
+    public final static Map<Long, List<String>> threads = new ConcurrentHashMap<>();
     public final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
 
     public String getCommandName() {
@@ -56,7 +74,8 @@ public abstract class TelegramCommand {
     protected void executeMessage(SendMessage sendMessage) {
         try {
             sender.execute(sendMessage);
-            log.info("Сообщение '{}' отправлено пользователю, chatId={}", sendMessage.getText(), sendMessage.getChatId());
+            log.info("Сообщение '{}' отправлено пользователю, chatId={}",
+                sendMessage.getText(), sendMessage.getChatId());
         } catch (TelegramApiException e) {
             log.error("Ошибка отправки сообщения", e);
         }
@@ -89,6 +108,41 @@ public abstract class TelegramCommand {
         SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
         sendMessage.setReplyMarkup(keyboardMarkup);
         executeMessage(sendMessage);
+    }
+
+
+    protected void findStations(String messageText, UserState.CommandState commandState, int step, long chatId) {
+        List<StationDto> fromStationDtos = stationService.findStations(messageText);
+        if (fromStationDtos.isEmpty()) {
+            commandState.setStep(step);
+            sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
+            return;
+        }
+        sendButtons(chatId, "Выберите станцию:", fromStationDtos);
+        commandState.incrementStep();
+    }
+
+    protected StationDto getStationDto(String messageText, List<StationDto> toStationDtos) {
+        return toStationDtos == null ? null :
+            toStationDtos.stream()
+                .filter(stationDto -> stationDto.name().equalsIgnoreCase(messageText))
+                .findAny().orElse(null);
+    }
+
+    protected String getRoutes(UserState.CommandState commandState) {
+        return routeService.getPrettyStringRoutes(
+            commandState.getParams().get(FROM_STATION_CODE),
+            commandState.getParams().get(TO_STATION_CODE),
+            commandState.getParams().get(DATE));
+    }
+
+    protected LocalDate parseDate(String dateStr) {
+        try {
+            return LocalDate.parse(dateStr,
+                DateTimeFormatter.ofPattern(TelegramCommand.DATE_FORMAT_PATTERN));
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     @Override

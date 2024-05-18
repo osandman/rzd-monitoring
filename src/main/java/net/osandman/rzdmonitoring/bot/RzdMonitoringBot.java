@@ -35,11 +35,11 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
                     return;
                 }
             }
-            new UnknownCommand(this).handleCommand(this, update);
+            new UnknownCommand(null, null, null).handleCommand(this, update);
         } else if (update.hasMessage() && update.getMessage().hasText()) {
             for (TelegramCommand command : commands) {
                 if (!TelegramCommand.userStates.isEmpty() &&
-                        TelegramCommand.userStates.get(chatId).getUserStates().containsKey(command.getCommandName())) {
+                    TelegramCommand.userStates.get(chatId).getUserStates().containsKey(command.getCommandName())) {
                     command.handleCommand(this, update);
                 }
             }
