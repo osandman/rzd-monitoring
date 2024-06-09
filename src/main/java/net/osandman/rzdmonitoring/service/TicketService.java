@@ -7,6 +7,7 @@ import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Route;
 import net.osandman.rzdmonitoring.client.dto.route.Tp;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
+import net.osandman.rzdmonitoring.config.ScheduleConfig;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.Printer;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
@@ -26,18 +27,22 @@ import static net.osandman.rzdmonitoring.util.Utils.sleep;
 public class TicketService extends BaseService {
 
     public static final String TICKETS_ENDPOINT = "";
-    public static int pause = 1000 * 300; // 5 минут
     private final Printer printer;
     private final RouteService routeService;
     private final Notifier notifier;
+    private final ScheduleConfig scheduleConfig;
+    private final int pause;
 
-    public TicketService(RequestProcess requestProcess, Printer printer, RouteService routeService, Notifier notifier) {
+    public TicketService(RequestProcess requestProcess, Printer printer, RouteService routeService, Notifier notifier, ScheduleConfig scheduleConfig) {
         super(TICKETS_ENDPOINT, requestProcess);
         this.printer = printer;
         this.routeService = routeService;
         this.notifier = notifier;
+        this.scheduleConfig = scheduleConfig;
+        pause = scheduleConfig.getInterval();
     }
 
+    // TODO переделать запуск метода по расписанию
     public void autoLoop(String date, String fromCode, String toCode, String... trainNumbers) {
         while (true) {
             BASE_PARAMS.put("dt0", date);
@@ -57,7 +62,9 @@ public class TicketService extends BaseService {
             log.info(findRouteResult.comment);
             if (findRouteResult.findRoutes == 0) {
                 log.warn("Нет поездов соответствующих заданным на дату {}", date);
-                continue;
+                break;
+                // TODO убирать из списка тасок текущую
+                // TelegramCommand.threads.get()
             }
             log.info("Ожидание до следующего запроса билетов {} минут", pause / 1000 / 60.0);
             sleep(pause);
@@ -76,7 +83,7 @@ public class TicketService extends BaseService {
             return new FindRouteResult(0, comment);
         }
         int countMatchesRoutes = 0;
-        notifier.sendMessage("Начинаем поиск билетов");
+        notifier.sendMessage("▶ Начинаем поиск билетов");
         for (Tp tp : rootRoute.tp) {
             if (tp.list.isEmpty()) {
                 log.info("Нет свободных мест в поезде: '{}'", tp);

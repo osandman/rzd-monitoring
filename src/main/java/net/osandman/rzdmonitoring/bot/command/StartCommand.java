@@ -34,7 +34,15 @@ public class StartCommand extends TelegramCommand {
         String allCommands = String.join(System.lineSeparator(),
             commands.stream().map(TelegramCommand::getCommandName).toList());
         String message = MESSAGE.formatted(fullName, allCommands);
+        StringBuilder tasks = new StringBuilder("⚠ отсутствуют");
+        if (threads.get(chatId) != null) {
+            tasks.setLength(0);
+            for (String threadName : threads.get(chatId)) {
+                tasks.append("✳ ").append(threadName).append(System.lineSeparator());
+            }
+        }
         sendMessage(chatId, message);
+        sendMessage(chatId, "Запущены задачи: \n" + tasks);
         sendButtons(chatId, "Выберите опцию:", commands);
     }
 }

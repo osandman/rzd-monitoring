@@ -89,9 +89,7 @@ public class FindTicketsCommand extends TelegramCommand {
                     chatId,
                     runScheduler(
                         chatId,
-                        commandState.getParams().get(DATE),
-                        commandState.getParams().get(FROM_STATION_CODE),
-                        commandState.getParams().get(TO_STATION_CODE)
+                        commandState
                     )
                 );
                 userStates.remove(chatId);
@@ -99,10 +97,15 @@ public class FindTicketsCommand extends TelegramCommand {
         }
     }
 
-    private String runScheduler(Long chatId, String date, String fromCode, String toCode, String... trainNumbers) {
+    private String runScheduler(Long chatId, UserState.CommandState commandState, String... trainNumbers) {
+        String date = commandState.getParams().get(DATE);
+        String from = commandState.getParams().get(FROM_STATION);
+        String to = commandState.getParams().get(TO_STATION);
+
         Executors.newSingleThreadExecutor().execute(
             () -> {
-                String threadName = Thread.currentThread().getName();
+                String threadName = "task-" + date + "-from-" + from + "-to-" + to;
+                Thread.currentThread().setName(threadName);
                 if (threads.get(chatId) == null) {
                     threads.put(chatId, new CopyOnWriteArrayList<>() {{
                         add(threadName);
@@ -111,7 +114,12 @@ public class FindTicketsCommand extends TelegramCommand {
                     List<String> threadNames = threads.get(chatId);
                     threadNames.add(threadName);
                 }
-                ticketService.autoLoop(date, fromCode, toCode, trainNumbers);
+                ticketService.autoLoop(
+                    date,
+                    commandState.getParams().get(FROM_STATION_CODE),
+                    commandState.getParams().get(TO_STATION_CODE),
+                    trainNumbers
+                );
             }
         );
         return ("Запущен мониторинг билетов на нижние места на дату %s, "
