@@ -1,4 +1,4 @@
-package net.osandman.rzdmonitoring.bot;
+package net.osandman.rzdmonitoring.entity;
 
 import lombok.Data;
 import net.osandman.rzdmonitoring.bot.command.ParamEnum;
@@ -11,7 +11,7 @@ public class UserState {
     // String - команда ("/xxx")
     private final Map<String, CommandState> userStates = new HashMap<>();
 
-    public CommandState getCommandState(String command) {
+    public CommandState getOrCreateCommandState(String command) {
         return userStates.computeIfAbsent(command, k -> new CommandState());
     }
 
