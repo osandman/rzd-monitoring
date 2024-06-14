@@ -1,9 +1,8 @@
 package net.osandman.rzdmonitoring.bot.command;
 
-import net.osandman.rzdmonitoring.bot.UserState;
+import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.StationDto;
-import net.osandman.rzdmonitoring.service.RouteService;
-import net.osandman.rzdmonitoring.service.StationService;
+import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.service.TicketService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -20,26 +19,27 @@ import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
 
 @Component
-public class FindTicketsCommand extends TelegramCommand {
+@RequiredArgsConstructor
+public class FindTicketsCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
+    private final TicketService ticketService;
 
-    public FindTicketsCommand(TicketService ticketService, RouteService routeService,
-                              StationService stationService) {
-        super(ticketService, routeService, stationService, CommandEnum.TICKETS.name);
+    @Override
+    public String getCommand() {
+        return CommandEnum.TICKETS.getCommand();
     }
 
     @Override
     public void handleCommand(Update update) {
         long chatId = update.getMessage().getChatId();
-//        sendMessage(chatId, "Еще не готовы у пони подковы ...");
         Message message = update.getMessage();
         String messageText = message.getText();
         String userName = message.getChat().getFirstName() + " " + message.getChat().getLastName();
 
         log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
 
-        UserState userState = userStates.computeIfAbsent(chatId, k -> new UserState());
-        UserState.CommandState commandState = userState.getCommandState(command); // устанавливает команду если ее не было
+        UserState userState = userStateRepository.getOrCreate(chatId);
+        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand()); // устанавливает команду если ее не было
 
         switch (commandState.getStep()) {
             case 1 -> { // начало команды
@@ -92,9 +92,14 @@ public class FindTicketsCommand extends TelegramCommand {
                         commandState
                     )
                 );
-                userStates.remove(chatId);
+                userStateRepository.remove(chatId);
             }
         }
+    }
+
+    @Override
+    public boolean canToShow() {
+        return true;
     }
 
     private String runScheduler(Long chatId, UserState.CommandState commandState, String... trainNumbers) {
@@ -108,11 +113,11 @@ public class FindTicketsCommand extends TelegramCommand {
                 Thread.currentThread().setName(threadName);
                 if (threads.get(chatId) == null) {
                     threads.put(chatId, new CopyOnWriteArrayList<>() {{
-                        add(threadName);
+                        add(Thread.currentThread());
                     }});
                 } else {
-                    List<String> threadNames = threads.get(chatId);
-                    threadNames.add(threadName);
+                    List<Thread> threadList = threads.get(chatId);
+                    threadList.add(Thread.currentThread());
                 }
                 ticketService.autoLoop(
                     date,

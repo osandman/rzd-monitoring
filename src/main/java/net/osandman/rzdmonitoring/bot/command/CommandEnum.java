@@ -1,13 +1,15 @@
 package net.osandman.rzdmonitoring.bot.command;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Getter
 public enum CommandEnum {
     START("/start"),
     TICKETS("/tickets"),
-    SHOW_TASK("/show-tasks"),
+    TASKS("/tasks"),
     ROUTES("/routes");
 
-    final String name;
-    CommandEnum(String name) {
-        this.name = name;
-    }
+    private final String command;
 }

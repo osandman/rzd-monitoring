@@ -1,10 +1,9 @@
 package net.osandman.rzdmonitoring.bot.command;
 
-import net.osandman.rzdmonitoring.bot.UserState;
+import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.StationDto;
+import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.service.RouteService;
-import net.osandman.rzdmonitoring.service.StationService;
-import net.osandman.rzdmonitoring.service.TicketService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,11 +15,14 @@ import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
 
 @Component
-public class FindRoutesCommand extends TelegramCommand {
+@RequiredArgsConstructor
+public class FindRoutesCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
-    protected FindRoutesCommand(TicketService ticketService, RouteService routeService,
-                                StationService stationService) {
-        super(ticketService, routeService, stationService, CommandEnum.ROUTES.name);
+    private final RouteService routeService;
+
+    @Override
+    public String getCommand() {
+        return CommandEnum.ROUTES.getCommand();
     }
 
     @Override
@@ -32,8 +34,8 @@ public class FindRoutesCommand extends TelegramCommand {
 
         log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
 
-        UserState userState = userStates.computeIfAbsent(chatId, k -> new UserState());
-        UserState.CommandState commandState = userState.getCommandState(command); // устанавливает команду если ее не было
+        UserState userState = userStateRepository.getOrCreate(chatId);
+        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand()); // устанавливает команду если ее не было
 
         switch (commandState.getStep()) {
             case 1 -> { // начало команды
@@ -84,8 +86,20 @@ public class FindRoutesCommand extends TelegramCommand {
                     commandState.getParams().get(TO_STATION),
                     commandState.getParams().get(DATE)));
                 sendMessage(chatId, getRoutes(commandState));
-                userStates.remove(chatId);
+                userStateRepository.remove(chatId);
             }
         }
+    }
+
+    @Override
+    public boolean canToShow() {
+        return true;
+    }
+
+    private String getRoutes(UserState.CommandState commandState) {
+        return routeService.getPrettyStringRoutes(
+            commandState.getParams().get(FROM_STATION_CODE),
+            commandState.getParams().get(TO_STATION_CODE),
+            commandState.getParams().get(DATE));
     }
 }

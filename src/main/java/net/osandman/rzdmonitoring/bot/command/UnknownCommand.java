@@ -1,20 +1,26 @@
 package net.osandman.rzdmonitoring.bot.command;
 
-import net.osandman.rzdmonitoring.service.RouteService;
-import net.osandman.rzdmonitoring.service.StationService;
-import net.osandman.rzdmonitoring.service.TicketService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-public class UnknownCommand extends TelegramCommand {
+@Component
+public class UnknownCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
-    public UnknownCommand(TicketService ticketService, RouteService routeService,
-                          StationService stationService) {
-        super(ticketService, routeService, stationService, null);
-    }
+    public static final String UNKNOWN_COMMAND = "unknown";
 
     @Override
     public void handleCommand(Update update) {
         long chatId = update.getMessage().getChatId();
         sendMessage(chatId, "Команда не найдена");
+    }
+
+    @Override
+    public String getCommand() {
+        return UNKNOWN_COMMAND;
+    }
+
+    @Override
+    public boolean canToShow() {
+        return false;
     }
 }

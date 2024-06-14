@@ -1,8 +1,6 @@
 package net.osandman.rzdmonitoring.bot.command;
 
-import net.osandman.rzdmonitoring.service.RouteService;
-import net.osandman.rzdmonitoring.service.StationService;
-import net.osandman.rzdmonitoring.service.TicketService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -10,8 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 
 @Component
-public class StartCommand extends TelegramCommand {
-    private final List<TelegramCommand> commands;
+@RequiredArgsConstructor
+public class StartCommand extends AbstractTelegramCommand implements ITelegramCommand {
+
+    private final List<ITelegramCommand> commands;
     private final static String MESSAGE = """
         Привет!
         Добро пожаловать, %s!
@@ -20,10 +20,9 @@ public class StartCommand extends TelegramCommand {
         %s
         """;
 
-    public StartCommand(TicketService ticketService, RouteService routeService, StationService stationService,
-                        List<TelegramCommand> commands) {
-        super(ticketService, routeService, stationService, CommandEnum.START.name);
-        this.commands = commands;
+    @Override
+    public String getCommand() {
+        return CommandEnum.START.getCommand();
     }
 
     @Override
@@ -32,17 +31,21 @@ public class StartCommand extends TelegramCommand {
         Chat chat = update.getMessage().getChat();
         String fullName = chat.getFirstName() + " " + chat.getLastName();
         String allCommands = String.join(System.lineSeparator(),
-            commands.stream().map(TelegramCommand::getCommandName).toList());
+            commands.stream()
+                .filter(ITelegramCommand::canToShow)
+                .map(ITelegramCommand::getCommand).toList()
+        );
         String message = MESSAGE.formatted(fullName, allCommands);
-        StringBuilder tasks = new StringBuilder("⚠ отсутствуют");
-        if (threads.get(chatId) != null) {
-            tasks.setLength(0);
-            for (String threadName : threads.get(chatId)) {
-                tasks.append("✳ ").append(threadName).append(System.lineSeparator());
-            }
-        }
         sendMessage(chatId, message);
-        sendMessage(chatId, "Запущены задачи: \n" + tasks);
-        sendButtons(chatId, "Выберите опцию:", commands);
+        sendButtons(chatId, "Выберите опцию:",
+            commands.stream()
+                .filter(ITelegramCommand::canToShow)
+                .map(ITelegramCommand::getCommand)
+                .toList());
+    }
+
+    @Override
+    public boolean canToShow() {
+        return true;
     }
 }

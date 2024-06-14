@@ -1,17 +1,17 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.bot.UserState;
 import net.osandman.rzdmonitoring.dto.StationDto;
-import net.osandman.rzdmonitoring.service.RouteService;
+import net.osandman.rzdmonitoring.entity.UserState;
+import net.osandman.rzdmonitoring.repository.UserStateRepository;
 import net.osandman.rzdmonitoring.service.StationService;
-import net.osandman.rzdmonitoring.service.TicketService;
 import net.osandman.rzdmonitoring.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -25,33 +25,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION_CODE;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
-
 @RequiredArgsConstructor
-public abstract class TelegramCommand {
+public abstract class AbstractTelegramCommand {
 
-    protected final TicketService ticketService;
-    protected final RouteService routeService;
-    protected final StationService stationService;
-    protected final String command;
-    protected final Logger log = LoggerFactory.getLogger(getClass().getName());
+    @Autowired
+    protected StationService stationService;
+
+    @Autowired
+    protected UserStateRepository userStateRepository;
+
+    @Autowired
+    @Lazy // для избежания циклической зависимости реализаций команд с List<ITelegramCommand> commands
     protected TelegramLongPollingBot sender;
-    public final static Map<Long, UserState> userStates = new ConcurrentHashMap<>();
-    public final static Map<Long, List<String>> threads = new ConcurrentHashMap<>();
+    protected final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
+    public final static Map<Long, List<Thread>> threads = new ConcurrentHashMap<>();
     public final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
-
-    public String getCommandName() {
-        return command;
-    }
-
-    public void handleCommand(TelegramLongPollingBot sender, Update update) {
-        this.sender = sender;
-        handleCommand(update);
-    }
-
-    protected abstract void handleCommand(Update update);
 
     protected void sendMessage(long chatId, String message) {
         int maxLength = 4096;
@@ -77,7 +65,9 @@ public abstract class TelegramCommand {
             log.info("Сообщение '{}' отправлено пользователю, chatId={}",
                 sendMessage.getText(), sendMessage.getChatId());
         } catch (TelegramApiException e) {
-            log.error("Ошибка отправки сообщения", e);
+            log.error("Ошибка при отправке сообщения", e);
+        } catch (Exception e) {
+            log.error("Произошла ошибка", e);
         }
     }
 
@@ -129,24 +119,12 @@ public abstract class TelegramCommand {
                 .findAny().orElse(null);
     }
 
-    protected String getRoutes(UserState.CommandState commandState) {
-        return routeService.getPrettyStringRoutes(
-            commandState.getParams().get(FROM_STATION_CODE),
-            commandState.getParams().get(TO_STATION_CODE),
-            commandState.getParams().get(DATE));
-    }
-
     protected LocalDate parseDate(String dateStr) {
         try {
             return LocalDate.parse(dateStr,
-                DateTimeFormatter.ofPattern(TelegramCommand.DATE_FORMAT_PATTERN));
+                DateTimeFormatter.ofPattern(AbstractTelegramCommand.DATE_FORMAT_PATTERN));
         } catch (DateTimeParseException e) {
             return null;
         }
-    }
-
-    @Override
-    public String toString() {
-        return getCommandName();
     }
 }

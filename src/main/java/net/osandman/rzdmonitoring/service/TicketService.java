@@ -64,7 +64,7 @@ public class TicketService extends BaseService {
                 log.warn("Нет поездов соответствующих заданным на дату {}", date);
                 break;
                 // TODO убирать из списка тасок текущую
-                // TelegramCommand.threads.get()
+                // AbstractTelegramCommand.threads.get()
             }
             log.info("Ожидание до следующего запроса билетов {} минут", pause / 1000 / 60.0);
             sleep(pause);
