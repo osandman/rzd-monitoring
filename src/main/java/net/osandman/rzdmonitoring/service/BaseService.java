@@ -20,7 +20,7 @@ public abstract class BaseService {
     protected static final Map<String, String> BASE_PARAMS = new HashMap<>() {{
         put("dir", Direction.ONE_WAY.code);
         put("tfl", Train.ALL.value);
-        put("checkSeats", "1");
+        put("checkSeats", "0");
     }};
 
     public BaseService(String endPoint, RequestProcess requestProcess) {

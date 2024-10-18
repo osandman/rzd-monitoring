@@ -22,8 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public abstract class AbstractTelegramCommand {
@@ -38,7 +36,6 @@ public abstract class AbstractTelegramCommand {
     @Lazy // для избежания циклической зависимости реализаций команд с List<ITelegramCommand> commands
     protected TelegramLongPollingBot sender;
     protected final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
-    public final static Map<Long, List<Thread>> threads = new ConcurrentHashMap<>();
     public final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
 
     protected void sendMessage(long chatId, String message) {

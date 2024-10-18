@@ -7,9 +7,9 @@ import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Route;
 import net.osandman.rzdmonitoring.client.dto.route.Tp;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
-import net.osandman.rzdmonitoring.config.ScheduleConfig;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.Printer;
+import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class TicketService extends BaseService {
     private final RouteService routeService;
     private final Notifier notifier;
     private final ScheduleConfig scheduleConfig;
-    private final int pause;
+    private final long pause;
 
     public TicketService(RequestProcess requestProcess, Printer printer, RouteService routeService, Notifier notifier, ScheduleConfig scheduleConfig) {
         super(TICKETS_ENDPOINT, requestProcess);
@@ -50,7 +50,7 @@ public class TicketService extends BaseService {
             if (rootRoute == null) {
                 log.info("Ошибка получения маршрутов. "
                          + "Ожидание до следующего запроса билетов {} минут", pause / 1000 / 60.0);
-                sleep(pause);
+                sleep((int) pause);
                 continue;
             }
             if (trainNumbers.length == 0) {
@@ -67,8 +67,39 @@ public class TicketService extends BaseService {
                 // AbstractTelegramCommand.threads.get()
             }
             log.info("Ожидание до следующего запроса билетов {} минут", pause / 1000 / 60.0);
-            sleep(pause);
+            sleep((int) pause);
         }
+    }
+
+    public void process(String taskId, String date, String fromCode, String toCode, String... trainNumbers) {
+        BASE_PARAMS.put("dt0", date);
+        RootRoute rootRoute = routeService.findRootRoute(fromCode, toCode, date);
+        if (rootRoute == null) {
+            log.info("Ошибка получения маршрутов. "
+                     + "Ожидание до следующего запроса билетов {} минут", scheduleConfig.getInterval());
+            return;
+        }
+        if (trainNumbers.length == 0) {
+            if (rootRoute.getTp() != null) {
+                trainNumbers = rootRoute.getTp().stream()
+                    .flatMap(route -> route.list.stream().map(r -> r.number))
+                    .toArray(String[]::new);
+            } else {
+                log.error("Не найдены маршруты - Tp=null, taskId={}, rootRoute={}", taskId, rootRoute);
+                return;
+            }
+        }
+        log.info("Ищем билеты для поездов: {}, taskId={}", Arrays.asList(trainNumbers), taskId);
+//        notifier.sendMessage("▶ Начинаем поиск билетов для задачи '" + taskId + "'");
+        FindRouteResult findRouteResult = findTickets(rootRoute, date, trainNumbers);
+        log.info(findRouteResult.comment);
+        if (findRouteResult.findRoutes == 0) {
+            log.warn("Нет поездов соответствующих заданным на дату {}", date);
+            return;
+            // TODO убирать из списка тасок текущую
+            // AbstractTelegramCommand.threads.get()
+        }
+        log.info("Ожидание до следующего запроса билетов {} минут", scheduleConfig.getInterval());
     }
 
     public FindRouteResult findTickets(RootRoute rootRoute, String date, String... routeNumber) {
@@ -83,7 +114,6 @@ public class TicketService extends BaseService {
             return new FindRouteResult(0, comment);
         }
         int countMatchesRoutes = 0;
-        notifier.sendMessage("▶ Начинаем поиск билетов");
         for (Tp tp : rootRoute.tp) {
             if (tp.list.isEmpty()) {
                 log.info("Нет свободных мест в поезде: '{}'", tp);
@@ -107,13 +137,12 @@ public class TicketService extends BaseService {
                 }
             }
         }
-        notifier.sendMessage("Поиск билетов завершен, повтор через %.2f минут".formatted(pause / 1000 / 60.0));
+//        notifier.sendMessage("Поиск билетов завершен, повтор через %d минут".formatted(scheduleConfig.getInterval()));
         return new FindRouteResult(countMatchesRoutes, "Поиск билетов в заданных поездах завершен");
     }
 
-    public record FindRouteResult(int findRoutes, String comment) {
+    private record FindRouteResult(int findRoutes, String comment) {
     }
-
 
     private String findTrainWithTickets(String date, Route route) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

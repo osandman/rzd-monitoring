@@ -30,6 +30,10 @@ public class RzdMonitoringApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+//        scanTickets();
+    }
+
+    private void scanTickets() {
         Scanner scanner = new Scanner(System.in);
         String date;
         log.info("Введите дату отправления в формате '{}' или 'q' для выхода", DATE_FORMAT_PATTERN);

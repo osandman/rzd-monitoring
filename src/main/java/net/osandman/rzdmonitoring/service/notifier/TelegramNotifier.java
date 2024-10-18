@@ -37,8 +37,6 @@ public class TelegramNotifier implements Notifier {
             int responseCode = connection.getResponseCode();
             log.info("В телеграм чат отправлено уведомление: '{}'. Response Code: '{}'", params, responseCode);
 
-            // Здесь можно обработать ответ от сервера, если это необходимо
-
         } catch (IOException e) {
             log.error("Error from telegram notify: '{}'", e.getMessage());
         }

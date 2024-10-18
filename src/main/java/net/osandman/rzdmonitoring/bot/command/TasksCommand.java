@@ -1,14 +1,22 @@
 package net.osandman.rzdmonitoring.bot.command;
 
+import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.entity.UserState;
+import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 @Component
+@RequiredArgsConstructor
 public class TasksCommand extends AbstractTelegramCommand implements ITelegramCommand {
+
+    private final MultiTaskScheduler taskSchedulingConfig;
 
     @Override
     public String getCommand() {
@@ -31,30 +39,37 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
         switch (commandState.getStep()) {
             case 1 -> { // начало команды
                 StringBuilder tasks = new StringBuilder();
-                if (threads.get(chatId) != null) {
-                    for (Thread thread : threads.get(chatId)) {
-                        tasks.append("✳ ").append(thread.getName()).append(System.lineSeparator());
+                Map<String, ScheduledFuture<?>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
+                if (scheduledTasks != null && !scheduledTasks.isEmpty()) {
+                    for (Map.Entry<String, ScheduledFuture<?>> futureEntry : scheduledTasks.entrySet()) {
+                        tasks.append("✳ ").append(futureEntry.getKey()).append(System.lineSeparator());
                     }
+//                    for (Thread thread : scheduledTasks.get(chatId)) {
+//                        tasks.append("✳ ").append(thread.getName()).append(System.lineSeparator());
+//                    }
                     sendMessage(chatId, "Запущены задачи: \n" + tasks);
-                    sendButtons(chatId, "Удалить задачи", List.of(allTasks));
+                    List<String> taskNames = new ArrayList<>(scheduledTasks.keySet());
+                    taskNames.add(allTasks);
+                    sendButtons(chatId, "Удалить задачи", taskNames);
                 } else {
                     sendMessage(chatId, "⚠ Задачи отсутствуют");
                 }
                 commandState.incrementStep();
             }
             case 2 -> {
+                Map<String, ScheduledFuture<?>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
                 if (messageText.equalsIgnoreCase(allTasks)) {
-                    // TODO доработать шедулер и создать ThreadFactory, сейчас interrupt() с exception
-                    for (Thread thread : threads.get(chatId)) {
-                        try {
-                            thread.interrupt();
-                            thread.join();
-                        } catch (InterruptedException e) {
-                            log.error("Ошибка при удалении потока", e);
-                            sendMessage(chatId, "Ошибка при удалении задачи '%s'".formatted(thread.getName()));
+                    if (scheduledTasks != null && !scheduledTasks.isEmpty()) {
+                        for (Map.Entry<String, ScheduledFuture<?>> futureEntry : scheduledTasks.entrySet()) {
+                            taskSchedulingConfig.removeTask(futureEntry.getKey());
                         }
+                    } else {
+                        sendMessage(chatId, "⚠ Задачи отсутствуют");
                     }
                     sendMessage(chatId, "Все задачи удалены");
+                } else {
+                    taskSchedulingConfig.removeTask(messageText);
+                    sendMessage(chatId, "Задача удалена");
                 }
                 userStateRepository.remove(chatId);
             }

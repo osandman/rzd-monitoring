@@ -3,14 +3,12 @@ package net.osandman.rzdmonitoring.bot.command;
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
+import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
+import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.service.TicketService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executors;
 
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION;
@@ -22,7 +20,8 @@ import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
 @RequiredArgsConstructor
 public class FindTicketsCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
-    private final TicketService ticketService;
+    private final MultiTaskScheduler multiTaskScheduler;
+    private final ScheduleConfig scheduleConfig;
 
     @Override
     public String getCommand() {
@@ -85,13 +84,12 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                     return;
                 }
                 commandState.addKey(DATE, messageText);
-                sendMessage(
-                    chatId,
-                    runScheduler(
-                        chatId,
-                        commandState
-                    )
-                );
+                String taskId = createTask(chatId, commandState);
+                String messageTask = """
+                    Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
+                    период поиска каждые %s минуты
+                    """.formatted(taskId, scheduleConfig.getInterval());
+                sendMessage(chatId, messageTask);
                 userStateRepository.remove(chatId);
             }
         }
@@ -102,32 +100,18 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         return true;
     }
 
-    private String runScheduler(Long chatId, UserState.CommandState commandState, String... trainNumbers) {
+    private String createTask(Long chatId, UserState.CommandState commandState, String... trainNumbers) {
         String date = commandState.getParams().get(DATE);
         String from = commandState.getParams().get(FROM_STATION);
         String to = commandState.getParams().get(TO_STATION);
-
-        Executors.newSingleThreadExecutor().execute(
-            () -> {
-                String threadName = "task-" + date + "-from-" + from + "-to-" + to;
-                Thread.currentThread().setName(threadName);
-                if (threads.get(chatId) == null) {
-                    threads.put(chatId, new CopyOnWriteArrayList<>() {{
-                        add(Thread.currentThread());
-                    }});
-                } else {
-                    List<Thread> threadList = threads.get(chatId);
-                    threadList.add(Thread.currentThread());
-                }
-                ticketService.autoLoop(
-                    date,
-                    commandState.getParams().get(FROM_STATION_CODE),
-                    commandState.getParams().get(TO_STATION_CODE),
-                    trainNumbers
-                );
-            }
+        String taskId = "task-" + date + "-from-" + from + "-to-" + to + "-chatId-" + chatId;
+        multiTaskScheduler.addTask(
+            taskId,
+            date,
+            commandState.getParams().get(FROM_STATION_CODE),
+            commandState.getParams().get(TO_STATION_CODE),
+            trainNumbers
         );
-        return ("Запущен мониторинг билетов на нижние места на дату %s, "
-                + "при нахождении билетов вы получите уведомление в чат").formatted(date);
+        return taskId;
     }
 }

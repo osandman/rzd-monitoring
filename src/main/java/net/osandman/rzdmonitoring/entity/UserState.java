@@ -1,11 +1,13 @@
 package net.osandman.rzdmonitoring.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import net.osandman.rzdmonitoring.bot.command.ParamEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 @Data
 public class UserState {
     // String - команда ("/xxx")
