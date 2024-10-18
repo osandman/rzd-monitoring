@@ -1,7 +1,10 @@
 package net.osandman.rzdmonitoring.client.dto.train;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class RootTrain {
     public String result;
     public List<Lst> lst;
