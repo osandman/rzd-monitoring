@@ -12,7 +12,7 @@
 
     <groupId>net.osandman</groupId>
     <artifactId>rzd-monitoring</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>rzd-monitoring</name>
     <description>rzd-monitoring telegram bot</description>
     <url>@ponov_rzd_bot</url>
