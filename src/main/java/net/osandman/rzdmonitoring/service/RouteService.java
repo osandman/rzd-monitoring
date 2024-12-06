@@ -1,7 +1,7 @@
 package net.osandman.rzdmonitoring.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.osandman.rzdmonitoring.client.RequestProcess;
+import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.RouteMapper;
@@ -17,8 +17,8 @@ public class RouteService extends BaseService {
     public static final String ROUTE_ENDPOINT = "";
     private final RouteMapper routeMapper;
 
-    public RouteService(RequestProcess requestProcess, RouteMapper routeMapper) {
-        super(ROUTE_ENDPOINT, requestProcess);
+    public RouteService(RestConnector restConnector, RouteMapper routeMapper) {
+        super(ROUTE_ENDPOINT, restConnector);
         this.routeMapper = routeMapper;
     }
 

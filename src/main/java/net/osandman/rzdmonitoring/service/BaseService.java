@@ -1,7 +1,7 @@
 package net.osandman.rzdmonitoring.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import net.osandman.rzdmonitoring.client.RequestProcess;
+import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.FirstResponse;
 import net.osandman.rzdmonitoring.entity.Direction;
 import net.osandman.rzdmonitoring.util.JsonParser;
@@ -15,7 +15,7 @@ import static net.osandman.rzdmonitoring.util.Utils.sleep;
 
 public abstract class BaseService {
     private final String endPoint; //"/timetable/public/ru";
-    protected final RequestProcess requestProcess;
+    protected final RestConnector restConnector;
 
     protected static final Map<String, String> BASE_PARAMS = new HashMap<>() {{
         put("dir", Direction.ONE_WAY.code);
@@ -23,9 +23,9 @@ public abstract class BaseService {
         put("checkSeats", "0");
     }};
 
-    public BaseService(String endPoint, RequestProcess requestProcess) {
+    public BaseService(String endPoint, RestConnector restConnector) {
         this.endPoint = endPoint;
-        this.requestProcess = requestProcess;
+        this.restConnector = restConnector;
     }
 
     protected String getResponse(Map<String, String> specialParams) {
@@ -34,11 +34,11 @@ public abstract class BaseService {
 
         sleep(500);
 
-        String response = requestProcess.callGetRequest(endPoint, params);
+        String response = restConnector.callGetRequest(endPoint, params);
         JsonNode jsonNode = JsonParser.parse(response);
         // в случае если запрос сразу возвращает конечный результат, судя по тестам это маршруты с билетам без мест
         if (jsonNode.get("result").asText().equalsIgnoreCase("OK")) {
-            return requestProcess.callGetRequest(endPoint, params);
+            return restConnector.callGetRequest(endPoint, params);
         }
         FirstResponse firstResponse = JsonParser.parse(response, FirstResponse.class);
 
@@ -46,6 +46,6 @@ public abstract class BaseService {
         params.clear();
         params.add("layer_id", specialParams.get("layer_id"));
         params.add("rid", String.valueOf(firstResponse.RID));
-        return requestProcess.callGetRequest(endPoint, params);
+        return restConnector.callGetRequest(endPoint, params);
     }
 }

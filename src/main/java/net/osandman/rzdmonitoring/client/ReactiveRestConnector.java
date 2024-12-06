@@ -8,13 +8,14 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class RequestProcess {
+public class ReactiveRestConnector implements RestConnector {
     private final WebClient webClient;
 
-    public RequestProcess(WebClient webClient) {
+    public ReactiveRestConnector(WebClient webClient) {
         this.webClient = webClient;
     }
 
+    @Override
     public <T> T callGetRequest(String url, MultiValueMap<String, String> params, Class<T> clazz) {
         return webClient.get()
             .uri(uriBuilder -> uriBuilder
@@ -34,6 +35,7 @@ public class RequestProcess {
             .block();
     }
 
+    @Override
     public String callGetRequest(String url, MultiValueMap<String, String> params) {
         return webClient.get()
             .uri(uriBuilder -> uriBuilder

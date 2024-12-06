@@ -1,7 +1,7 @@
 package net.osandman.rzdmonitoring.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.osandman.rzdmonitoring.client.RequestProcess;
+import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.FirstResponse;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Route;
@@ -33,8 +33,8 @@ public class TicketService extends BaseService {
     private final ScheduleConfig scheduleConfig;
     private final long pause;
 
-    public TicketService(RequestProcess requestProcess, Printer printer, RouteService routeService, Notifier notifier, ScheduleConfig scheduleConfig) {
-        super(TICKETS_ENDPOINT, requestProcess);
+    public TicketService(RestConnector restConnector, Printer printer, RouteService routeService, Notifier notifier, ScheduleConfig scheduleConfig) {
+        super(TICKETS_ENDPOINT, restConnector);
         this.printer = printer;
         this.routeService = routeService;
         this.notifier = notifier;
@@ -150,13 +150,13 @@ public class TicketService extends BaseService {
         sleep(500);
         String result = null;
         try {
-            FirstResponse firstResponse = requestProcess.callGetRequest(TICKETS_ENDPOINT, params, FirstResponse.class);
+            FirstResponse firstResponse = restConnector.callGetRequest(TICKETS_ENDPOINT, params, FirstResponse.class);
             log.info("Ответ на запрос RID: '{}'", firstResponse);
             sleep(1000);
             params.clear();
             params.add("layer_id", LayerId.DETAIL_ID.code);
             params.add("rid", String.valueOf(firstResponse.RID));
-            result = requestProcess.callGetRequest(TICKETS_ENDPOINT, params);
+            result = restConnector.callGetRequest(TICKETS_ENDPOINT, params);
         } catch (Exception e) {
             log.error("Ошибка при получении билетов маршрута, параметры: {}", params, e);
         }
