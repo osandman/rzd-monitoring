@@ -1,6 +1,5 @@
 package net.osandman.rzdmonitoring.service;
 
-import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.station.Station;
 import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.util.JsonParser;
@@ -16,8 +15,8 @@ import java.util.regex.Pattern;
 public class StationService extends BaseService {
     public static final String STATION_ENDPOINT = "/suggester";
 
-    public StationService(RestConnector restConnector) {
-        super(STATION_ENDPOINT, restConnector);
+    public StationService() {
+        super(STATION_ENDPOINT);
     }
 
     @NonNull

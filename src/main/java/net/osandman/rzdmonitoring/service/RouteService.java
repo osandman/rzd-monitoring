@@ -17,8 +17,8 @@ public class RouteService extends BaseService {
     public static final String ROUTE_ENDPOINT = "";
     private final RouteMapper routeMapper;
 
-    public RouteService(RestConnector restConnector, RouteMapper routeMapper) {
-        super(ROUTE_ENDPOINT, restConnector);
+    public RouteService(RouteMapper routeMapper) {
+        super(ROUTE_ENDPOINT);
         this.routeMapper = routeMapper;
     }
 

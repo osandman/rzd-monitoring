@@ -1,10 +1,18 @@
 package net.osandman.rzdmonitoring.client.dto;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class FirstResponse {
-    public String result;
-    public long RID;
-    public String timestamp;
+    private String result;
+    @JsonProperty("RID")
+    private long RID;
+    private String timestamp;
 }

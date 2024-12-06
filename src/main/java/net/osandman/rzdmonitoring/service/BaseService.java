@@ -5,6 +5,8 @@ import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.FirstResponse;
 import net.osandman.rzdmonitoring.entity.Direction;
 import net.osandman.rzdmonitoring.util.JsonParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -15,7 +17,10 @@ import static net.osandman.rzdmonitoring.util.Utils.sleep;
 
 public abstract class BaseService {
     private final String endPoint; //"/timetable/public/ru";
-    protected final RestConnector restConnector;
+
+    @Autowired
+    @Qualifier("restTemplateConnector")
+    protected RestConnector restConnector;
 
     protected static final Map<String, String> BASE_PARAMS = new HashMap<>() {{
         put("dir", Direction.ONE_WAY.code);
@@ -23,9 +28,8 @@ public abstract class BaseService {
         put("checkSeats", "0");
     }};
 
-    public BaseService(String endPoint, RestConnector restConnector) {
+    public BaseService(String endPoint) {
         this.endPoint = endPoint;
-        this.restConnector = restConnector;
     }
 
     protected String getResponse(Map<String, String> specialParams) {
@@ -45,7 +49,7 @@ public abstract class BaseService {
         sleep(1000);
         params.clear();
         params.add("layer_id", specialParams.get("layer_id"));
-        params.add("rid", String.valueOf(firstResponse.RID));
+        params.add("rid", String.valueOf(firstResponse.getRID()));
         return restConnector.callGetRequest(endPoint, params);
     }
 }
