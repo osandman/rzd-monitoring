@@ -1,23 +1,27 @@
 package net.osandman.rzdmonitoring.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.osandman.rzdmonitoring.client.RequestProcess;
 import net.osandman.rzdmonitoring.client.dto.FirstResponse;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Route;
 import net.osandman.rzdmonitoring.client.dto.route.Tp;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
+import net.osandman.rzdmonitoring.dto.TicketsResult;
+import net.osandman.rzdmonitoring.dto.TrainDto;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.Printer;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
+import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static net.osandman.rzdmonitoring.util.Utils.sleep;
@@ -33,8 +37,8 @@ public class TicketService extends BaseService {
     private final ScheduleConfig scheduleConfig;
     private final long pause;
 
-    public TicketService(RequestProcess requestProcess, Printer printer, RouteService routeService, Notifier notifier, ScheduleConfig scheduleConfig) {
-        super(TICKETS_ENDPOINT, requestProcess);
+    public TicketService(Printer printer, RouteService routeService, Notifier notifier, ScheduleConfig scheduleConfig) {
+        super(TICKETS_ENDPOINT);
         this.printer = printer;
         this.routeService = routeService;
         this.notifier = notifier;
@@ -42,78 +46,53 @@ public class TicketService extends BaseService {
         pause = scheduleConfig.getInterval();
     }
 
-    // TODO переделать запуск метода по расписанию
-    public void autoLoop(String date, String fromCode, String toCode, String... trainNumbers) {
-        while (true) {
-            BASE_PARAMS.put("dt0", date);
-            RootRoute rootRoute = routeService.findRootRoute(fromCode, toCode, date);
-            if (rootRoute == null) {
-                log.info("Ошибка получения маршрутов. "
-                         + "Ожидание до следующего запроса билетов {} минут", pause / 1000 / 60.0);
-                sleep((int) pause);
-                continue;
-            }
-            if (trainNumbers.length == 0) {
-                trainNumbers = rootRoute.getTp()
-                    .stream().flatMap(route -> route.list.stream().map(r -> r.number)).toArray(String[]::new);
-            }
-            log.info("Ищем билеты для поездов: {}", Arrays.asList(trainNumbers));
-            FindRouteResult findRouteResult = findTickets(rootRoute, date, trainNumbers);
-            log.info(findRouteResult.comment);
-            if (findRouteResult.findRoutes == 0) {
-                log.warn("Нет поездов соответствующих заданным на дату {}", date);
-                break;
-                // TODO убирать из списка тасок текущую
-                // AbstractTelegramCommand.threads.get()
-            }
-            log.info("Ожидание до следующего запроса билетов {} минут", pause / 1000 / 60.0);
-            sleep((int) pause);
-        }
-    }
-
-    public void process(String taskId, String date, String fromCode, String toCode, String... trainNumbers) {
-        BASE_PARAMS.put("dt0", date);
-        RootRoute rootRoute = routeService.findRootRoute(fromCode, toCode, date);
+    public TicketsResult process(TicketsTask ticketsTask) {
+        BASE_PARAMS.put("dt0", ticketsTask.date());
+        RootRoute rootRoute = routeService
+            .findRootRoute(ticketsTask.fromCode(), ticketsTask.toCode(), ticketsTask.date());
         if (rootRoute == null) {
             log.info("Ошибка получения маршрутов. "
                      + "Ожидание до следующего запроса билетов {} минут", scheduleConfig.getInterval());
-            return;
+            return null;
         }
-        if (trainNumbers.length == 0) {
+        List<String> routeNumbers = Arrays.asList(ticketsTask.routeNumbers());
+        if (routeNumbers.isEmpty()) {
             if (rootRoute.getTp() != null) {
-                trainNumbers = rootRoute.getTp().stream()
+                routeNumbers = rootRoute.getTp().stream()
                     .flatMap(route -> route.list.stream().map(r -> r.number))
-                    .toArray(String[]::new);
+                    .toList();
             } else {
-                log.error("Не найдены маршруты - Tp=null, taskId={}, rootRoute={}", taskId, rootRoute);
-                return;
+                log.error("Не найдены маршруты - Tp=null, taskId={}, rootRoute={}", ticketsTask.taskId(), rootRoute);
+                return null;
             }
         }
-        log.info("Ищем билеты для поездов: {}, taskId={}", Arrays.asList(trainNumbers), taskId);
+        log.info("Ищем билеты для поездов: {}, taskId={}", Arrays.asList(routeNumbers), ticketsTask.taskId());
 //        notifier.sendMessage("▶ Начинаем поиск билетов для задачи '" + taskId + "'");
-        FindRouteResult findRouteResult = findTickets(rootRoute, date, trainNumbers);
-        log.info(findRouteResult.comment);
-        if (findRouteResult.findRoutes == 0) {
-            log.warn("Нет поездов соответствующих заданным на дату {}", date);
-            return;
+        TicketsResult ticketsResult = findTickets(rootRoute, ticketsTask.date(), routeNumbers);
+        log.info(ticketsResult.comment());
+        if (ticketsResult.findRoutes() == 0) {
+            log.warn("Нет поездов соответствующих заданным на дату {}", ticketsTask.date());
+            return null;
             // TODO убирать из списка тасок текущую
             // AbstractTelegramCommand.threads.get()
         }
         log.info("Ожидание до следующего запроса билетов {} минут", scheduleConfig.getInterval());
+        return ticketsResult;
     }
 
-    public FindRouteResult findTickets(RootRoute rootRoute, String date, String... routeNumber) {
+    private TicketsResult findTickets(RootRoute rootRoute, String date, List<String> routeNumbers) {
         if (rootRoute == null) {
             String rootRouteIsNull = "rootRoute is null";
             log.error(rootRouteIsNull);
-            return new FindRouteResult(0, rootRouteIsNull);
+            return new TicketsResult(0, rootRouteIsNull, List.of());
         }
         if (rootRoute.tp == null) {
             String comment = "rootRoute.tp is null, rootRoute={}";
             log.warn(comment, rootRoute);
-            return new FindRouteResult(0, comment);
+            return new TicketsResult(0, comment, List.of());
         }
         int countMatchesRoutes = 0;
+        List<TrainDto> trains = new ArrayList<>();
         for (Tp tp : rootRoute.tp) {
             if (tp.list.isEmpty()) {
                 log.info("Нет свободных мест в поезде: '{}'", tp);
@@ -122,7 +101,7 @@ public class TicketService extends BaseService {
             for (Route route : tp.list) {
                 // TODO сделать проверку что ни один из найденных номеров поездов не соответствует заданным и
                 // возврат значения
-                if (routeNumber.length != 0 && Arrays.asList(routeNumber).contains(route.number)) {
+                if (!routeNumbers.isEmpty() && routeNumbers.contains(route.number)) {
                     log.info("Ищем свободные места для поезда: {}", route.number);
                     countMatchesRoutes++;
                     RootTrain rootTrain = JsonParser.parse(
@@ -130,18 +109,20 @@ public class TicketService extends BaseService {
                         RootTrain.class
                     );
                     if (rootTrain == null) {
-                        log.error("Ошибка при разборе ответа от сервера, поезд: {}", route.number);
+                        String error = "Ошибка при разборе ответа от сервера, поезд: %s".formatted(route.number);
+                        log.error(error);
+                        trains.add(TrainDto.builder()
+                            .trainNumber(route.number)
+                            .error(error)
+                            .build());
                         continue;
                     }
-                    printer.ticketsMapping(rootTrain);
+                    trains.add(printer.ticketsMapping(rootTrain));
                 }
             }
         }
 //        notifier.sendMessage("Поиск билетов завершен, повтор через %d минут".formatted(scheduleConfig.getInterval()));
-        return new FindRouteResult(countMatchesRoutes, "Поиск билетов в заданных поездах завершен");
-    }
-
-    private record FindRouteResult(int findRoutes, String comment) {
+        return new TicketsResult(countMatchesRoutes, "Поиск билетов в заданных поездах завершен", trains);
     }
 
     private String findTrainWithTickets(String date, Route route) {
@@ -150,15 +131,16 @@ public class TicketService extends BaseService {
         sleep(500);
         String result = null;
         try {
-            FirstResponse firstResponse = requestProcess.callGetRequest(TICKETS_ENDPOINT, params, FirstResponse.class);
+            String response = restConnector.callGetRequest(TICKETS_ENDPOINT, params);
+            FirstResponse firstResponse = JsonParser.parse(response, FirstResponse.class);
             log.info("Ответ на запрос RID: '{}'", firstResponse);
             sleep(1000);
             params.clear();
             params.add("layer_id", LayerId.DETAIL_ID.code);
-            params.add("rid", String.valueOf(firstResponse.RID));
-            result = requestProcess.callGetRequest(TICKETS_ENDPOINT, params);
+            params.add("rid", String.valueOf(firstResponse.getRID()));
+            result = restConnector.callGetRequest(TICKETS_ENDPOINT, params);
         } catch (Exception e) {
-            log.error("Ошибка при получении билетов маршрута, параметры: {}", params, e);
+            log.error("Ошибка при получении билетов маршрута, параметры: {}, message='{}'", params, e.getMessage());
         }
         return result;
     }

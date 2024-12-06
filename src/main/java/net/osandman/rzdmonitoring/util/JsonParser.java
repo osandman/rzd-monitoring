@@ -11,7 +11,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class JsonParser {
         T result = null;
         try {
             result = objectMapper.readValue(json, clazz);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Invalid read value from JSON, {}", e.getMessage());
         }
         return result;
@@ -40,7 +39,7 @@ public class JsonParser {
         T result = null;
         try {
             result = objectMapper.readValue(jsonString, clazz);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error("Invalid read value from JSON, {}", e.getMessage());
         }
         return result;
@@ -51,7 +50,7 @@ public class JsonParser {
         List<T> resultList = new ArrayList<>();
         try (MappingIterator<T> mappingIterator = reader.readValues(jsonString)) {
             resultList = mappingIterator.readAll();
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (Exception e) {
             log.error("Invalid read value from JSON, {}", e.getMessage());
         }
         return resultList;

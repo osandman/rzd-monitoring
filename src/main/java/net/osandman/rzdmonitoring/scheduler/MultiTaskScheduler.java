@@ -40,14 +40,14 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
 
-    public void addTask(String taskId, String date, String fromCode, String toCode, String... trainNumbers) {
-        removeTask(taskId);  // Удаляем задачу, если она уже существует
-        Runnable task = () -> ticketService.process(taskId, date, fromCode, toCode, trainNumbers);
+    public void addTask(TicketsTask ticketsTask) {
+        removeTask(ticketsTask.taskId());  // Удаляем задачу, если она уже существует
+        Runnable task = () -> ticketService.process(ticketsTask);
         TaskScheduler scheduler = taskRegistrar.getScheduler();
         if (scheduler != null) {
             ScheduledFuture<?> scheduledTask = scheduler
                 .scheduleWithFixedDelay(task, Duration.ofMinutes(scheduleConfig.getInterval()));
-            scheduledTasks.put(taskId, scheduledTask);
+            scheduledTasks.put(ticketsTask.taskId(), scheduledTask);
         }
     }
 
@@ -56,9 +56,5 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
         if (scheduledTask != null) {
             scheduledTask.cancel(false);
         }
-    }
-
-    public void updateTaskInterval(String taskId, String date, String fromCode, String toCode, String... trainNumbers) {
-        addTask(taskId, date, fromCode, toCode, trainNumbers);
     }
 }

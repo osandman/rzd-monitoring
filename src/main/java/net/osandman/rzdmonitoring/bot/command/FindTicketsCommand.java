@@ -5,7 +5,7 @@ import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
-import net.osandman.rzdmonitoring.service.TicketService;
+import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -106,12 +106,13 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         String to = commandState.getParams().get(TO_STATION);
         String taskId = "task-" + date + "-from-" + from + "-to-" + to + "-chatId-" + chatId;
         multiTaskScheduler.addTask(
-            taskId,
-            date,
-            commandState.getParams().get(FROM_STATION_CODE),
-            commandState.getParams().get(TO_STATION_CODE),
-            trainNumbers
-        );
+            TicketsTask.builder()
+                .taskId(taskId)
+                .date(date)
+                .fromCode(commandState.getParams().get(FROM_STATION_CODE))
+                .toCode(commandState.getParams().get(TO_STATION_CODE))
+                .routeNumbers(trainNumbers)
+                .build());
         return taskId;
     }
 }

@@ -36,7 +36,7 @@ public abstract class AbstractTelegramCommand {
     @Lazy // для избежания циклической зависимости реализаций команд с List<ITelegramCommand> commands
     protected TelegramLongPollingBot sender;
     protected final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
-    public final static String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
+    public static final String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
 
     protected void sendMessage(long chatId, String message) {
         int maxLength = 4096;

@@ -45,7 +45,7 @@ public class RzdMonitoringApplication implements ApplicationRunner {
                     StationEnum to = StationEnum.MOSCOW_ALL;
                     log.info("Маршрут {} - {}", from, to);
 //        ticketService.autoLoop(date, "091И", "001Э", "011Е", "077Ы", "009Н");
-                    ticketService.autoLoop(date, from.code(), to.code(), "011Е", "077Ы", "009Н");
+//                    ticketService.autoLoop(date, from.code(), to.code(), "011Е", "077Ы", "009Н");
 //        ticketService.autoLoop(date);
                 }
             } catch (Exception e) {
