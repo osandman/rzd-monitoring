@@ -1,0 +1,1 @@
+CREATE DATABASE rzd_monitoring_db;
