@@ -24,12 +24,13 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
     private final ScheduleConfig scheduleConfig;
 
     @Override
-    public String getCommand() {
-        return CommandEnum.TICKETS.getCommand();
+    public Command getCommand() {
+        return Command.TICKETS;
     }
 
     @Override
     public void handleCommand(Update update) {
+        // TODO рефакторить - использовать общий метод из абстрактного класса
         long chatId = update.getMessage().getChatId();
         Message message = update.getMessage();
         String messageText = message.getText();
@@ -38,7 +39,8 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
 
         UserState userState = userStateRepository.getOrCreate(chatId);
-        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand()); // устанавливает команду если ее не было
+        // устанавливает команду если ее не было
+        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand());
 
         switch (commandState.getStep()) {
             case 1 -> { // начало команды
@@ -46,7 +48,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 commandState.incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
-                findStations(messageText, commandState, 2, chatId);
+                findStationsAndIncrementStep(messageText, commandState, 2, chatId);
             }
             case 3 -> { // выбор станции отправления из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
@@ -62,7 +64,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 commandState.incrementStep();
             }
             case 4 -> { // ввод вручную станции назначения
-                findStations(messageText, commandState, 4, chatId);
+                findStationsAndIncrementStep(messageText, commandState, 4, chatId);
             }
             case 5 -> { // выбор станции назначения из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
@@ -90,7 +92,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                     период поиска каждые %s минуты
                     """.formatted(taskId, scheduleConfig.getInterval());
                 sendMessage(chatId, messageTask);
-                userStateRepository.remove(chatId);
+                userStateRepository.get(chatId).deleteCommand(getCommand());
             }
         }
     }

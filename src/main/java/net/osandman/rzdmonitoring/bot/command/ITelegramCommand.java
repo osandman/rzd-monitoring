@@ -6,7 +6,7 @@ public interface ITelegramCommand {
 
     void handleCommand(Update update);
 
-    String getCommand();
+    Command getCommand();
 
     boolean canToShow();
 }

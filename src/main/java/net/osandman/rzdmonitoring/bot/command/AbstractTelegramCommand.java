@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -33,10 +35,28 @@ public abstract class AbstractTelegramCommand {
     protected UserStateRepository userStateRepository;
 
     @Autowired
-    @Lazy // для избежания циклической зависимости реализаций команд с List<ITelegramCommand> commands
+    @Lazy // для избежания циклической зависимости реализаций команд с Set<ITelegramCommand> commands
     protected TelegramLongPollingBot sender;
+
     protected final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
     public static final String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
+
+    protected CommandContext buildCommandContext(Update update, Command command) {
+        Message message = update.getMessage();
+        long chatId = message.getChatId();
+        String messageText = message.getText();
+        String userName = message.getChat().getFirstName() + " " + message.getChat().getLastName();
+
+        log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
+
+        UserState userState = userStateRepository.getOrCreate(chatId);
+        // устанавливает команду если ее не было
+        UserState.CommandState commandState = userState.getOrCreateCommandState(command);
+        return new CommandContext(chatId, messageText, commandState);
+    }
+
+    protected record CommandContext(long chatId, String messageText, UserState.CommandState state) {
+    }
 
     protected void sendMessage(long chatId, String message) {
         int maxLength = 4096;
@@ -62,9 +82,9 @@ public abstract class AbstractTelegramCommand {
             log.info("Сообщение '{}' отправлено пользователю, chatId={}",
                 sendMessage.getText(), sendMessage.getChatId());
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке сообщения", e);
+            log.error("Ошибка при отправке сообщения '{}'", e.getMessage());
         } catch (Exception e) {
-            log.error("Произошла ошибка", e);
+            log.error("Произошла непредвиденная ошибка '{}'", e.getMessage());
         }
     }
 
@@ -98,14 +118,16 @@ public abstract class AbstractTelegramCommand {
     }
 
 
-    protected void findStations(String messageText, UserState.CommandState commandState, int step, long chatId) {
-        List<StationDto> fromStationDtos = stationService.findStations(messageText);
-        if (fromStationDtos.isEmpty()) {
+    protected void findStationsAndIncrementStep(
+        String messageText, UserState.CommandState commandState, int step, long chatId
+    ) {
+        List<StationDto> stationDtos = stationService.findStations(messageText);
+        if (stationDtos.isEmpty()) {
             commandState.setStep(step);
             sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
             return;
         }
-        sendButtons(chatId, "Выберите станцию:", fromStationDtos);
+        sendButtons(chatId, "Выберите станцию:", stationDtos);
         commandState.incrementStep();
     }
 
@@ -119,7 +141,7 @@ public abstract class AbstractTelegramCommand {
     protected LocalDate parseDate(String dateStr) {
         try {
             return LocalDate.parse(dateStr,
-                DateTimeFormatter.ofPattern(AbstractTelegramCommand.DATE_FORMAT_PATTERN));
+                DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
         } catch (DateTimeParseException e) {
             return null;
         }
