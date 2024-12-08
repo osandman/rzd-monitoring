@@ -67,7 +67,8 @@ public class TicketService extends BaseService {
             }
         }
         log.info("Ищем билеты для поездов: {}, taskId={}", Arrays.asList(routeNumbers), ticketsTask.taskId());
-//        notifier.sendMessage("▶ Начинаем поиск билетов для задачи '" + taskId + "'");
+        notifier.sendMessage("▶ Начинаем поиск билетов для задачи '" + ticketsTask.taskId() + "'");
+
         TicketsResult ticketsResult = findTickets(rootRoute, ticketsTask.date(), routeNumbers);
         log.info(ticketsResult.comment());
         if (ticketsResult.findRoutes() == 0) {
