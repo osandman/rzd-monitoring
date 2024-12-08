@@ -5,14 +5,16 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.List;
+import java.util.Set;
+
+import static org.springframework.util.StringUtils.hasText;
 
 @Component
 @RequiredArgsConstructor
 public class StartCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
-    private final List<ITelegramCommand> commands;
-    private final static String MESSAGE = """
+    private final Set<ITelegramCommand> telegramCommands;
+    private final static String START_MESSAGE = """
         Привет!
         Добро пожаловать, %s!
         Это бот для получения информации о маршрутах и билетах РЖД.
@@ -21,26 +23,33 @@ public class StartCommand extends AbstractTelegramCommand implements ITelegramCo
         """;
 
     @Override
-    public String getCommand() {
-        return CommandEnum.START.getCommand();
+    public Command getCommand() {
+        return Command.START;
     }
 
     @Override
     public void handleCommand(Update update) {
         long chatId = update.getMessage().getChatId();
         Chat chat = update.getMessage().getChat();
-        String fullName = chat.getFirstName() + " " + chat.getLastName();
+        String firstName = hasText(chat.getFirstName()) ? chat.getFirstName() : "";
+        String lastName = hasText(chat.getLastName()) ? chat.getLastName() : "";
+        String fullName = hasText(firstName + lastName)
+            ? String.join(" ", firstName, lastName)
+            : chat.getUserName();
         String allCommands = String.join(System.lineSeparator(),
-            commands.stream()
+            telegramCommands.stream()
                 .filter(ITelegramCommand::canToShow)
-                .map(ITelegramCommand::getCommand).toList()
+                .map(telegramCommand ->
+                    telegramCommand.getCommand().getCommandStr() + " - " + telegramCommand.getCommand().getDesc()
+                )
+                .toList()
         );
-        String message = MESSAGE.formatted(fullName, allCommands);
+        String message = START_MESSAGE.formatted(fullName, allCommands);
         sendMessage(chatId, message);
         sendButtons(chatId, "Выберите опцию:",
-            commands.stream()
+            telegramCommands.stream()
                 .filter(ITelegramCommand::canToShow)
-                .map(ITelegramCommand::getCommand)
+                .map(telegramCommand -> telegramCommand.getCommand().getCommandStr())
                 .toList());
     }
 

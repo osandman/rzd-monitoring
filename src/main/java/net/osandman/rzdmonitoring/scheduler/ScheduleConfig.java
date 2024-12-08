@@ -2,20 +2,15 @@ package net.osandman.rzdmonitoring.scheduler;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Параметры шедулера.
  */
-@Configuration
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "rzd.scheduler")
 public class ScheduleConfig {
-
-    @Value("${scheduler.state}")
     private State state;
-
-    @Value("${scheduler.interval}")
     private long interval;
 }

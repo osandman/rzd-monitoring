@@ -25,7 +25,7 @@ public class StationService extends BaseService {
             .filter(station -> station.getName().toLowerCase().contains(namePart.toLowerCase())
 //                        && station.getS() >= 4
             )
-            .map(station -> new StationDto(station.getName(), station.getCode()))
+            .map(station -> new StationDto(station.getName(), station.getCode(), station.getS(), station.getL()))
             .toList();
     }
 

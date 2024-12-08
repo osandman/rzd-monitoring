@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class UserStateRepositoryInMem implements UserStateRepository {
 
-    private final static Map<Long, UserState> userStates = new ConcurrentHashMap<>();
+    private final Map<Long, UserState> userStates = new ConcurrentHashMap<>();
 
     @Override
     public UserState get(long chatId) {

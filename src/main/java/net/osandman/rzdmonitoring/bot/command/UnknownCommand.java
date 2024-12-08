@@ -6,17 +6,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 public class UnknownCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
-    public static final String UNKNOWN_COMMAND = "unknown";
-
     @Override
     public void handleCommand(Update update) {
         long chatId = update.getMessage().getChatId();
-        sendMessage(chatId, "Команда не найдена");
+        sendMessage(chatId, getCommand().getDesc());
     }
 
     @Override
-    public String getCommand() {
-        return UNKNOWN_COMMAND;
+    public Command getCommand() {
+        return Command.UNKNOWN;
     }
 
     @Override

@@ -1,10 +1,8 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
@@ -19,24 +17,15 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
     private final MultiTaskScheduler taskSchedulingConfig;
 
     @Override
-    public String getCommand() {
-        return CommandEnum.TASKS.getCommand();
+    public Command getCommand() {
+        return Command.TASKS;
     }
 
     @Override
     public void handleCommand(Update update) {
-        Message message = update.getMessage();
-        long chatId = message.getChatId();
-        String messageText = message.getText();
-        String userName = message.getChat().getFirstName() + " " + message.getChat().getLastName();
-
-        log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
-
-        UserState userState = userStateRepository.getOrCreate(chatId);
-        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand()); // устанавливает команду если ее не было
-
+        CommandContext command = buildCommandContext(update, getCommand());
         String allTasks = "Все";
-        switch (commandState.getStep()) {
+        switch (command.state().getStep()) {
             case 1 -> { // начало команды
                 StringBuilder tasks = new StringBuilder();
                 Map<String, ScheduledFuture<?>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
@@ -44,34 +33,31 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                     for (Map.Entry<String, ScheduledFuture<?>> futureEntry : scheduledTasks.entrySet()) {
                         tasks.append("✳ ").append(futureEntry.getKey()).append(System.lineSeparator());
                     }
-//                    for (Thread thread : scheduledTasks.get(chatId)) {
-//                        tasks.append("✳ ").append(thread.getName()).append(System.lineSeparator());
-//                    }
-                    sendMessage(chatId, "Запущены задачи: \n" + tasks);
+                    sendMessage(command.chatId(), "Запущены задачи: \n" + tasks);
                     List<String> taskNames = new ArrayList<>(scheduledTasks.keySet());
                     taskNames.add(allTasks);
-                    sendButtons(chatId, "Удалить задачи", taskNames);
+                    sendButtons(command.chatId(), "Удалить задачи", taskNames);
                 } else {
-                    sendMessage(chatId, "⚠ Задачи отсутствуют");
+                    sendMessage(command.chatId(), "⚠ Задачи отсутствуют");
                 }
-                commandState.incrementStep();
+                command.state().incrementStep();
             }
             case 2 -> {
                 Map<String, ScheduledFuture<?>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
-                if (messageText.equalsIgnoreCase(allTasks)) {
+                if (command.messageText().equalsIgnoreCase(allTasks)) {
                     if (scheduledTasks != null && !scheduledTasks.isEmpty()) {
                         for (Map.Entry<String, ScheduledFuture<?>> futureEntry : scheduledTasks.entrySet()) {
                             taskSchedulingConfig.removeTask(futureEntry.getKey());
                         }
                     } else {
-                        sendMessage(chatId, "⚠ Задачи отсутствуют");
+                        sendMessage(command.chatId(), "⚠ Задачи отсутствуют");
                     }
-                    sendMessage(chatId, "Все задачи удалены");
+                    sendMessage(command.chatId(), "Все задачи удалены");
                 } else {
-                    taskSchedulingConfig.removeTask(messageText);
-                    sendMessage(chatId, "Задача удалена");
+                    taskSchedulingConfig.removeTask(command.messageText());
+                    sendMessage(command.chatId(), "Задача удалена");
                 }
-                userStateRepository.remove(chatId);
+                userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             }
         }
     }

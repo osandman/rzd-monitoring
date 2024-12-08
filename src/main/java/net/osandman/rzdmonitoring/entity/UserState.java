@@ -2,6 +2,7 @@ package net.osandman.rzdmonitoring.entity;
 
 import lombok.Data;
 import lombok.Getter;
+import net.osandman.rzdmonitoring.bot.command.Command;
 import net.osandman.rzdmonitoring.bot.command.ParamEnum;
 
 import java.util.HashMap;
@@ -11,10 +12,18 @@ import java.util.Map;
 @Data
 public class UserState {
     // String - команда ("/xxx")
-    private final Map<String, CommandState> userStates = new HashMap<>();
+    private final Map<Command, CommandState> userStates = new HashMap<>();
 
-    public CommandState getOrCreateCommandState(String command) {
+    public CommandState getOrCreateCommandState(Command command) {
         return userStates.computeIfAbsent(command, k -> new CommandState());
+    }
+
+    public void deleteCommand(Command command) {
+        userStates.remove(command);
+    }
+
+    public void deleteAll() {
+        userStates.clear();
     }
 
     @Data

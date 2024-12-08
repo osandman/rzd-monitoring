@@ -5,7 +5,6 @@ import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.service.RouteService;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
@@ -21,72 +20,80 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
     private final RouteService routeService;
 
     @Override
-    public String getCommand() {
-        return CommandEnum.ROUTES.getCommand();
+    public Command getCommand() {
+        return Command.ROUTES;
     }
 
     @Override
     public void handleCommand(Update update) {
-        Message message = update.getMessage();
-        long chatId = message.getChatId();
-        String messageText = message.getText();
-        String userName = message.getChat().getFirstName() + " " + message.getChat().getLastName();
-
-        log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
-
-        UserState userState = userStateRepository.getOrCreate(chatId);
-        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand()); // устанавливает команду если ее не было
-
-        switch (commandState.getStep()) {
+        CommandContext command = buildCommandContext(update, getCommand());
+        switch (command.state().getStep()) {
             case 1 -> { // начало команды
-                sendMessage(chatId, "Введите станцию отправления");
-                commandState.incrementStep();
+                sendMessage(command.chatId(), "Введите станцию отправления");
+                command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
-                findStations(messageText, commandState, 2, chatId);
+                findStationsAndIncrementStep(
+                    command.messageText(), command.state(), 2, command.chatId()
+                );
             }
             case 3 -> { // выбор станции отправления из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
-                StationDto fromStationDto = getStationDto(messageText, stationService.findStations(messageText));
+                StationDto fromStationDto = getStationDto(
+                    command.messageText(), stationService.findStations(command.messageText())
+                );
                 if (fromStationDto == null) {
-                    commandState.setStep(3);
-                    sendMessage(chatId, "Станция отправления '%s' не найдена, выберите из списка".formatted(messageText));
+                    command.state().setStep(3);
+                    sendMessage(
+                        command.chatId(),
+                        "Станция отправления '%s' не найдена, выберите из списка".formatted(command.messageText())
+                    );
                     return;
                 }
-                commandState.addKey(FROM_STATION_CODE, fromStationDto.code());
-                commandState.addKey(FROM_STATION, fromStationDto.name());
-                sendMessage(chatId, "Введите станцию назначения");
-                commandState.incrementStep();
+                command.state().addKey(FROM_STATION_CODE, fromStationDto.code());
+                command.state().addKey(FROM_STATION, fromStationDto.name());
+                sendMessage(command.chatId(), "Введите станцию назначения");
+                command.state().incrementStep();
             }
             case 4 -> { // ввод вручную станции назначения
-                findStations(messageText, commandState, 4, chatId);
+                findStationsAndIncrementStep(
+                    command.messageText(), command.state(), 4, command.chatId()
+                );
             }
             case 5 -> { // выбор станции назначения из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
-                StationDto toStationDto = getStationDto(messageText, stationService.findStations(messageText));
+                StationDto toStationDto = getStationDto(
+                    command.messageText(), stationService.findStations(command.messageText())
+                );
                 if (toStationDto == null) {
-                    commandState.setStep(5);
-                    sendMessage(chatId, "Станция назначения '%s' не найдена, выберите из списка".formatted(messageText));
+                    command.state().setStep(5);
+                    sendMessage(
+                        command.chatId(),
+                        "Станция назначения '%s' не найдена, выберите из списка".formatted(command.messageText())
+                    );
                     return;
                 }
-                commandState.addKey(TO_STATION_CODE, toStationDto.code());
-                commandState.addKey(TO_STATION, toStationDto.name());
-                sendMessage(chatId, "Введите дату отправления, в формате " + DATE_FORMAT_PATTERN);
-                commandState.incrementStep();
+                command.state().addKey(TO_STATION_CODE, toStationDto.code());
+                command.state().addKey(TO_STATION, toStationDto.name());
+                sendMessage(command.chatId(), "Введите дату отправления, в формате " + DATE_FORMAT_PATTERN);
+                command.state().incrementStep();
             }
             case 6 -> { // ввод даты
-                if (parseDate(messageText) == null) {
-                    commandState.setStep(6);
-                    sendMessage(chatId, "Не верный формат даты '%s', введите заново".formatted(messageText));
+                if (parseDate(command.messageText()) == null) {
+                    command.state().setStep(6);
+                    sendMessage(
+                        command.chatId(),
+                        "Не верный формат даты '%s', введите заново".formatted(command.messageText())
+                    );
                     return;
                 }
-                commandState.addKey(DATE, messageText);
-                sendMessage(chatId, "Ищу маршруты от %s до %s, на %s".formatted(
-                    commandState.getParams().get(FROM_STATION),
-                    commandState.getParams().get(TO_STATION),
-                    commandState.getParams().get(DATE)));
-                sendMessage(chatId, getRoutes(commandState));
-                userStateRepository.remove(chatId);
+                command.state().addKey(DATE, command.messageText());
+                sendMessage(command.chatId(), "Ищу маршруты от %s до %s, на %s".formatted(
+                    command.state().getParams().get(FROM_STATION),
+                    command.state().getParams().get(TO_STATION),
+                    command.state().getParams().get(DATE)));
+                sendMessage(command.chatId(), getRoutes(command.state()));
+                userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             }
         }
     }
