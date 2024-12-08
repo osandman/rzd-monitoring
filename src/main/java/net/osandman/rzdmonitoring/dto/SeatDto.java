@@ -12,7 +12,6 @@ public record SeatDto(
     @Override
     public String toString() {
         return "вагон: " + carNumber + "(" + carType + "), "
-               + "места: " + seatPlaces + "(" + seatLabel + "), " + seatTariff + "р, "
-               + "кол-во: " + seatFree;
+               + "свободных мест - " + seatFree + "(" + seatLabel + "), " + seatTariff + "р;";
     }
 }
