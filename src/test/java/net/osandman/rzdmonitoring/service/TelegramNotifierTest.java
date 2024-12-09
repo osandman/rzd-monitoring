@@ -25,9 +25,12 @@ class TelegramNotifierTest {
     @Value("${bot.token}")
     String botToken;
 
+    @Value("${bot.chat-id}")
+    private Long chatId;
+
     @Test
     void messageIsSend() {
-        notifier.sendMessage("test message");
+        notifier.sendMessage("test message", chatId);
     }
 
     @Test

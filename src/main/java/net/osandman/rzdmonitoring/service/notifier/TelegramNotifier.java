@@ -17,11 +17,12 @@ public class TelegramNotifier implements Notifier {
     @Value("${bot.token}")
     private String botToken;
 
-    @Value("${bot.chat-id}")
-    private String chatId;
-
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(String message, Long chatId) {
+        if (chatId == null) {
+            log.warn("Сообщение не отправлено в телеграм, т.к. chatId={}", chatId);
+            return;
+        }
         try {
             URL url = new URL("https://api.telegram.org/bot" + botToken + "/sendMessage");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
