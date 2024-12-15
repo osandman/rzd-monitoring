@@ -32,7 +32,8 @@ public abstract class BaseService {
         this.endPoint = endPoint;
     }
 
-    protected String getResponse(Map<String, String> specialParams) {
+    // TODO перенести метод в RouteService
+    protected String getRoutesResponse(Map<String, String> specialParams) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.setAll(specialParams);
 
@@ -41,9 +42,16 @@ public abstract class BaseService {
         String response = restConnector.callGetRequest(endPoint, params);
         JsonNode jsonNode = JsonParser.parse(response);
         // в случае если запрос сразу возвращает конечный результат, судя по тестам это маршруты с билетам без мест
-        if (jsonNode.get("result").asText().equalsIgnoreCase("OK")) {
+        if (jsonNode.path("result").asText().equalsIgnoreCase("OK")
+            && !jsonNode.path("tp").path(0).path("list").isEmpty()) {
             return restConnector.callGetRequest(endPoint, params);
         }
+        // запрос может вернуть ответ с сообщением, что поезда не найдены
+        if (jsonNode.path("tp").path(0).path("msgList").path(0)
+            .path("message").asText().toLowerCase().contains("не найдено ни одного поезда")) {
+            return null;
+        }
+
         FirstResponse firstResponse = JsonParser.parse(response, FirstResponse.class);
 
         sleep(1000);

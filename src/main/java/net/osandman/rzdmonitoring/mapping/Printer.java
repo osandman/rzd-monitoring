@@ -2,10 +2,8 @@ package net.osandman.rzdmonitoring.mapping;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.osandman.rzdmonitoring.client.dto.train.Car;
 import net.osandman.rzdmonitoring.client.dto.train.Lst;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
-import net.osandman.rzdmonitoring.client.dto.train.Seat;
 import net.osandman.rzdmonitoring.dto.SeatDto;
 import net.osandman.rzdmonitoring.dto.TrainDto;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
@@ -30,7 +28,7 @@ public class Printer {
     private static final String RESET = "\033[0m";
     private static final String TRAIN_ICON = "\uD83D\uDE86"; // 🚆 🚉
 
-    public TrainDto ticketsMapping(RootTrain rootTrain) {
+    public TrainDto ticketsMapping(RootTrain rootTrain, Long chatId) {
         List<SeatDto> findSeats = new LinkedList<>();
         Map<String, String> trainParams = new LinkedHashMap<>();
         TrainDto trainDto = new TrainDto();
@@ -39,9 +37,12 @@ public class Printer {
                 .values().forEach(train -> train.cars.forEach(car -> car.seats
                     .forEach(seat -> {
                         String seatLabel = seat.label;
+                        fill(train, trainParams, trainDto);
                         if (!seat.label.toLowerCase().contains("верх") && !car.type.toLowerCase().contains("люкс")) {
 //                        if (!car.type.contains("Люкс") && train.number.contains("286")) {
-                            fill(train, car, seat, trainParams, findSeats, trainDto);
+                            findSeats.add(
+                                new SeatDto(car.cnumber, car.type, seat.label, seat.places, seat.tariff, seat.free)
+                            );
                             seatLabel = GREEN + seat.label + RESET;
                         }
                         log.info("Поезд {}, вагон №{}, тип {}, свободных {}={} ({}), тариф={}",
@@ -50,7 +51,7 @@ public class Printer {
                     })));
             if (!findSeats.isEmpty()) {
                 trainDto.setSeats(findSeats);
-                sendNotify(findSeats, trainParams);
+                sendNotify(findSeats, trainParams, chatId);
             }
         } catch (Exception e) {
             log.error("Ошибка во время разбора маршрута поезда {}, '{}'", rootTrain, e.getMessage());
@@ -60,11 +61,8 @@ public class Printer {
     }
 
     private static void fill(
-        Lst train, Car car, Seat seat, Map<String, String> trainParams, List<SeatDto> findSeats, TrainDto trainDto
+        Lst train, Map<String, String> trainParams, TrainDto trainDto
     ) {
-        findSeats.add(
-            new SeatDto(car.cnumber, car.type, seat.label, seat.places, seat.tariff, seat.free)
-        );
         trainDto.setTrainNumber(train.number);
         trainDto.setFromStation(train.station0);
         trainDto.setToStation(train.station1);
@@ -78,20 +76,20 @@ public class Printer {
                 Objects.requireNonNullElse(train.localDate1, train.date1) + " " + Objects.requireNonNullElse(train.localTime1, train.time1),
                 DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
             ));
-        trainParams.put(TRAIN_ICON + " №", train.number);
+        trainParams.put(TRAIN_ICON + " ", train.number);
         trainParams.put("от ", train.station0);
         trainParams.put("до ", train.station1);
         trainParams.put("дата: ", Objects.requireNonNullElse(train.localDate0, train.date0));
         trainParams.put("время: ", Objects.requireNonNullElse(train.localTime0, train.time0));
     }
 
-    private void sendNotify(List<SeatDto> findSeats, Map<String, String> trainParams) {
+    private void sendNotify(List<SeatDto> findSeats, Map<String, String> trainParams, Long chatId) {
         StringBuilder builder = new StringBuilder();
-        builder.append(String.join(", ",
+        builder.append(String.join(" ",
                 trainParams.entrySet().stream()
                     .map(entry -> entry.getKey() + entry.getValue()).toList()))
             .append("\n");
         findSeats.forEach(car -> builder.append(car).append("\n"));
-        notifier.sendMessage(builder.toString());
+        notifier.sendMessage(builder.toString(), chatId);
     }
 }

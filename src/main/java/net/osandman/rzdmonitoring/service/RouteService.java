@@ -1,7 +1,6 @@
 package net.osandman.rzdmonitoring.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.RouteMapper;
@@ -38,7 +37,7 @@ public class RouteService extends BaseService {
         Map<String, String> allRequestParams = buildAllParams(fromStationCode, toStationCode, date);
         RootRoute rootRoute = null;
         try {
-            String bodyFromResponse = getResponse(allRequestParams);
+            String bodyFromResponse = getRoutesResponse(allRequestParams);
             if (bodyFromResponse != null) {
                 rootRoute = JsonParser.parse(bodyFromResponse, RootRoute.class);
             }

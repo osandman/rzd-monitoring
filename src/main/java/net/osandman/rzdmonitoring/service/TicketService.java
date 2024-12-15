@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.client.dto.FirstResponse;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Route;
-import net.osandman.rzdmonitoring.client.dto.route.Tp;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
 import net.osandman.rzdmonitoring.dto.TicketsResult;
 import net.osandman.rzdmonitoring.dto.TrainDto;
@@ -14,6 +13,7 @@ import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import net.osandman.rzdmonitoring.util.JsonParser;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -48,79 +48,88 @@ public class TicketService extends BaseService {
 
     public TicketsResult process(TicketsTask ticketsTask) {
         BASE_PARAMS.put("dt0", ticketsTask.date());
+        Long chatId = ticketsTask.chatId();
+        notifier.sendMessage(
+            "▶ Начинаем поиск билетов для задачи '" + ticketsTask.taskId() + "'",
+            chatId
+        );
         RootRoute rootRoute = routeService
             .findRootRoute(ticketsTask.fromCode(), ticketsTask.toCode(), ticketsTask.date());
         if (rootRoute == null) {
-            log.info("Ошибка получения маршрутов. "
-                     + "Ожидание до следующего запроса билетов {} минут", scheduleConfig.getInterval());
-            return null;
+            String errorMsg = "Ошибка получения маршрутов";
+            log.error(errorMsg);
+            notifier.sendMessage(errorMsg, chatId);
+            return new TicketsResult(0, errorMsg, List.of());
         }
-        List<String> routeNumbers = Arrays.asList(ticketsTask.routeNumbers());
-        if (routeNumbers.isEmpty()) {
-            if (rootRoute.getTp() != null) {
-                routeNumbers = rootRoute.getTp().stream()
-                    .flatMap(route -> route.list.stream().map(r -> r.number))
-                    .toList();
-            } else {
-                log.error("Не найдены маршруты - Tp=null, taskId={}, rootRoute={}", ticketsTask.taskId(), rootRoute);
-                return null;
-            }
+        String errorMsgRoutesNotFound = "Маршруты не найдены";
+        if (rootRoute.getTp() == null) {
+            log.warn("Не найдены маршруты - Tp=null, taskId={}, rootRoute={}", ticketsTask.taskId(), rootRoute);
+            notifier.sendMessage(errorMsgRoutesNotFound, chatId);
+            return new TicketsResult(0, errorMsgRoutesNotFound, List.of());
         }
-        log.info("Ищем билеты для поездов: {}, taskId={}", Arrays.asList(routeNumbers), ticketsTask.taskId());
-        notifier.sendMessage("▶ Начинаем поиск билетов для задачи '" + ticketsTask.taskId() + "'");
+        List<String> routeNumbersToFind = Arrays.asList(ticketsTask.routeNumbers());
+        List<String> availableNumbers = rootRoute.getTp().stream()
+            .flatMap(route -> route.list.stream().map(r -> r.number))
+            .toList();
+        List<String> checkedNumbers;
+        if (routeNumbersToFind.isEmpty()) { // если пусто, то ищем все маршруты
+            checkedNumbers = availableNumbers;
+        } else {
+            checkedNumbers = routeNumbersToFind.stream()
+                .filter(availableNumbers::contains)
+                .toList();
+        }
+        if (checkedNumbers.isEmpty()) {
+            log.warn("Пропускаем поиск. Ищем поезда: {}, а найдены поезда: {}", routeNumbersToFind, availableNumbers);
+            notifier.sendMessage(errorMsgRoutesNotFound, chatId);
+            return new TicketsResult(0, errorMsgRoutesNotFound, List.of());
+        }
+        log.info("Ищем билеты для поездов: {}, taskId={}", checkedNumbers, ticketsTask.taskId());
+        notifier.sendMessage("Ищем билеты для поездов: %s".formatted(checkedNumbers), chatId);
 
-        TicketsResult ticketsResult = findTickets(rootRoute, ticketsTask.date(), routeNumbers);
-        log.info(ticketsResult.comment());
-        if (ticketsResult.findRoutes() == 0) {
-            log.warn("Нет поездов соответствующих заданным на дату {}", ticketsTask.date());
-            return null;
-            // TODO убирать из списка тасок текущую
-            // AbstractTelegramCommand.threads.get()
-        }
+        TicketsResult ticketsResult = findTickets(rootRoute, ticketsTask.date(), checkedNumbers, chatId);
+        log.info("{}, найдено {} маршрутов", ticketsResult.comment(), ticketsResult.findRoutes());
         log.info("Ожидание до следующего запроса билетов {} минут", scheduleConfig.getInterval());
         return ticketsResult;
     }
 
-    private TicketsResult findTickets(RootRoute rootRoute, String date, List<String> routeNumbers) {
-        if (rootRoute == null) {
-            String rootRouteIsNull = "rootRoute is null";
-            log.error(rootRouteIsNull);
-            return new TicketsResult(0, rootRouteIsNull, List.of());
-        }
+    private TicketsResult findTickets(
+        @NonNull RootRoute rootRoute,
+        @NonNull String date,
+        @NonNull List<String> routeNumbers,
+        @NonNull Long chatId
+    ) {
         if (rootRoute.tp == null) {
-            String comment = "rootRoute.tp is null, rootRoute={}";
-            log.warn(comment, rootRoute);
+            String comment = "rootRoute.tp is null, rootRoute='%s'".formatted(rootRoute);
+            log.warn(comment);
             return new TicketsResult(0, comment, List.of());
         }
         int countMatchesRoutes = 0;
         List<TrainDto> trains = new ArrayList<>();
-        for (Tp tp : rootRoute.tp) {
-            if (tp.list.isEmpty()) {
-                log.info("Нет свободных мест в поезде: '{}'", tp);
+        for (String number : routeNumbers) {
+
+            Route routeToFind = rootRoute.tp.stream()
+                .filter(tp -> !tp.list.isEmpty())
+                .flatMap(tp -> tp.list.stream())
+                .filter(route -> number.equalsIgnoreCase(route.number))
+                .findAny()
+                .orElse(null);
+            log.info("Ищем свободные места для поезда: {}", number);
+            countMatchesRoutes++;
+            RootTrain rootTrain = JsonParser.parse(
+                findTrainWithTickets(date, routeToFind),
+                RootTrain.class
+            );
+            if (rootTrain == null) {
+                String error = "Ошибка при разборе ответа от сервера, поезд: %s".formatted(number);
+                log.error(error);
+                trains.add(TrainDto.builder()
+                    .trainNumber(number)
+                    .error(error)
+                    .build());
                 continue;
             }
-            for (Route route : tp.list) {
-                // TODO сделать проверку что ни один из найденных номеров поездов не соответствует заданным и
-                // возврат значения
-                if (!routeNumbers.isEmpty() && routeNumbers.contains(route.number)) {
-                    log.info("Ищем свободные места для поезда: {}", route.number);
-                    countMatchesRoutes++;
-                    RootTrain rootTrain = JsonParser.parse(
-                        findTrainWithTickets(date, route),
-                        RootTrain.class
-                    );
-                    if (rootTrain == null) {
-                        String error = "Ошибка при разборе ответа от сервера, поезд: %s".formatted(route.number);
-                        log.error(error);
-                        trains.add(TrainDto.builder()
-                            .trainNumber(route.number)
-                            .error(error)
-                            .build());
-                        continue;
-                    }
-                    trains.add(printer.ticketsMapping(rootTrain));
-                }
-            }
+            trains.add(printer.ticketsMapping(rootTrain, chatId));
         }
 //        notifier.sendMessage("Поиск билетов завершен, повтор через %d минут".formatted(scheduleConfig.getInterval()));
         return new TicketsResult(countMatchesRoutes, "Поиск билетов в заданных поездах завершен", trains);

@@ -38,7 +38,7 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                     taskNames.add(allTasks);
                     sendButtons(command.chatId(), "Удалить задачи", taskNames);
                 } else {
-                    sendMessage(command.chatId(), "⚠ Задачи отсутствуют");
+                    sendMessage(command.chatId(), "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
                 }
                 command.state().incrementStep();
             }
@@ -50,7 +50,7 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                             taskSchedulingConfig.removeTask(futureEntry.getKey());
                         }
                     } else {
-                        sendMessage(command.chatId(), "⚠ Задачи отсутствуют");
+                        sendMessage(command.chatId(), "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
                     }
                     sendMessage(command.chatId(), "Все задачи удалены");
                 } else {

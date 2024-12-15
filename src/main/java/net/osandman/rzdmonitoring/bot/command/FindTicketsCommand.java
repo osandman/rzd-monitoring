@@ -87,10 +87,15 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 }
                 commandState.addKey(DATE, messageText);
                 String taskId = createTask(chatId, commandState);
-                String messageTask = """
-                    Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
-                    период поиска каждые %s минуты
-                    """.formatted(taskId, scheduleConfig.getInterval());
+                String messageTask;
+                if (taskId == null) {
+                    messageTask = "⚠ Не найдены маршруты по данному запросу";
+                } else {
+                    messageTask = """
+                        ✅ Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
+                        период поиска каждые %s минуты
+                        """.formatted(taskId, scheduleConfig.getInterval());
+                }
                 sendMessage(chatId, messageTask);
                 userStateRepository.get(chatId).deleteCommand(getCommand());
             }
@@ -107,14 +112,17 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         String from = commandState.getParams().get(FROM_STATION);
         String to = commandState.getParams().get(TO_STATION);
         String taskId = "task-" + date + "-from-" + from + "-to-" + to + "-chatId-" + chatId;
-        multiTaskScheduler.addTask(
-            TicketsTask.builder()
-                .taskId(taskId)
-                .date(date)
-                .fromCode(commandState.getParams().get(FROM_STATION_CODE))
-                .toCode(commandState.getParams().get(TO_STATION_CODE))
-                .routeNumbers(trainNumbers)
-                .build());
-        return taskId;
+        TicketsTask ticketsTask = TicketsTask.builder()
+            .chatId(chatId)
+            .taskId(taskId)
+            .date(date)
+            .fromCode(commandState.getParams().get(FROM_STATION_CODE))
+            .toCode(commandState.getParams().get(TO_STATION_CODE))
+            .routeNumbers(trainNumbers)
+            .build();
+        if (multiTaskScheduler.addTask(ticketsTask)) {
+            return taskId;
+        }
+        return null;
     }
 }
