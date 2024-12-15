@@ -79,15 +79,14 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
                 command.state().incrementStep();
             }
             case 6 -> { // ввод даты
-                if (parseDate(command.messageText()) == null) {
+                String dateStr = command.messageText();
+                CheckDateResult checkDateResult = dateValidate(dateStr);
+                if (!checkDateResult.valid()) {
                     command.state().setStep(6);
-                    sendMessage(
-                        command.chatId(),
-                        "Не верный формат даты '%s', введите заново".formatted(command.messageText())
-                    );
+                    sendMessage(command.chatId(), checkDateResult.message());
                     return;
                 }
-                command.state().addKey(DATE, command.messageText());
+                command.state().addKey(DATE, dateStr);
                 sendMessage(command.chatId(), "Ищу маршруты от %s до %s, на %s".formatted(
                     command.state().getParams().get(FROM_STATION),
                     command.state().getParams().get(TO_STATION),

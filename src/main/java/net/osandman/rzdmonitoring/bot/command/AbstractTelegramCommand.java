@@ -45,7 +45,7 @@ public abstract class AbstractTelegramCommand {
         Message message = update.getMessage();
         long chatId = message.getChatId();
         String messageText = message.getText();
-        String userName = message.getChat().getFirstName() + " " + message.getChat().getLastName();
+        String userName = message.getChat().getUserName();
 
         log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
 
@@ -140,10 +140,31 @@ public abstract class AbstractTelegramCommand {
 
     protected LocalDate parseDate(String dateStr) {
         try {
-            return LocalDate.parse(dateStr,
-                DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
+            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
         } catch (DateTimeParseException e) {
             return null;
         }
+    }
+
+    protected CheckDateResult dateValidate(String dateStr) {
+        boolean valid = true;
+        String message = "ОК";
+        LocalDate localDate = parseDate(dateStr);
+        if (localDate == null) {
+            return new CheckDateResult(false, "Не верный формат даты '%s', введите заново".formatted(dateStr));
+        }
+        if (localDate.isBefore(LocalDate.now())) {
+            message = "Дата меньше текущей, введите заново";
+            valid = false;
+        }
+        long maxDaysAllowToBuy = 120L;
+        if (localDate.isAfter(LocalDate.now().plusDays(maxDaysAllowToBuy))) {
+            message = "Дата превышает %d дней от текущей, введите заново".formatted(maxDaysAllowToBuy);
+            valid = false;
+        }
+        return new CheckDateResult(valid, message);
+    }
+
+    protected record CheckDateResult(boolean valid, String message) {
     }
 }

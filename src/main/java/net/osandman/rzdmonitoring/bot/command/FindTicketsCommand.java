@@ -80,9 +80,10 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 commandState.incrementStep();
             }
             case 6 -> { // ввод даты
-                if (parseDate(messageText) == null) {
+                CheckDateResult checkDateResult = dateValidate(messageText);
+                if (!checkDateResult.valid()) {
                     commandState.setStep(6);
-                    sendMessage(chatId, "Не верный формат даты '%s', введите заново".formatted(messageText));
+                    sendMessage(chatId, checkDateResult.message());
                     return;
                 }
                 commandState.addKey(DATE, messageText);
