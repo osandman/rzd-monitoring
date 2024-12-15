@@ -61,16 +61,16 @@ public class TicketService extends BaseService {
             notifier.sendMessage(errorMsg, chatId);
             return new TicketsResult(0, errorMsg, List.of());
         }
-        String errorMsgRoutesNotFound = "Маршруты не найдены";
-        if (rootRoute.getTp() == null) {
-            log.warn("Не найдены маршруты - Tp=null, taskId={}, rootRoute={}", ticketsTask.taskId(), rootRoute);
-            notifier.sendMessage(errorMsgRoutesNotFound, chatId);
-            return new TicketsResult(0, errorMsgRoutesNotFound, List.of());
-        }
         List<String> routeNumbersToFind = Arrays.asList(ticketsTask.routeNumbers());
         List<String> availableNumbers = rootRoute.getTp().stream()
             .flatMap(route -> route.list.stream().map(r -> r.number))
             .toList();
+        String errorMsgRoutesNotFound = "Маршруты с билетами не найдены";
+        if (availableNumbers.isEmpty()) {
+            log.warn("{}, taskId={}, rootRoute={}", errorMsgRoutesNotFound, ticketsTask.taskId(), rootRoute);
+            notifier.sendMessage(errorMsgRoutesNotFound, chatId);
+            return new TicketsResult(0, errorMsgRoutesNotFound, List.of());
+        }
         List<String> checkedNumbers;
         if (routeNumbersToFind.isEmpty()) { // если пусто, то ищем все маршруты
             checkedNumbers = availableNumbers;
@@ -80,9 +80,10 @@ public class TicketService extends BaseService {
                 .toList();
         }
         if (checkedNumbers.isEmpty()) {
-            log.warn("Пропускаем поиск. Ищем поезда: {}, а найдены поезда: {}", routeNumbersToFind, availableNumbers);
-            notifier.sendMessage(errorMsgRoutesNotFound, chatId);
-            return new TicketsResult(0, errorMsgRoutesNotFound, List.of());
+            String errorMsgSkipSearch = "Поиск не выполнен, таких маршрутов не существует";
+            log.warn("{}. Ищем поезда: {}, а найдены поезда: {}", errorMsgSkipSearch, routeNumbersToFind, availableNumbers);
+            notifier.sendMessage(errorMsgSkipSearch, chatId);
+            return new TicketsResult(0, errorMsgSkipSearch, List.of());
         }
         log.info("Ищем билеты для поездов: {}, taskId={}", checkedNumbers, ticketsTask.taskId());
         notifier.sendMessage("Ищем билеты для поездов: %s".formatted(checkedNumbers), chatId);
@@ -116,13 +117,25 @@ public class TicketService extends BaseService {
                 .orElse(null);
             log.info("Ищем свободные места для поезда: {}", number);
             countMatchesRoutes++;
+            String trainWithTickets;
+            try {
+                trainWithTickets = findTrainWithTickets(date, routeToFind);
+            } catch (Exception e) {
+                trains.add(TrainDto.builder()
+                    .trainNumber(number)
+                    .error(e.getMessage())
+                    .build());
+                notifier.sendMessage("Ошибка при запросе билетов маршрута %s".formatted(number), chatId);
+                continue;
+            }
             RootTrain rootTrain = JsonParser.parse(
-                findTrainWithTickets(date, routeToFind),
+                trainWithTickets,
                 RootTrain.class
             );
             if (rootTrain == null) {
                 String error = "Ошибка при разборе ответа от сервера, поезд: %s".formatted(number);
                 log.error(error);
+                notifier.sendMessage(error, chatId);
                 trains.add(TrainDto.builder()
                     .trainNumber(number)
                     .error(error)
@@ -136,23 +149,23 @@ public class TicketService extends BaseService {
     }
 
     private String findTrainWithTickets(String date, Route route) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.setAll(buildAllParams(date, route));
+        MultiValueMap<String, String> firstReqParams = new LinkedMultiValueMap<>();
+        firstReqParams.setAll(buildAllParams(date, route));
         sleep(500);
-        String result = null;
         try {
-            String response = restConnector.callGetRequest(TICKETS_ENDPOINT, params);
+            String response = restConnector.callGetRequest(TICKETS_ENDPOINT, firstReqParams);
             FirstResponse firstResponse = JsonParser.parse(response, FirstResponse.class);
             log.info("Ответ на запрос RID: '{}'", firstResponse);
             sleep(1000);
-            params.clear();
-            params.add("layer_id", LayerId.DETAIL_ID.code);
-            params.add("rid", String.valueOf(firstResponse.getRID()));
-            result = restConnector.callGetRequest(TICKETS_ENDPOINT, params);
+            MultiValueMap<String, String> secondReqParams = new LinkedMultiValueMap<>();
+            secondReqParams.add("layer_id", LayerId.DETAIL_ID.code);
+            secondReqParams.add("rid", String.valueOf(firstResponse.getRID()));
+            return restConnector.callGetRequest(TICKETS_ENDPOINT, secondReqParams);
         } catch (Exception e) {
-            log.error("Ошибка при получении билетов маршрута, параметры: {}, message='{}'", params, e.getMessage());
+            log.error("Ошибка при получении билетов маршрута, параметры: {}, message='{}'",
+                firstReqParams, e.getMessage());
+            throw new RuntimeException("Ошибка при получении билетов ='%s'".formatted(e.getMessage()), e);
         }
-        return result;
     }
 
     private static Map<String, String> buildAllParams(String date, Route route) {
