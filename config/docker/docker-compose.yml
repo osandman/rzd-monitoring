@@ -2,9 +2,9 @@ version: '3.5'
 name: osandman
 services:
   postgresql:
-    image: postgres:15.2
+    image: postgres:16.1
     restart: always
-    container_name: postgres
+    container_name: postgres-rzd
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -13,7 +13,7 @@ services:
       - "5402:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
-    #      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./scripts:/docker-entrypoint-initdb.d/
     #      - ./postgres_data:/var/lib/postgresql/data
     command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200
 volumes:
