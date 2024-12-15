@@ -1,16 +1,19 @@
 # Пайплайн сборки проекта в докере
+# https://docs.docker.com/get-started/docker-concepts/building-images/multi-stage-builds/
 # 1. Этап сборки
-FROM openjdk:17-alpine AS builder
+FROM eclipse-temurin:17-jdk-jammy AS builder
 WORKDIR /app
 COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
+COPY mvnw pom.xml .env ./
 RUN ./mvnw dependency:go-offline
 COPY src ./src
 RUN ./mvnw clean package
 
 # 2. Финальный образ
-FROM openjdk:17-alpine
+FROM eclipse-temurin:17-jre-jammy
 LABEL "com.docker.compose.project"="osandman"
 WORKDIR /app
+EXPOSE 8088
 COPY --from=builder /app/target/rzd-monitoring-0.0.1.jar ./rzd-monitoring.jar
+COPY .env .env
 ENTRYPOINT ["java", "-jar", "rzd-monitoring.jar"]
