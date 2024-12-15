@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: rzd-monitoring
+  aop:
+    proxy-target-class: false
+  config:
+    import: optional:file:.env[.properties]
+server:
+  port: 8088
+
+bot:
+  token: ${BOT_TOKEN}
+  chat-id: ${CHAT_ID}
+  username: ${USERNAME}
+
+rzd:
+  base-url: https://pass.rzd.ru
+  scheduler:
+    state: ACTIVE
+    interval: 2 # интервал запуска в минутах
+
+logging:
+  charset:
+    console: UTF-8
+
