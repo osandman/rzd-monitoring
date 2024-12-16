@@ -6,6 +6,7 @@ import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
+import net.osandman.rzdmonitoring.validate.CheckDateResult;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -80,7 +81,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 commandState.incrementStep();
             }
             case 6 -> { // ввод даты
-                CheckDateResult checkDateResult = dateValidate(messageText);
+                CheckDateResult checkDateResult = validator.dateValidate(messageText);
                 if (!checkDateResult.valid()) {
                     commandState.setStep(6);
                     sendMessage(chatId, checkDateResult.message());

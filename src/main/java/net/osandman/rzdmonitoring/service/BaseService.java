@@ -5,6 +5,7 @@ import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.FirstResponse;
 import net.osandman.rzdmonitoring.entity.Direction;
 import net.osandman.rzdmonitoring.util.JsonParser;
+import net.osandman.rzdmonitoring.validate.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,6 +22,9 @@ public abstract class BaseService {
     @Autowired
     @Qualifier("restTemplateConnector")
     protected RestConnector restConnector;
+
+    @Autowired
+    protected Validator validator;
 
     protected static final Map<String, String> BASE_PARAMS = new HashMap<>() {{
         put("dir", Direction.ONE_WAY.code);

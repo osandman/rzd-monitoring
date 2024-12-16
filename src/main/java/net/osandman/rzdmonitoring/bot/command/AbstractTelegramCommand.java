@@ -6,6 +6,7 @@ import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
 import net.osandman.rzdmonitoring.service.StationService;
 import net.osandman.rzdmonitoring.util.Utils;
+import net.osandman.rzdmonitoring.validate.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +31,9 @@ public abstract class AbstractTelegramCommand {
 
     @Autowired
     protected UserStateRepository userStateRepository;
+
+    @Autowired
+    protected Validator validator;
 
     @Autowired
     @Lazy // для избежания циклической зависимости реализаций команд с Set<ITelegramCommand> commands
@@ -136,35 +137,5 @@ public abstract class AbstractTelegramCommand {
             toStationDtos.stream()
                 .filter(stationDto -> stationDto.name().equalsIgnoreCase(messageText))
                 .findAny().orElse(null);
-    }
-
-    protected LocalDate parseDate(String dateStr) {
-        try {
-            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
-        } catch (DateTimeParseException e) {
-            return null;
-        }
-    }
-
-    protected CheckDateResult dateValidate(String dateStr) {
-        boolean valid = true;
-        String message = "ОК";
-        LocalDate localDate = parseDate(dateStr);
-        if (localDate == null) {
-            return new CheckDateResult(false, "Не верный формат даты '%s', введите заново".formatted(dateStr));
-        }
-        if (localDate.isBefore(LocalDate.now())) {
-            message = "Дата меньше текущей, введите заново";
-            valid = false;
-        }
-        long maxDaysAllowToBuy = 120L;
-        if (localDate.isAfter(LocalDate.now().plusDays(maxDaysAllowToBuy))) {
-            message = "Дата превышает %d дней от текущей, введите заново".formatted(maxDaysAllowToBuy);
-            valid = false;
-        }
-        return new CheckDateResult(valid, message);
-    }
-
-    protected record CheckDateResult(boolean valid, String message) {
     }
 }

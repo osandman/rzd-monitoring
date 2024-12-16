@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.service.RouteService;
+import net.osandman.rzdmonitoring.validate.CheckDateResult;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -80,7 +81,7 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
             }
             case 6 -> { // ввод даты
                 String dateStr = command.messageText();
-                CheckDateResult checkDateResult = dateValidate(dateStr);
+                CheckDateResult checkDateResult = validator.dateValidate(dateStr);
                 if (!checkDateResult.valid()) {
                     command.state().setStep(6);
                     sendMessage(command.chatId(), checkDateResult.message());

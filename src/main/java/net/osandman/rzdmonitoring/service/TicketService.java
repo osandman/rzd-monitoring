@@ -13,6 +13,7 @@ import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import net.osandman.rzdmonitoring.util.JsonParser;
+import net.osandman.rzdmonitoring.validate.CheckDateResult;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -35,7 +36,6 @@ public class TicketService extends BaseService {
     private final RouteService routeService;
     private final Notifier notifier;
     private final ScheduleConfig scheduleConfig;
-    private final long pause;
 
     public TicketService(Printer printer, RouteService routeService, Notifier notifier, ScheduleConfig scheduleConfig) {
         super(TICKETS_ENDPOINT);
@@ -43,10 +43,13 @@ public class TicketService extends BaseService {
         this.routeService = routeService;
         this.notifier = notifier;
         this.scheduleConfig = scheduleConfig;
-        pause = scheduleConfig.getInterval();
     }
 
     public TicketsResult process(TicketsTask ticketsTask) {
+        CheckDateResult checkDateResult = validator.dateValidate(ticketsTask.date());
+        if (!checkDateResult.valid()) {
+            return new TicketsResult(0, checkDateResult.message(), List.of());
+        }
         BASE_PARAMS.put("dt0", ticketsTask.date());
         Long chatId = ticketsTask.chatId();
         notifier.sendMessage(
