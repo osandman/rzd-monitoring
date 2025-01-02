@@ -1,11 +1,13 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -13,7 +15,9 @@ import static org.springframework.util.StringUtils.hasText;
 @RequiredArgsConstructor
 public class StartCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
-    private final Set<ITelegramCommand> telegramCommands;
+    @Qualifier("sortedTelegramCommands")
+    @Lazy
+    private final List<ITelegramCommand> telegramCommands;
     private final static String START_MESSAGE = """
         Привет!
         Добро пожаловать, %s!
@@ -34,7 +38,7 @@ public class StartCommand extends AbstractTelegramCommand implements ITelegramCo
         String firstName = hasText(chat.getFirstName()) ? chat.getFirstName() : "";
         String lastName = hasText(chat.getLastName()) ? chat.getLastName() : "";
         String fullName = hasText(firstName + lastName)
-            ? String.join(" ", firstName, lastName)
+            ? String.join(" ", firstName, lastName).trim()
             : chat.getUserName();
         String allCommands = String.join(System.lineSeparator(),
             telegramCommands.stream()

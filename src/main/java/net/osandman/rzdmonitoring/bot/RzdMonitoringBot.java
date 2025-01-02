@@ -5,12 +5,13 @@ import net.osandman.rzdmonitoring.bot.command.ITelegramCommand;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.Set;
+import java.util.List;
 
 import static net.osandman.rzdmonitoring.bot.command.Command.UNKNOWN;
 
@@ -21,13 +22,14 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
     @Value("${bot.username}")
     private String botUserName;
 
-    private final Set<ITelegramCommand> telegramCommands;
+    private final List<ITelegramCommand> telegramCommands;
     private final UserStateRepository userStateRepository;
 
     @Autowired
     public RzdMonitoringBot(
         @Value("${bot.token}") String botToken,
-        Set<ITelegramCommand> telegramCommands, UserStateRepository userStateRepository
+        @Qualifier("sortedTelegramCommands")
+        List<ITelegramCommand> telegramCommands, UserStateRepository userStateRepository
     ) {
         super(botToken);
         this.telegramCommands = telegramCommands;
