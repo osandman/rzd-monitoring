@@ -6,10 +6,11 @@ import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
-import net.osandman.rzdmonitoring.validate.CheckDateResult;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION;
@@ -31,64 +32,59 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
 
     @Override
     public void handleCommand(Update update) {
-        // TODO рефакторить - использовать общий метод из абстрактного класса
-        long chatId = update.getMessage().getChatId();
-        Message message = update.getMessage();
-        String messageText = message.getText();
-        String userName = message.getChat().getFirstName() + " " + message.getChat().getLastName();
-
-        log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
-
-        UserState userState = userStateRepository.getOrCreate(chatId);
-        // устанавливает команду если ее не было
-        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand());
-
-        switch (commandState.getStep()) {
+        CommandContext command = buildCommandContext(update, getCommand());
+        switch (command.state().getStep()) {
             case 1 -> { // начало команды
-                sendMessage(chatId, "Введите станцию отправления");
-                commandState.incrementStep();
+                sendMessage(command.chatId(), "Введите станцию отправления");
+                command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
-                findAndShowStationsAndIncrementStep(messageText, commandState, chatId);
+                findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 3 -> { // выбор станции отправления из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
-                StationDto fromStationDto = getStationDto(messageText, stationService.findStations(messageText));
+                StationDto fromStationDto = getStationDto(
+                    command.messageText(), stationService.findStations(command.messageText())
+                );
                 if (fromStationDto == null) {
-                    commandState.setStep(3);
-                    sendMessage(chatId, "Станция отправления '%s' не найдена, выберите из списка".formatted(messageText));
+                    sendMessage(
+                        command.chatId(),
+                        "Станция отправления '%s' не найдена, выберите из списка".formatted(command.messageText())
+                    );
                     return;
                 }
-                commandState.addKey(FROM_STATION_CODE, fromStationDto.code());
-                commandState.addKey(FROM_STATION, fromStationDto.name());
-                sendMessage(chatId, "Введите станцию назначения");
-                commandState.incrementStep();
+                command.state().addKey(FROM_STATION_CODE, fromStationDto.code());
+                command.state().addKey(FROM_STATION, fromStationDto.name());
+                sendMessage(command.chatId(), "Введите станцию назначения");
+                command.state().incrementStep();
             }
             case 4 -> { // ввод вручную станции назначения
-                findAndShowStationsAndIncrementStep(messageText, commandState, chatId);
+                findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 5 -> { // выбор станции назначения из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
-                StationDto toStationDto = getStationDto(messageText, stationService.findStations(messageText));
+                StationDto toStationDto = getStationDto(
+                    command.messageText(), stationService.findStations(command.messageText())
+                );
                 if (toStationDto == null) {
-                    commandState.setStep(5);
-                    sendMessage(chatId, "Станция назначения '%s' не найдена, выберите из списка".formatted(messageText));
+                    sendMessage(
+                        command.chatId(),
+                        "Станция назначения '%s' не найдена, выберите из списка".formatted(command.messageText())
+                    );
                     return;
                 }
-                commandState.addKey(TO_STATION_CODE, toStationDto.code());
-                commandState.addKey(TO_STATION, toStationDto.name());
-                sendMessage(chatId, "Введите дату отправления, в формате " + DATE_FORMAT_PATTERN);
-                commandState.incrementStep();
+                command.state().addKey(TO_STATION_CODE, toStationDto.code());
+                command.state().addKey(TO_STATION, toStationDto.name());
+                sendCalendar(command.chatId(), "Введите дату отправления", update);
+                command.state().incrementStep();
             }
             case 6 -> { // ввод даты
-                CheckDateResult checkDateResult = validator.dateValidate(messageText);
-                if (!checkDateResult.valid()) {
-                    commandState.setStep(6);
-                    sendMessage(chatId, checkDateResult.message());
+                LocalDate localDate = handleDate(update, command);
+                if (localDate == null) {
                     return;
                 }
-                commandState.addKey(DATE, messageText);
-                String taskId = createTask(chatId, commandState);
+                command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)));
+                String taskId = createTask(command.chatId(), command.state());
                 String messageTask;
                 if (taskId == null) {
                     messageTask = "⚠ Не найдены маршруты по данному запросу";
@@ -98,8 +94,8 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                         период поиска каждые %s минуты
                         """.formatted(taskId, scheduleConfig.getInterval());
                 }
-                sendMessage(chatId, messageTask);
-                userStateRepository.get(chatId).deleteCommand(getCommand());
+                sendMessage(command.chatId(), messageTask);
+                userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             }
         }
     }
