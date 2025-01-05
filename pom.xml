@@ -51,6 +51,13 @@
             <artifactId>telegrambots-spring-boot-starter</artifactId>
             <version>${telegram.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.github.dostonhamrakulov/java-telegram-bot-calendar -->
+        <dependency>
+            <groupId>io.github.dostonhamrakulov</groupId>
+            <artifactId>java-telegram-bot-calendar</artifactId>
+            <version>2.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
