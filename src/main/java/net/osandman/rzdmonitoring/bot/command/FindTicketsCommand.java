@@ -49,7 +49,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 commandState.incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
-                findStationsAndIncrementStep(messageText, commandState, 2, chatId);
+                findAndShowStationsAndIncrementStep(messageText, commandState, chatId);
             }
             case 3 -> { // выбор станции отправления из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
@@ -65,7 +65,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 commandState.incrementStep();
             }
             case 4 -> { // ввод вручную станции назначения
-                findStationsAndIncrementStep(messageText, commandState, 4, chatId);
+                findAndShowStationsAndIncrementStep(messageText, commandState, chatId);
             }
             case 5 -> { // выбор станции назначения из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса

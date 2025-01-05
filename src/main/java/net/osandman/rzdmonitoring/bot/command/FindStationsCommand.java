@@ -23,16 +23,13 @@ public class FindStationsCommand extends AbstractTelegramCommand implements ITel
                 command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
-                findStationsAndIncrementStep(
-                    command.messageText(), command.state(), 2, command.chatId()
-                );
+                findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 3 -> { // выбор из найденных станций
                 StationDto stationDto = getStationDto(
                     command.messageText(), stationService.findStations(command.messageText())
                 );
                 if (stationDto == null) {
-                    command.state().setStep(3);
                     sendMessage(
                         command.chatId(),
                         "Станция '%s' не найдена, выберите из списка".formatted(command.messageText())

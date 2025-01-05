@@ -23,14 +23,14 @@ public class RouteService extends BaseService {
 
     public String getPrettyStringRoutes(String fromStationCode, String toStationCode, String date) {
         RootRoute rootRoute = findRootRoute(fromStationCode, toStationCode, date);
-        if (rootRoute != null && rootRoute.tp != null) {
-            if (rootRoute.tp.iterator().next().list.isEmpty()) {
-                return "Маршруты не найдены";
-            } else {
-                return routeMapper.getPrettyString(rootRoute);
-            }
+        if (rootRoute == null || rootRoute.tp == null || rootRoute.tp.isEmpty()) {
+            return "Маршруты не найдены";
         }
-        return "Произошла ошибка, обратитесь к администратору";
+        try {
+            return routeMapper.getPrettyString(rootRoute);
+        } catch (Exception e) {
+            return "Произошла ошибка, обратитесь к администратору";
+        }
     }
 
     public RootRoute findRootRoute(String fromStationCode, String toStationCode, String date) {

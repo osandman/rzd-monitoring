@@ -1,11 +1,15 @@
 package net.osandman.rzdmonitoring.bot.command;
 
+import io.github.dostonhamrakulov.InlineCalendarBuilder;
+import io.github.dostonhamrakulov.InlineCalendarCommandUtil;
+import io.github.dostonhamrakulov.LanguageEnum;
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
 import net.osandman.rzdmonitoring.service.StationService;
 import net.osandman.rzdmonitoring.util.Utils;
+import net.osandman.rzdmonitoring.validate.CheckDateResult;
 import net.osandman.rzdmonitoring.validate.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.InaccessibleMessage;
+import org.telegram.telegrambots.meta.api.objects.MaybeInaccessibleMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -20,6 +26,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +50,16 @@ public abstract class AbstractTelegramCommand {
     public static final String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
 
     protected CommandContext buildCommandContext(Update update, Command command) {
-        Message message = update.getMessage();
+        MaybeInaccessibleMessage message = getMessage(update);
         long chatId = message.getChatId();
-        String messageText = message.getText();
-        String userName = message.getChat().getUserName();
+        String messageText = null;
+        String userName = null;
+        if (message instanceof Message mes) {
+            messageText = mes.getText();
+            userName = mes.getChat().getUserName();
+        } else if (message instanceof InaccessibleMessage mes) {
+            userName = mes.getChat().getUserName();
+        }
 
         log.info("Сообщение '{}' получено от пользователя {}, chatId={}", messageText, userName, chatId);
 
@@ -54,6 +67,13 @@ public abstract class AbstractTelegramCommand {
         // устанавливает команду если ее не было
         UserState.CommandState commandState = userState.getOrCreateCommandState(command);
         return new CommandContext(chatId, messageText, commandState);
+    }
+
+    private MaybeInaccessibleMessage getMessage(Update update) {
+        if (update.getMessage() != null) {
+            return update.getMessage();
+        }
+        return update.getCallbackQuery().getMessage();
     }
 
     protected record CommandContext(long chatId, String messageText, UserState.CommandState state) {
@@ -118,13 +138,46 @@ public abstract class AbstractTelegramCommand {
         executeMessage(sendMessage);
     }
 
+    protected void sendCalendar(long chatId, String message, Update update) {
+        InlineCalendarBuilder inlineCalendarBuilder = new InlineCalendarBuilder(LanguageEnum.RU);
+        inlineCalendarBuilder.setShowFullMonthName(false);
+        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
+        sendMessage.setReplyMarkup(inlineCalendarBuilder.build(update));
+        executeMessage(sendMessage);
+    }
 
-    protected void findStationsAndIncrementStep(
-        String messageText, UserState.CommandState commandState, int step, long chatId
+    protected LocalDate handleDate(Update update, CommandContext command) {
+        LocalDate localDate;
+        CheckDateResult checkDateResult;
+        if (InlineCalendarCommandUtil.isInlineCalendarClicked(update)) {
+            // if ignorable buttons are clicked like empty cells, cells for week days, etc.
+            if (InlineCalendarCommandUtil.isCalendarIgnoreButtonClicked(update)) {
+                return null;
+            }
+            // return to the next or previous months
+            if (InlineCalendarCommandUtil.isCalendarNavigationButtonClicked(update)) {
+                sendCalendar(command.chatId(), "Введите дату отправления", update);
+                return null;
+            }
+            localDate = InlineCalendarCommandUtil.extractDate(update);
+            checkDateResult = validator.dateValidate(localDate);
+        } else {
+            String dateStr = command.messageText();
+            checkDateResult = validator.dateValidate(dateStr);
+        }
+
+        if (!checkDateResult.valid()) {
+            sendMessage(command.chatId(), checkDateResult.message());
+            return null;
+        }
+        return checkDateResult.localDate();
+    }
+
+    protected void findAndShowStationsAndIncrementStep(
+        String messageText, UserState.CommandState commandState, long chatId
     ) {
         List<StationDto> stationDtos = stationService.findStations(messageText);
         if (stationDtos.isEmpty()) {
-            commandState.setStep(step);
             sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
             return;
         }

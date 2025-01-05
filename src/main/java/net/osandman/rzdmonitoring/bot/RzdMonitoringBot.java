@@ -7,8 +7,11 @@ import net.osandman.rzdmonitoring.repository.UserStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.MaybeInaccessibleMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
@@ -37,16 +40,25 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
     }
 
     @Override
-    public void onUpdateReceived(Update update) {
-        long chatId = update.getMessage().getChatId();
-        log.info("Поступил update для chatId={}", chatId);
+    public void onUpdateReceived(@NonNull Update update) {
+        if (update.hasMessage()) {
+            handleMessage(update);
+        } else if (update.hasCallbackQuery()) {
+            handleCallback(update);
+        }
+    }
+
+    private void handleMessage(@NonNull Update update) {
+        Message message = update.getMessage();
+        long chatId = message.getChatId();
+        log.info("Поступил update для chatId={}, текст='{}'", chatId, message.getText());
         if (!update.hasMessage()) {
             log.info("Update не содержит сообщений");
             return;
         }
-        if (update.getMessage().isCommand()) {
+        if (message.isCommand()) {
             userStateRepository.getOrCreate(chatId).deleteAll();
-            String messageText = update.getMessage().getText();
+            String messageText = message.getText();
             for (ITelegramCommand telegramCommand : telegramCommands) {
                 String commandStr = telegramCommand.getCommand().getCommandStr();
                 if (messageText.equalsIgnoreCase(commandStr)) {
@@ -57,7 +69,7 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
             telegramCommands.stream()
                 .filter(command -> UNKNOWN.equals(command.getCommand()))
                 .findAny().ifPresent(command -> command.handleCommand(update));
-        } else if (update.getMessage().hasText()) {
+        } else if (message.hasText()) {
             for (ITelegramCommand telegramCommand : telegramCommands) {
                 UserState userState = userStateRepository.get(chatId);
                 // TODO подумать нужно ли хранить набор команд, если по факту только одна активная, остальные обнуляются
@@ -65,6 +77,19 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
                     telegramCommand.handleCommand(update);
                     return;
                 }
+            }
+        }
+    }
+
+    private void handleCallback(@NonNull Update update) {
+        MaybeInaccessibleMessage message = update.getCallbackQuery().getMessage();
+        long chatId = message.getChatId();
+        for (ITelegramCommand telegramCommand : telegramCommands) {
+            UserState userState = userStateRepository.get(chatId);
+            // TODO подумать нужно ли хранить набор команд, если по факту только одна активная, остальные обнуляются
+            if (userState != null && userState.getUserStates().containsKey(telegramCommand.getCommand())) {
+                telegramCommand.handleCommand(update);
+                return;
             }
         }
     }

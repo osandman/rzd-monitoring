@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.service.RouteService;
-import net.osandman.rzdmonitoring.validate.CheckDateResult;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION;
@@ -34,9 +36,7 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
                 command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
-                findStationsAndIncrementStep(
-                    command.messageText(), command.state(), 2, command.chatId()
-                );
+                findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 3 -> { // выбор станции отправления из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
@@ -44,7 +44,6 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
                     command.messageText(), stationService.findStations(command.messageText())
                 );
                 if (fromStationDto == null) {
-                    command.state().setStep(3);
                     sendMessage(
                         command.chatId(),
                         "Станция отправления '%s' не найдена, выберите из списка".formatted(command.messageText())
@@ -57,9 +56,7 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
                 command.state().incrementStep();
             }
             case 4 -> { // ввод вручную станции назначения
-                findStationsAndIncrementStep(
-                    command.messageText(), command.state(), 4, command.chatId()
-                );
+                findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 5 -> { // выбор станции назначения из найденных
                 // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
@@ -67,7 +64,6 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
                     command.messageText(), stationService.findStations(command.messageText())
                 );
                 if (toStationDto == null) {
-                    command.state().setStep(5);
                     sendMessage(
                         command.chatId(),
                         "Станция назначения '%s' не найдена, выберите из списка".formatted(command.messageText())
@@ -76,18 +72,15 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
                 }
                 command.state().addKey(TO_STATION_CODE, toStationDto.code());
                 command.state().addKey(TO_STATION, toStationDto.name());
-                sendMessage(command.chatId(), "Введите дату отправления, в формате " + DATE_FORMAT_PATTERN);
+                sendCalendar(command.chatId(), "Введите дату отправления", update);
                 command.state().incrementStep();
             }
             case 6 -> { // ввод даты
-                String dateStr = command.messageText();
-                CheckDateResult checkDateResult = validator.dateValidate(dateStr);
-                if (!checkDateResult.valid()) {
-                    command.state().setStep(6);
-                    sendMessage(command.chatId(), checkDateResult.message());
+                LocalDate localDate = handleDate(update, command);
+                if (localDate == null) {
                     return;
                 }
-                command.state().addKey(DATE, dateStr);
+                command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)));
                 sendMessage(command.chatId(), "Ищу маршруты от %s до %s, на %s".formatted(
                     command.state().getParams().get(FROM_STATION),
                     command.state().getParams().get(TO_STATION),
