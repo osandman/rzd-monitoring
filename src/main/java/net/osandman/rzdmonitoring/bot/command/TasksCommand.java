@@ -28,13 +28,14 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
         switch (command.state().getStep()) {
             case 1 -> { // начало команды
                 StringBuilder tasks = new StringBuilder();
-                Map<String, ScheduledFuture<?>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
-                if (scheduledTasks != null && !scheduledTasks.isEmpty()) {
-                    for (Map.Entry<String, ScheduledFuture<?>> futureEntry : scheduledTasks.entrySet()) {
+                Map<Long, Map<String, ScheduledFuture<?>>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
+                Map<String, ScheduledFuture<?>> taskMap = scheduledTasks.get(command.chatId());
+                if (taskMap != null && !taskMap.isEmpty()) {
+                    for (Map.Entry<String, ScheduledFuture<?>> futureEntry : taskMap.entrySet()) {
                         tasks.append("✳ ").append(futureEntry.getKey()).append(System.lineSeparator());
                     }
                     sendMessage(command.chatId(), "Запущены задачи: \n" + tasks);
-                    List<String> taskNames = new ArrayList<>(scheduledTasks.keySet());
+                    List<String> taskNames = new ArrayList<>(taskMap.keySet());
                     taskNames.add(allTasks);
                     sendButtons(command.chatId(), "Удалить задачи", taskNames);
                 } else {
@@ -43,20 +44,41 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                 command.state().incrementStep();
             }
             case 2 -> {
-                Map<String, ScheduledFuture<?>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
-                if (command.messageText().equalsIgnoreCase(allTasks)) {
-                    if (scheduledTasks != null && !scheduledTasks.isEmpty()) {
-                        for (Map.Entry<String, ScheduledFuture<?>> futureEntry : scheduledTasks.entrySet()) {
-                            taskSchedulingConfig.removeTask(futureEntry.getKey());
-                        }
-                    } else {
+                Map<Long, Map<String, ScheduledFuture<?>>> scheduledTasks = taskSchedulingConfig.getScheduledTasks();
+                Map<String, ScheduledFuture<?>> taskMap = scheduledTasks.get(command.chatId());
+                if (allTasks.equalsIgnoreCase(command.messageText())) {
+                    Integer removedCount = taskSchedulingConfig.removeTasks(command.chatId());
+                    if (removedCount == null || removedCount == 0) {
                         sendMessage(command.chatId(), "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
+                    } else {
+                        sendMessage(command.chatId(), "Все (%d) задачи удалены".formatted(removedCount));
                     }
-                    sendMessage(command.chatId(), "Все задачи удалены");
+                } else if (taskMap.containsKey(command.messageText())) {
+                    Boolean check = taskSchedulingConfig.removeTask(command.chatId(), command.messageText());
+                    if (check == null) {
+                        sendMessage(command.chatId(), "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
+                    } else if (check) {
+                        sendMessage(command.chatId(), "Задача '%s' удалена".formatted(command.messageText()));
+                    } else {
+                        sendMessage(command.chatId(), "Ошибка при удалении задачи '%s'".formatted(command.messageText()));
+                    }
                 } else {
-                    taskSchedulingConfig.removeTask(command.messageText());
-                    sendMessage(command.chatId(), "Задача удалена");
+                    sendMessage(command.chatId(), "Задача '%s' не существует".formatted(command.messageText()));
                 }
+
+//                if (command.messageText().equalsIgnoreCase(allTasks)) {
+//                    if (taskMap != null && !scheduledTasks.isEmpty()) {
+//                        for (Map.Entry<String, ScheduledFuture<?>> futureEntry : taskMap.entrySet()) {
+//                            taskSchedulingConfig.removeTask(command.chatId(), futureEntry.getKey());
+//                        }
+//                    } else {
+//                        sendMessage(command.chatId(), "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
+//                    }
+//                    sendMessage(command.chatId(), "Все задачи удалены");
+//                } else {
+//                    taskSchedulingConfig.removeTask(command.messageText());
+//                    sendMessage(command.chatId(), "Задача удалена");
+//                }
                 userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             }
         }

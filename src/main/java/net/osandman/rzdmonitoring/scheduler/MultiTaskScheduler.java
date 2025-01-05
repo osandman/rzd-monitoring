@@ -28,7 +28,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
     private final TicketService ticketService;
     private final RouteService routeService;
     @Getter
-    private final Map<String, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
+    private final Map<Long, Map<String, ScheduledFuture<?>>> scheduledTasks = new ConcurrentHashMap<>();
     private ScheduledTaskRegistrar taskRegistrar;
 
     @Override
@@ -44,7 +44,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
     }
 
     public boolean addTask(TicketsTask ticketsTask) {
-        removeTask(ticketsTask.taskId());  // Удаляем задачу, если она уже существует
+        removeTask(ticketsTask.chatId(), ticketsTask.taskId());  // Удаляем задачу, если она уже существует
         RootRoute rootRoute =
             routeService.findRootRoute(ticketsTask.fromCode(), ticketsTask.toCode(), ticketsTask.date());
         // проверка того, что маршрут существует, только после этого добавлять задание
@@ -54,17 +54,37 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
         Runnable task = () -> ticketService.process(ticketsTask);
         TaskScheduler scheduler = taskRegistrar.getScheduler();
         if (scheduler != null) {
-            ScheduledFuture<?> scheduledTask = scheduler
-                .scheduleWithFixedDelay(task, Duration.ofMinutes(scheduleConfig.getInterval()));
-            scheduledTasks.put(ticketsTask.taskId(), scheduledTask);
+            ScheduledFuture<?> scheduledTask =
+                scheduler.scheduleWithFixedDelay(task, Duration.ofMinutes(scheduleConfig.getInterval()));
+            Map<String, ScheduledFuture<?>> taskMap =
+                scheduledTasks.getOrDefault(ticketsTask.chatId(), new ConcurrentHashMap<>());
+            taskMap.put(ticketsTask.taskId(), scheduledTask);
+            scheduledTasks.putIfAbsent(ticketsTask.chatId(), taskMap);
         }
         return true;
     }
 
-    public void removeTask(String taskId) {
-        ScheduledFuture<?> scheduledTask = scheduledTasks.remove(taskId);
+    public Boolean removeTask(long chatId, String taskId) {
+        Map<String, ScheduledFuture<?>> taskMap = scheduledTasks.get(chatId);
+        if (taskMap == null) {
+            return null;
+        }
+        ScheduledFuture<?> scheduledTask = taskMap.remove(taskId);
         if (scheduledTask != null) {
             scheduledTask.cancel(false);
+            return true;
         }
+        return false;
+    }
+
+    public Integer removeTasks(long chatId) {
+        Map<String, ScheduledFuture<?>> taskMap = scheduledTasks.remove(chatId);
+        if (taskMap == null) {
+            return null;
+        }
+        for (ScheduledFuture<?> scheduledFuture : taskMap.values()) {
+            scheduledFuture.cancel(false);
+        }
+        return taskMap.size();
     }
 }
