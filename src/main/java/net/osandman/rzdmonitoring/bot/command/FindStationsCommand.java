@@ -1,7 +1,7 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.dto.StationDto;
+import net.osandman.rzdmonitoring.dto.station.StationDto;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -32,14 +32,12 @@ public class FindStationsCommand extends AbstractTelegramCommand implements ITel
                 if (stationDto == null) {
                     sendMessage(
                         command.chatId(),
-                        "Станция '%s' не найдена, выберите из списка".formatted(command.messageText())
+                        "Информация о станции '%s' не найдена, выберите из списка или запустите поиск заново"
+                            .formatted(command.messageText())
                     );
                     return;
                 }
-                sendMessage(
-                    command.chatId(),
-                    "код=%s, статус=%d, уровень=%d".formatted(stationDto.code(), stationDto.state(), stationDto.level())
-                );
+                sendMessage(command.chatId(), stationDto.printStr());
             }
         }
     }

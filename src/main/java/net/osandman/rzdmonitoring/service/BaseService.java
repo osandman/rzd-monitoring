@@ -7,7 +7,6 @@ import net.osandman.rzdmonitoring.entity.Direction;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import net.osandman.rzdmonitoring.validate.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -20,7 +19,6 @@ public abstract class BaseService {
     private final String endPoint; //"/timetable/public/ru";
 
     @Autowired
-    @Qualifier("restTemplateConnector")
     protected RestConnector restConnector;
 
     @Autowired

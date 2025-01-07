@@ -3,6 +3,7 @@ package net.osandman.rzdmonitoring.client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,9 +17,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Primary
 public class RestTemplateConnector implements RestConnector {
 
     public static final String HOST = "pass.rzd.ru";
@@ -27,38 +31,43 @@ public class RestTemplateConnector implements RestConnector {
     private final RestTemplate restTemplate;
 
     @Value("${rzd.base-url}")
-    private String baseUrl;
+    private String baseAppUrl;
 
     static {
-        httpHeaders.set("Host", HOST);
+//        httpHeaders.set("Host", HOST);
 //        httpHeaders.set("Cookie", "JSESSIONID=4054C174E5CD78D5FDD8BD8D155FC233");
 //        httpHeaders.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
     }
 
     @Override
-    public <T> T callGetRequest(String endpoint, MultiValueMap<String, String> params, Class<T> clazz) {
-        return callExchange(endpoint, params, clazz, HttpMethod.GET, null);
+    public <T> T callGetRequest(String endpoint, MultiValueMap<String, String> params, Class<T> respClass) {
+        return callExchange("", endpoint, params, respClass, HttpMethod.GET, null);
+    }
+
+    @Override
+    public <T> T callGetRequest(String baseUrl, String endpoint, MultiValueMap<String, String> params, Class<T> respClass) {
+        return callExchange(baseUrl, endpoint, params, respClass, HttpMethod.GET, null);
     }
 
     @Override
     public String callGetRequest(String endpoint, MultiValueMap<String, String> params) {
-        return callExchange(endpoint, params, String.class, HttpMethod.GET, null);
+        return callExchange("", endpoint, params, String.class, HttpMethod.GET, null);
     }
 
-    private <RESP> RESP callExchange(
+    private <T> T callExchange(
+        String baseUrl,
         @NonNull String endpoint,
         MultiValueMap<String, String> params,
-        @NonNull Class<RESP> respClass,
+        @NonNull Class<T> respClass,
         @NonNull HttpMethod httpMethod,
         String requestBody
-    ) throws RestClientException {
-
+    ) throws RestClientException, IllegalArgumentException {
         HttpEntity<String> requestHttpEntity = new HttpEntity<>(requestBody, httpHeaders);
-        URI url = UriComponentsBuilder.fromHttpUrl(baseUrl)
+        URI url = UriComponentsBuilder.fromHttpUrl(hasText(baseUrl) ? baseUrl : baseAppUrl)
             .path(endpoint)
             .queryParams(params)
             .build().encode().toUri();
-        ResponseEntity<RESP> response = restTemplate.exchange(
+        ResponseEntity<T> response = restTemplate.exchange(
             url,
             httpMethod,
             requestHttpEntity,

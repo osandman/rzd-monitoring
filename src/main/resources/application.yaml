@@ -5,8 +5,12 @@ spring:
     proxy-target-class: false
   config:
     import: optional:file:.env[.properties]
+  webflux:
+    base-path: /api
 server:
   port: 8088
+#  servlet:
+#    context-path: /api
 
 bot:
   token: ${BOT_TOKEN}

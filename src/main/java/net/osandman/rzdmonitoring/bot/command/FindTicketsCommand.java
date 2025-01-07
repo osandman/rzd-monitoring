@@ -1,7 +1,7 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.dto.StationDto;
+import net.osandman.rzdmonitoring.dto.station.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;

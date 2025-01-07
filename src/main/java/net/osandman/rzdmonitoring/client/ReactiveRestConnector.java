@@ -16,7 +16,7 @@ public class ReactiveRestConnector implements RestConnector {
     }
 
     @Override
-    public <T> T callGetRequest(String url, MultiValueMap<String, String> params, Class<T> clazz) {
+    public <T> T callGetRequest(String url, MultiValueMap<String, String> params, Class<T> respClass) {
         return webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path(url)
@@ -29,7 +29,7 @@ public class ReactiveRestConnector implements RestConnector {
                                   "(KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
             .header("Accept-Language", "ru")
             .retrieve()
-            .bodyToMono(clazz)
+            .bodyToMono(respClass)
             .doOnError(error -> log.error("An error has occurred {}", error.getMessage()))
             .onErrorResume(error -> Mono.just((T) new Object())) // TODO сделать правильно обработку ошибок
             .block();

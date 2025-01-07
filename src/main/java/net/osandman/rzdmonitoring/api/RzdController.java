@@ -1,11 +1,11 @@
 package net.osandman.rzdmonitoring.api;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.dto.StationDto;
 import net.osandman.rzdmonitoring.dto.TicketsResult;
+import net.osandman.rzdmonitoring.dto.station.StationDto;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
-import net.osandman.rzdmonitoring.service.StationService;
 import net.osandman.rzdmonitoring.service.TicketService;
+import net.osandman.rzdmonitoring.service.station.StationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

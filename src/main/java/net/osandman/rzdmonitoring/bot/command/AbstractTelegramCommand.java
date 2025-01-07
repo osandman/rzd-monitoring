@@ -4,10 +4,10 @@ import io.github.dostonhamrakulov.InlineCalendarBuilder;
 import io.github.dostonhamrakulov.InlineCalendarCommandUtil;
 import io.github.dostonhamrakulov.LanguageEnum;
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.dto.StationDto;
+import net.osandman.rzdmonitoring.dto.station.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
-import net.osandman.rzdmonitoring.service.StationService;
+import net.osandman.rzdmonitoring.service.station.StationService;
 import net.osandman.rzdmonitoring.util.Utils;
 import net.osandman.rzdmonitoring.validate.CheckDateResult;
 import net.osandman.rzdmonitoring.validate.Validator;
@@ -121,7 +121,7 @@ public abstract class AbstractTelegramCommand {
 
         for (T button : toButtons) {
             buttons.add(new KeyboardButton(button.toString()));
-            if (buttons.size() >= 4) {
+            if (buttons.size() >= 3) {
                 currentRow.addAll(buttons);
                 keyboard.add(currentRow);
                 buttons.clear();
