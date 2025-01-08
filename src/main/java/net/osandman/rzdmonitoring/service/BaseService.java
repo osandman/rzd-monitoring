@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static net.osandman.rzdmonitoring.util.Utils.sleep;
+import static org.springframework.util.StringUtils.hasText;
 
 public abstract class BaseService {
     private final String endPoint; //"/timetable/public/ru";
@@ -46,11 +47,12 @@ public abstract class BaseService {
         // в случае если запрос сразу возвращает конечный результат, судя по тестам это маршруты с билетам без мест
         if (jsonNode.path("result").asText().equalsIgnoreCase("OK")
             && !jsonNode.path("tp").path(0).path("list").isEmpty()) {
-            return restConnector.callGetRequest(endPoint, params);
+            return response;
         }
         // запрос может вернуть ответ с сообщением, что поезда не найдены
-        if (jsonNode.path("tp").path(0).path("msgList").path(0)
-            .path("message").asText().toLowerCase().contains("не найдено ни одного поезда")) {
+        String msg = jsonNode.path("tp").path(0).path("msgList").path(0)
+            .path("message").asText().toLowerCase();
+        if (hasText(msg) && (msg.contains("не найдено ни одного поезда"))) {
             return null;
         }
 

@@ -1,7 +1,7 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.dto.station.StationDto;
+import net.osandman.rzdmonitoring.dto.Result;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
@@ -35,47 +35,27 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         CommandContext command = buildCommandContext(update, getCommand());
         switch (command.state().getStep()) {
             case 1 -> { // начало команды
-                sendMessage(command.chatId(), "Введите станцию отправления");
+                sendMessage(command.chatId(), "Введите станцию отправления:");
                 command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
                 findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 3 -> { // выбор станции отправления из найденных
-                // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
-                StationDto fromStationDto = getStationDto(
-                    command.messageText(), stationService.findStations(command.messageText())
-                );
-                if (fromStationDto == null) {
-                    sendMessage(
-                        command.chatId(),
-                        "Станция отправления '%s' не найдена, выберите из списка".formatted(command.messageText())
-                    );
+                if (!checkStationAndSetStates(command, FROM_STATION_CODE, FROM_STATION)) {
                     return;
                 }
-                command.state().addKey(FROM_STATION_CODE, fromStationDto.code());
-                command.state().addKey(FROM_STATION, fromStationDto.name());
-                sendMessage(command.chatId(), "Введите станцию назначения");
+                sendMessage(command.chatId(), "Введите станцию назначения:");
                 command.state().incrementStep();
             }
             case 4 -> { // ввод вручную станции назначения
                 findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 5 -> { // выбор станции назначения из найденных
-                // TODO нужно чтобы лист станций dto кэшировлся либо сделать его полем класса
-                StationDto toStationDto = getStationDto(
-                    command.messageText(), stationService.findStations(command.messageText())
-                );
-                if (toStationDto == null) {
-                    sendMessage(
-                        command.chatId(),
-                        "Станция назначения '%s' не найдена, выберите из списка".formatted(command.messageText())
-                    );
+                if (!checkStationAndSetStates(command, TO_STATION_CODE, TO_STATION)) {
                     return;
                 }
-                command.state().addKey(TO_STATION_CODE, toStationDto.code());
-                command.state().addKey(TO_STATION, toStationDto.name());
-                sendCalendar(command.chatId(), "Введите дату отправления", update);
+                sendCalendar(command.chatId(), "Введите дату отправления:", update);
                 command.state().incrementStep();
             }
             case 6 -> { // ввод даты
@@ -84,16 +64,20 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                     return;
                 }
                 command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)));
-                String taskId = createTask(command.chatId(), command.state());
-                String messageTask;
-                if (taskId == null) {
-                    messageTask = "⚠ Не найдены маршруты по данному запросу";
-                } else {
-                    messageTask = """
-                        ✅ Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
-                        период поиска каждые %s минуты
-                        """.formatted(taskId, scheduleConfig.getInterval());
+                Result result = createTask(command.chatId(), command.state());
+                if (!result.success()) {
+                    sendMessage(
+                        command.chatId(),
+                        "⚠ %s на '%s', попробуйте выбрать другую дату"
+                            .formatted(result.msg(), command.state().getParams().get(DATE))
+                    );
+                    sendCalendar(command.chatId(), "Введите дату отправления:", update);
+                    return;
                 }
+                String messageTask = """
+                    ✅ Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
+                    период поиска каждые %s минуты
+                    """.formatted(result.msg(), scheduleConfig.getInterval());
                 sendMessage(command.chatId(), messageTask);
                 userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             }
@@ -105,7 +89,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         return true;
     }
 
-    private String createTask(Long chatId, UserState.CommandState commandState, String... trainNumbers) {
+    private Result createTask(Long chatId, UserState.CommandState commandState, String... trainNumbers) {
         String date = commandState.getParams().get(DATE);
         String from = commandState.getParams().get(FROM_STATION);
         String to = commandState.getParams().get(TO_STATION);
@@ -118,9 +102,6 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
             .toCode(commandState.getParams().get(TO_STATION_CODE))
             .routeNumbers(trainNumbers)
             .build();
-        if (multiTaskScheduler.addTask(ticketsTask)) {
-            return taskId;
-        }
-        return null;
+        return multiTaskScheduler.addTask(ticketsTask);
     }
 }

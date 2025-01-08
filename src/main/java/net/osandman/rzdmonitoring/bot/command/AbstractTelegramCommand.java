@@ -181,14 +181,28 @@ public abstract class AbstractTelegramCommand {
             sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
             return;
         }
-        sendButtons(chatId, "Выберите станцию:", stationDtos);
+        sendButtons(chatId, "Выберите станцию или введите текст для нового поиска:", stationDtos);
         commandState.incrementStep();
     }
 
-    protected StationDto getStationDto(String messageText, List<StationDto> toStationDtos) {
+    protected boolean checkStationAndSetStates(CommandContext command, ParamEnum stationCode, ParamEnum stationName) {
+        StationDto stationDto = getFoundStationDto(
+            command.messageText(), stationService.findStations(command.messageText())
+        );
+        if (stationDto == null) {
+            findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
+            command.state().decrementStep();
+            return false;
+        }
+        command.state().addKey(stationCode, stationDto.code());
+        command.state().addKey(stationName, stationDto.name());
+        return true;
+    }
+
+    protected StationDto getFoundStationDto(String searchName, List<StationDto> toStationDtos) {
         return toStationDtos == null ? null :
             toStationDtos.stream()
-                .filter(stationDto -> stationDto.name().equalsIgnoreCase(messageText))
+                .filter(stationDto -> stationDto.name().equalsIgnoreCase(searchName))
                 .findAny().orElse(null);
     }
 }

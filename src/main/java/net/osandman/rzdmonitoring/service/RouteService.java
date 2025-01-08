@@ -2,6 +2,7 @@ package net.osandman.rzdmonitoring.service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
+import net.osandman.rzdmonitoring.client.dto.route.Tp;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.RouteMapper;
 import net.osandman.rzdmonitoring.util.JsonParser;
@@ -25,6 +26,13 @@ public class RouteService extends BaseService {
         RootRoute rootRoute = findRootRoute(fromStationCode, toStationCode, date);
         if (rootRoute == null || rootRoute.tp == null || rootRoute.tp.isEmpty()) {
             return "Маршруты не найдены";
+        }
+        Tp tp = rootRoute.tp.get(0);
+        long countNotTrain = tp.msgList.stream()
+            .filter(map -> map.get("message").toLowerCase().contains("в указанную дату поезд не ходит"))
+            .count();
+        if (countNotTrain >= tp.list.size()) {
+            return "В указанную дату поезд не ходит";
         }
         try {
             return routeMapper.getPrettyString(rootRoute);
