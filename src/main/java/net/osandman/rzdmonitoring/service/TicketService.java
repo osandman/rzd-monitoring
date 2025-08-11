@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static net.osandman.rzdmonitoring.util.Utils.sleep;
-
 @Service
 @Slf4j
 public class TicketService extends BaseService {
@@ -123,6 +121,10 @@ public class TicketService extends BaseService {
             String trainWithTickets;
             try {
                 trainWithTickets = findTrainWithTickets(date, routeToFind);
+            } catch (InterruptedException e) {
+                log.error("Прервано выполнение текущей задачи для маршрута {}", number);
+                Thread.currentThread().interrupt();
+                break;
             } catch (Exception e) {
                 trains.add(TrainDto.builder()
                     .trainNumber(number)
@@ -151,19 +153,22 @@ public class TicketService extends BaseService {
         return new TicketsResult(countMatchesRoutes, "Поиск билетов в заданных поездах завершен", trains);
     }
 
-    private String findTrainWithTickets(String date, Route route) {
+    private String findTrainWithTickets(String date, Route route) throws InterruptedException {
         MultiValueMap<String, String> firstReqParams = new LinkedMultiValueMap<>();
         firstReqParams.setAll(buildAllParams(date, route));
-        sleep(500);
+        Thread.sleep(500);
         try {
             String response = restConnector.callGetRequest(TICKETS_ENDPOINT, firstReqParams);
             FirstResponse firstResponse = JsonParser.parse(response, FirstResponse.class);
             log.info("Ответ на запрос RID: '{}'", firstResponse);
-            sleep(1000);
+            Thread.sleep(1000);
             MultiValueMap<String, String> secondReqParams = new LinkedMultiValueMap<>();
             secondReqParams.add("layer_id", LayerId.DETAIL_ID.code);
             secondReqParams.add("rid", String.valueOf(firstResponse.getRID()));
             return restConnector.callGetRequest(TICKETS_ENDPOINT, secondReqParams);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw e;
         } catch (Exception e) {
             log.error("Ошибка при получении билетов маршрута, параметры: {}, message='{}'",
                 firstReqParams, e.getMessage());
