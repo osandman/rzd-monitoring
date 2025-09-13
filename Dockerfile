@@ -8,7 +8,6 @@ COPY mvnw pom.xml .env ./
 RUN ./mvnw dependency:go-offline
 COPY src ./src
 RUN ./mvnw clean package
-RUN docker stop rzd-monitoring || true && docker rm rzd-monitoring || true
 
 # 2. Финальный образ
 FROM eclipse-temurin:17-jre-jammy

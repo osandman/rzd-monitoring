@@ -20,7 +20,8 @@ public class RestTemplateRequestInterceptor implements ClientHttpRequestIntercep
         if (cookie != null) {
             request.getHeaders().add(HttpHeaders.COOKIE, cookie);
         }
-        log.info("Try to call request with params: url='{}' headers='{}'", request.getURI(), request.getHeaders());
+        log.info("Try to call request with params: url='{}', headers='{}', body='{}'",
+            request.getURI(), request.getHeaders(), new String(body));
         ClientHttpResponse response = execution.execute(request, body);
 
         if (cookie == null) {

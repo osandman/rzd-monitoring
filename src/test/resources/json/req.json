@@ -1,0 +1,11 @@
+{
+  "OriginCode": "2000002",
+  "DestinationCode": "2030400",
+  "Provider": "P1",
+  "DepartureDate": "2025-09-10T23:20:00",
+  "TrainNumber": "068Ы",
+  "SpecialPlacesDemand": "StandardPlacesAndForDisabledPersons",
+  "OnlyFpkBranded": false,
+  "HasPlacesForLargeFamily": false,
+  "CarIssuingType": "All"
+}

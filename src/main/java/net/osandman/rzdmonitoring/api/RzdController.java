@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.TicketsResult;
 import net.osandman.rzdmonitoring.dto.station.StationDto;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
-import net.osandman.rzdmonitoring.service.TicketService;
+import net.osandman.rzdmonitoring.service.seat.SeatFilter;
+import net.osandman.rzdmonitoring.service.seat.SeatService;
 import net.osandman.rzdmonitoring.service.station.StationService;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,7 @@ import java.util.List;
 public class RzdController {
 
     private final StationService stationService;
-    private final TicketService ticketService;
+    private final SeatService seatService;
 
     @GetMapping("/station")
     private List<StationDto> findStation(@RequestParam String name) {
@@ -29,8 +31,12 @@ public class RzdController {
 
     @GetMapping("/tickets")
     private TicketsResult findTickets(
+        @RequestParam List<SeatFilter> seatFilters,
         @RequestBody TicketsTask ticketsTask
     ) {
-        return ticketService.process(ticketsTask);
+        if (CollectionUtils.isEmpty(seatFilters)) {
+            seatFilters = List.of(SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID, SeatFilter.COMPARTMENT);
+        }
+        return seatService.monitoringProcess(ticketsTask, seatFilters);
     }
 }

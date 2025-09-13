@@ -1,0 +1,3219 @@
+{
+  "OriginCode": "2000002",
+  "DestinationCode": "2030400",
+  "OriginTimeZoneDifference": 0,
+  "DestinationTimeZoneDifference": 2,
+  "Cars": [
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "Compartment",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 305,
+      "HasImages": true,
+      "CarSubType": "66К",
+      "CarTypeName": "КУПЕ",
+      "CarSchemeName": "66К",
+      "CarNumber": "07",
+      "ServiceClass": "2Ф",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": "МЖ Ж У0",
+      "ServiceClassTranscript": "Вагон повышенной комфортности. 4-местные купе. Кондиционер, биотуалет в вагоне. Белье входит в стоимость проезда. Перевозка домашних животных.",
+      "FreePlaces": "36",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "9",
+          "Places": "36"
+        }
+      ],
+      "PlaceQuantity": 1,
+      "IsTwoStorey": false,
+      "Services": [
+        "Bedclothes",
+        "PetsCarriage",
+        "BioToilet",
+        "AirConditioning",
+        "HygienicKit",
+        "Press"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": "Без выкупа всех мест в купе:  каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;  на каждую Переноску оформляется перевозочный документ;  разрешается перевозка одной Переноски на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  провоз крупной собаки (без переноски)** не предусмотрен. С выкупом всех мест в купе:  дополнительная плата не взимается;  на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;  разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе;  при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.",
+      "PetTransportationFullDescription": "Без выкупа всех мест в купе:\n каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;\n на каждую Переноску оформляется перевозочный документ;\n разрешается перевозка одной Переноски на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n провоз крупной собаки (без переноски)** не предусмотрен.\nС выкупом всех мест в купе:\n дополнительная плата не взимается;\n на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;\n разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.\n* Мелких животных перевозят на местах для ручной клади в Переносках (тарах, коробках, ящиках, аквариумах, клетках и т.п.) размером не более 180 см по сумме трех измерений (длина-ширина-высота). Переноски должны быть удобными, чтобы животные могли лежать, вставать, перемещаться и поворачиваться. В одной переноске можно перевозить не более двух мелких животных. На протяжении всей перевозки животное должно находиться в Переноске.\n** Крупные собаки (без переноски) – собаки, не находящиеся в переносках. Крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе на протяжение всего путешествия.",
+      "MinPrice": 5130.8,
+      "MaxPrice": 6245.3,
+      "ServiceCost": 673.0,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": true,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": false,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": true,
+      "HasNonRefundableTariff": true,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "LastCompartmentUpperWithHigherLevelOfNoise",
+      "CarPlaceCode": "4",
+      "CarPlaceNameRu": "Последнее купе, верхнее",
+      "CarPlaceNameEn": "Far compartment, upper",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "InternalFamily",
+          "Description": "Скидка по семейному тарифу"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": false,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Последнее купе, верхнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "Compartment",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 305,
+      "HasImages": true,
+      "CarSubType": "66К",
+      "CarTypeName": "КУПЕ",
+      "CarSchemeName": "66К",
+      "CarNumber": "07",
+      "ServiceClass": "2Ф",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": "МЖ Ж У0",
+      "ServiceClassTranscript": "Вагон повышенной комфортности. 4-местные купе. Кондиционер, биотуалет в вагоне. Белье входит в стоимость проезда. Перевозка домашних животных.",
+      "FreePlaces": "10Ж, 20С, 24, 26, 28, 30, 32",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "3",
+          "Places": "10Ж"
+        },
+        {
+          "CompartmentNumber": "5",
+          "Places": "20С"
+        },
+        {
+          "CompartmentNumber": "6",
+          "Places": "24"
+        },
+        {
+          "CompartmentNumber": "7",
+          "Places": "26, 28"
+        },
+        {
+          "CompartmentNumber": "8",
+          "Places": "30, 32"
+        }
+      ],
+      "PlaceQuantity": 7,
+      "IsTwoStorey": false,
+      "Services": [
+        "Bedclothes",
+        "PetsCarriage",
+        "BioToilet",
+        "AirConditioning",
+        "HygienicKit",
+        "Press"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": "Без выкупа всех мест в купе:  каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;  на каждую Переноску оформляется перевозочный документ;  разрешается перевозка одной Переноски на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  провоз крупной собаки (без переноски)** не предусмотрен. С выкупом всех мест в купе:  дополнительная плата не взимается;  на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;  разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе;  при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.",
+      "PetTransportationFullDescription": "Без выкупа всех мест в купе:\n каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;\n на каждую Переноску оформляется перевозочный документ;\n разрешается перевозка одной Переноски на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n провоз крупной собаки (без переноски)** не предусмотрен.\nС выкупом всех мест в купе:\n дополнительная плата не взимается;\n на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;\n разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.\n* Мелких животных перевозят на местах для ручной клади в Переносках (тарах, коробках, ящиках, аквариумах, клетках и т.п.) размером не более 180 см по сумме трех измерений (длина-ширина-высота). Переноски должны быть удобными, чтобы животные могли лежать, вставать, перемещаться и поворачиваться. В одной переноске можно перевозить не более двух мелких животных. На протяжении всей перевозки животное должно находиться в Переноске.\n** Крупные собаки (без переноски) – собаки, не находящиеся в переносках. Крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе на протяжение всего путешествия.",
+      "MinPrice": 6245.3,
+      "MaxPrice": 6245.3,
+      "ServiceCost": 673.0,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": true,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": false,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": true,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "Upper",
+      "CarPlaceCode": "В",
+      "CarPlaceNameRu": "Верхнее",
+      "CarPlaceNameEn": "Upper",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "InternalFamily",
+          "Description": "Скидка по семейному тарифу"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": false,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Верхнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "Compartment",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 305,
+      "HasImages": true,
+      "CarSubType": "66К",
+      "CarTypeName": "КУПЕ",
+      "CarSchemeName": "66К",
+      "CarNumber": "07",
+      "ServiceClass": "2Ф",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": "МЖ Ж У0",
+      "ServiceClassTranscript": "Вагон повышенной комфортности. 4-местные купе. Кондиционер, биотуалет в вагоне. Белье входит в стоимость проезда. Перевозка домашних животных.",
+      "FreePlaces": "19С, 27, 31",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "5",
+          "Places": "19С"
+        },
+        {
+          "CompartmentNumber": "7",
+          "Places": "27"
+        },
+        {
+          "CompartmentNumber": "8",
+          "Places": "31"
+        }
+      ],
+      "PlaceQuantity": 3,
+      "IsTwoStorey": false,
+      "Services": [
+        "Bedclothes",
+        "PetsCarriage",
+        "BioToilet",
+        "AirConditioning",
+        "HygienicKit",
+        "Press"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": "Без выкупа всех мест в купе:  каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;  на каждую Переноску оформляется перевозочный документ;  разрешается перевозка одной Переноски на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  провоз крупной собаки (без переноски)** не предусмотрен. С выкупом всех мест в купе:  дополнительная плата не взимается;  на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;  разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе;  при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.",
+      "PetTransportationFullDescription": "Без выкупа всех мест в купе:\n каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;\n на каждую Переноску оформляется перевозочный документ;\n разрешается перевозка одной Переноски на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n провоз крупной собаки (без переноски)** не предусмотрен.\nС выкупом всех мест в купе:\n дополнительная плата не взимается;\n на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;\n разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.\n* Мелких животных перевозят на местах для ручной клади в Переносках (тарах, коробках, ящиках, аквариумах, клетках и т.п.) размером не более 180 см по сумме трех измерений (длина-ширина-высота). Переноски должны быть удобными, чтобы животные могли лежать, вставать, перемещаться и поворачиваться. В одной переноске можно перевозить не более двух мелких животных. На протяжении всей перевозки животное должно находиться в Переноске.\n** Крупные собаки (без переноски) – собаки, не находящиеся в переносках. Крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе на протяжение всего путешествия.",
+      "MinPrice": 8633.3,
+      "MaxPrice": 8633.3,
+      "ServiceCost": 673.0,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": true,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": false,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": true,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "Lower",
+      "CarPlaceCode": "Н",
+      "CarPlaceNameRu": "Нижнее",
+      "CarPlaceNameEn": "Lower",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "InternalFamily",
+          "Description": "Скидка по семейному тарифу"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": false,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Нижнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "Compartment",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 284,
+      "HasImages": true,
+      "CarSubType": "35К",
+      "CarTypeName": "КУПЕ",
+      "CarSchemeName": "35К",
+      "CarNumber": "10",
+      "ServiceClass": "2К",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": "Ж",
+      "ServiceClassTranscript": "Кондиционер, биотуалет в вагоне.\nБелье входит в стоимость проезда.\nВагон с услугой перевозки животных.\n",
+      "FreePlaces": "13",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "4",
+          "Places": "13"
+        }
+      ],
+      "PlaceQuantity": 1,
+      "IsTwoStorey": false,
+      "Services": [
+        "Bedclothes",
+        "PetsCarriage",
+        "BioToilet",
+        "AirConditioning"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": "Без выкупа всех мест в купе:  каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;  на каждую Переноску оформляется перевозочный документ;  разрешается перевозка одной Переноски на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  провоз крупной собаки (без переноски)** не предусмотрен. С выкупом всех мест в купе:  дополнительная плата не взимается;  на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;  разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе;  при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.",
+      "PetTransportationFullDescription": "Без выкупа всех мест в купе:\n каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;\n на каждую Переноску оформляется перевозочный документ;\n разрешается перевозка одной Переноски на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n провоз крупной собаки (без переноски)** не предусмотрен.\nС выкупом всех мест в купе:\n дополнительная плата не взимается;\n на каждую Переноску или крупную собаку (без переноски) оформляется безденежный перевозочный документ;\n разрешена перевозка одной Переноски или одной крупной собаки (без переноски) на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n при совместной перевозке количество Переносок и крупных собак не должно превышать количество мест в купе.\n* Мелких животных перевозят на местах для ручной клади в Переносках (тарах, коробках, ящиках, аквариумах, клетках и т.п.) размером не более 180 см по сумме трех измерений (длина-ширина-высота). Переноски должны быть удобными, чтобы животные могли лежать, вставать, перемещаться и поворачиваться. В одной переноске можно перевозить не более двух мелких животных. На протяжении всей перевозки животное должно находиться в Переноске.\n** Крупные собаки (без переноски) – собаки, не находящиеся в переносках. Крупная собака (без переноски) должна быть в наморднике, на поводке и находиться на полу купе на протяжение всего путешествия.",
+      "MinPrice": 8323.3,
+      "MaxPrice": 8323.3,
+      "ServiceCost": 363.0,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": false,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": true,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "Lower",
+      "CarPlaceCode": "Н",
+      "CarPlaceNameRu": "Нижнее",
+      "CarPlaceNameEn": "Lower",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "InternalFamily",
+          "Description": "Скидка по семейному тарифу"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": true,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Нижнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "ReservedSeat",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 384,
+      "HasImages": true,
+      "CarSubType": "42П",
+      "CarTypeName": "ПЛАЦ",
+      "CarSchemeName": "42П",
+      "CarNumber": "02",
+      "ServiceClass": "3Б",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": "Ж",
+      "ServiceClassTranscript": "Вагон открытого типа(плацкартный). Кондиционер и биотуалет в вагоне. Вагон с услугой перевозки животных.",
+      "FreePlaces": "38, 40, 44, 50, 52",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "2",
+          "Places": "52"
+        },
+        {
+          "CompartmentNumber": "3",
+          "Places": "50"
+        },
+        {
+          "CompartmentNumber": "6",
+          "Places": "44"
+        },
+        {
+          "CompartmentNumber": "8",
+          "Places": "40"
+        },
+        {
+          "CompartmentNumber": "9",
+          "Places": "38"
+        }
+      ],
+      "PlaceQuantity": 5,
+      "IsTwoStorey": false,
+      "Services": [
+        "PetsCarriage",
+        "BioToilet",
+        "AirConditioning"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": "Условия перевозки животных:  каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;  на каждую Переноску оформляется перевозочный документ;  разрешается перевозка одной Переноски на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  провоз крупной собаки (без переноски)** не предусмотрен.",
+      "PetTransportationFullDescription": "Условия перевозки животных:\n каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;\n на каждую Переноску оформляется перевозочный документ;\n разрешается перевозка одной Переноски на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n провоз крупной собаки (без переноски)** не предусмотрен.\n* Мелких животных перевозят на местах для ручной клади в Переносках (тарах, коробках, ящиках, аквариумах, клетках и т.п.) размером не более 180 см по сумме трех измерений (длина-ширина-высота). Переноски должны быть удобными, чтобы животные могли лежать, вставать, перемещаться и поворачиваться. В одной переноске можно перевозить не более двух мелких животных. На протяжении всей перевозки животное должно находиться в Переноске.\n** Крупные собаки (без переноски) – собаки, не находящиеся в переносках. В плацкартных, общих и вагонах с местами для сидений провоз крупных собак (без переноски) не предусмотрен.",
+      "MinPrice": 4437.5,
+      "MaxPrice": 4437.5,
+      "ServiceCost": 232.6,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": true,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": true,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "SideUpper",
+      "CarPlaceCode": "П",
+      "CarPlaceNameRu": "Боковое верхнее",
+      "CarPlaceNameEn": "Upper lateral",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": true,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Боковое верхнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "ReservedSeat",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 384,
+      "HasImages": true,
+      "CarSubType": "42П",
+      "CarTypeName": "ПЛАЦ",
+      "CarSchemeName": "42П",
+      "CarNumber": "02",
+      "ServiceClass": "3Б",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": "Ж",
+      "ServiceClassTranscript": "Вагон открытого типа(плацкартный). Кондиционер и биотуалет в вагоне. Вагон с услугой перевозки животных.",
+      "FreePlaces": "2, 4, 8, 12, 16, 22, 24, 30, 34, 36",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "1",
+          "Places": "2, 4"
+        },
+        {
+          "CompartmentNumber": "2",
+          "Places": "8"
+        },
+        {
+          "CompartmentNumber": "3",
+          "Places": "12"
+        },
+        {
+          "CompartmentNumber": "4",
+          "Places": "16"
+        },
+        {
+          "CompartmentNumber": "6",
+          "Places": "22, 24"
+        },
+        {
+          "CompartmentNumber": "8",
+          "Places": "30"
+        },
+        {
+          "CompartmentNumber": "9",
+          "Places": "34, 36"
+        }
+      ],
+      "PlaceQuantity": 10,
+      "IsTwoStorey": false,
+      "Services": [
+        "PetsCarriage",
+        "BioToilet",
+        "AirConditioning"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": "Условия перевозки животных:  каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;  на каждую Переноску оформляется перевозочный документ;  разрешается перевозка одной Переноски на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  провоз крупной собаки (без переноски)** не предусмотрен.",
+      "PetTransportationFullDescription": "Условия перевозки животных:\n каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;\n на каждую Переноску оформляется перевозочный документ;\n разрешается перевозка одной Переноски на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n провоз крупной собаки (без переноски)** не предусмотрен.\n* Мелких животных перевозят на местах для ручной клади в Переносках (тарах, коробках, ящиках, аквариумах, клетках и т.п.) размером не более 180 см по сумме трех измерений (длина-ширина-высота). Переноски должны быть удобными, чтобы животные могли лежать, вставать, перемещаться и поворачиваться. В одной переноске можно перевозить не более двух мелких животных. На протяжении всей перевозки животное должно находиться в Переноске.\n** Крупные собаки (без переноски) – собаки, не находящиеся в переносках. В плацкартных, общих и вагонах с местами для сидений провоз крупных собак (без переноски) не предусмотрен.",
+      "MinPrice": 4437.5,
+      "MaxPrice": 4437.5,
+      "ServiceCost": 232.6,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": true,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": true,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "Upper",
+      "CarPlaceCode": "В",
+      "CarPlaceNameRu": "Верхнее",
+      "CarPlaceNameEn": "Upper",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": true,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Верхнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "ReservedSeat",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 384,
+      "HasImages": true,
+      "CarSubType": "42П",
+      "CarTypeName": "ПЛАЦ",
+      "CarSchemeName": "42П",
+      "CarNumber": "02",
+      "ServiceClass": "3Б",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": "Ж",
+      "ServiceClassTranscript": "Вагон открытого типа(плацкартный). Кондиционер и биотуалет в вагоне. Вагон с услугой перевозки животных.",
+      "FreePlaces": "37",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "9",
+          "Places": "37"
+        }
+      ],
+      "PlaceQuantity": 1,
+      "IsTwoStorey": false,
+      "Services": [
+        "PetsCarriage",
+        "BioToilet",
+        "AirConditioning"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": "Условия перевозки животных:  каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;  на каждую Переноску оформляется перевозочный документ;  разрешается перевозка одной Переноски на одно место;  на протяжении всей перевозки животное должно находиться в Переноске;  провоз крупной собаки (без переноски)** не предусмотрен.",
+      "PetTransportationFullDescription": "Условия перевозки животных:\n каждая Переноска* с мелкими животными (включая собак) оплачивается отдельно;\n на каждую Переноску оформляется перевозочный документ;\n разрешается перевозка одной Переноски на одно место;\n на протяжении всей перевозки животное должно находиться в Переноске;\n провоз крупной собаки (без переноски)** не предусмотрен.\n* Мелких животных перевозят на местах для ручной клади в Переносках (тарах, коробках, ящиках, аквариумах, клетках и т.п.) размером не более 180 см по сумме трех измерений (длина-ширина-высота). Переноски должны быть удобными, чтобы животные могли лежать, вставать, перемещаться и поворачиваться. В одной переноске можно перевозить не более двух мелких животных. На протяжении всей перевозки животное должно находиться в Переноске.\n** Крупные собаки (без переноски) – собаки, не находящиеся в переносках. В плацкартных, общих и вагонах с местами для сидений провоз крупных собак (без переноски) не предусмотрен.",
+      "MinPrice": 4437.5,
+      "MaxPrice": 4437.5,
+      "ServiceCost": 232.6,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": true,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": true,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "SideLowerWithHigherLevelOfNoise",
+      "CarPlaceCode": "7",
+      "CarPlaceNameRu": "Боковое нижнее у туалета",
+      "CarPlaceNameEn": "Lower lateral near toilet",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": true,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Боковое нижнее у туалета",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "ReservedSeat",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 384,
+      "HasImages": true,
+      "CarSubType": "42П",
+      "CarTypeName": "ПЛАЦ",
+      "CarSchemeName": "42П",
+      "CarNumber": "01",
+      "ServiceClass": "3Э",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": null,
+      "ServiceClassTranscript": "Кондиционер, биотуалет в вагоне.",
+      "FreePlaces": "38, 40, 44, 46, 48, 50, 52",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "2",
+          "Places": "52"
+        },
+        {
+          "CompartmentNumber": "3",
+          "Places": "50"
+        },
+        {
+          "CompartmentNumber": "4",
+          "Places": "48"
+        },
+        {
+          "CompartmentNumber": "5",
+          "Places": "46"
+        },
+        {
+          "CompartmentNumber": "6",
+          "Places": "44"
+        },
+        {
+          "CompartmentNumber": "8",
+          "Places": "40"
+        },
+        {
+          "CompartmentNumber": "9",
+          "Places": "38"
+        }
+      ],
+      "PlaceQuantity": 7,
+      "IsTwoStorey": false,
+      "Services": [
+        "BioToilet",
+        "AirConditioning"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": null,
+      "PetTransportationFullDescription": null,
+      "MinPrice": 4437.5,
+      "MaxPrice": 4437.5,
+      "ServiceCost": 232.6,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": true,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": false,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "SideUpper",
+      "CarPlaceCode": "П",
+      "CarPlaceNameRu": "Боковое верхнее",
+      "CarPlaceNameEn": "Upper lateral",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": true,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Боковое верхнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "ReservedSeat",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 384,
+      "HasImages": true,
+      "CarSubType": "42П",
+      "CarTypeName": "ПЛАЦ",
+      "CarSchemeName": "42П",
+      "CarNumber": "01",
+      "ServiceClass": "3Э",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": null,
+      "ServiceClassTranscript": "Кондиционер, биотуалет в вагоне.",
+      "FreePlaces": "4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "1",
+          "Places": "4"
+        },
+        {
+          "CompartmentNumber": "2",
+          "Places": "6, 8"
+        },
+        {
+          "CompartmentNumber": "3",
+          "Places": "10, 12"
+        },
+        {
+          "CompartmentNumber": "4",
+          "Places": "14, 16"
+        },
+        {
+          "CompartmentNumber": "5",
+          "Places": "18, 20"
+        },
+        {
+          "CompartmentNumber": "6",
+          "Places": "22, 24"
+        },
+        {
+          "CompartmentNumber": "7",
+          "Places": "26, 28"
+        },
+        {
+          "CompartmentNumber": "8",
+          "Places": "30, 32"
+        },
+        {
+          "CompartmentNumber": "9",
+          "Places": "34, 36"
+        }
+      ],
+      "PlaceQuantity": 17,
+      "IsTwoStorey": false,
+      "Services": [
+        "BioToilet",
+        "AirConditioning"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": null,
+      "PetTransportationFullDescription": null,
+      "MinPrice": 4437.5,
+      "MaxPrice": 4437.5,
+      "ServiceCost": 232.6,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": true,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": false,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "Upper",
+      "CarPlaceCode": "В",
+      "CarPlaceNameRu": "Верхнее",
+      "CarPlaceNameEn": "Upper",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": true,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Верхнее",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "ReservedSeat",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 384,
+      "HasImages": true,
+      "CarSubType": "42П",
+      "CarTypeName": "ПЛАЦ",
+      "CarSchemeName": "42П",
+      "CarNumber": "01",
+      "ServiceClass": "3Э",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": null,
+      "ServiceClassTranscript": "Кондиционер, биотуалет в вагоне.",
+      "FreePlaces": "37",
+      "FreePlacesByCompartments": [
+        {
+          "CompartmentNumber": "9",
+          "Places": "37"
+        }
+      ],
+      "PlaceQuantity": 1,
+      "IsTwoStorey": false,
+      "Services": [
+        "BioToilet",
+        "AirConditioning"
+      ],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "Included"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": null,
+      "PetTransportationFullDescription": null,
+      "MinPrice": 4437.5,
+      "MaxPrice": 4437.5,
+      "ServiceCost": 232.6,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": true,
+      "HasElectronicRegistration": true,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": false,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "SideLowerWithHigherLevelOfNoise",
+      "CarPlaceCode": "7",
+      "CarPlaceNameRu": "Боковое нижнее у туалета",
+      "CarPlaceNameEn": "Lower lateral near toilet",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "PassengerBoardingControl",
+      "AvailableBaggageTypes": [
+        {
+          "Type": "HandLuggage",
+          "Name": "Ручная кладь",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "OversizedLuggage",
+          "Name": "Негабаритный багаж",
+          "Description": null,
+          "CarBaggageInfo": null
+        },
+        {
+          "Type": "LuggageInBaggageRoom",
+          "Name": "Багаж в специально оборудованных купе",
+          "Description": null,
+          "CarBaggageInfo": null
+        }
+      ],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "FromHead",
+      "IsGroupTransportaionAvailable": true,
+      "IsAutoBookingAvailable": true,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Боковое нижнее у туалета",
+      "HasFssBenefit": true,
+      "ServiceClassName": ""
+    },
+    {
+      "DestinationStationCode": "2030400",
+      "CarType": "Baggage",
+      "CarDirection": "NoValue",
+      "RailwayCarSchemeId": 284,
+      "HasImages": true,
+      "CarSubType": "35К",
+      "CarTypeName": "БАГАЖ",
+      "CarSchemeName": "35К",
+      "CarNumber": "10",
+      "ServiceClass": "",
+      "ServiceClassNameRu": null,
+      "ServiceClassNameEn": null,
+      "InternationalServiceClass": "",
+      "CarDescription": null,
+      "ServiceClassTranscript": "",
+      "FreePlaces": "",
+      "FreePlacesByCompartments": [],
+      "PlaceQuantity": 8,
+      "IsTwoStorey": false,
+      "Services": [],
+      "ServicesWithIndication": [
+        {
+          "CarService": "Bedclothes",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Meal",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Wifi",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Tv",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicKit",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Press",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "AirConditioning",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BioToilet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Plaid",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "WashbasinInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HygienicShower",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Socket220V",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Slippers",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PetsCarriage",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PlacesForPassengerWithBaby",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Transfer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "RestaurantCarOrBuffet",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "LuggageCompartment",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ShowerRoomInTrain",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Safe",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ImprovedServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HighComfortWaitingRoomServices",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "InfotainmentService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "HotDrink",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "UsbSocket",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "ExcursionService",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "PanoramicSalon",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "MediaPlayer",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "Iron",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "IroningBoard",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BusinessLounge",
+          "Indication": "NotIncluded"
+        },
+        {
+          "CarService": "BuffetWithOrderingMeals",
+          "Indication": "NotIncluded"
+        }
+      ],
+      "PetTransportationShortDescription": null,
+      "PetTransportationFullDescription": null,
+      "MinPrice": 0.0,
+      "MaxPrice": 0.0,
+      "ServiceCost": 0.0,
+      "PlaceReservationType": "Usual",
+      "Carrier": "ФПК",
+      "CarrierDisplayName": "ФПК",
+      "HasGenderCabins": false,
+      "RzhdCardTypes": [
+        "BusinessTravel",
+        "UniversalRzhdCard",
+        "RzhdBonus"
+      ],
+      "TrainNumber": "068Ы",
+      "ArrivalDateTime": "2025-09-11T21:45:00",
+      "LocalArrivalDateTime": "2025-09-11T23:45:00",
+      "HasNoInterchange": false,
+      "HasPlaceNumeration": true,
+      "IsBeddingSelectionPossible": false,
+      "HasElectronicRegistration": false,
+      "HasDynamicPricing": false,
+      "HasPlacesNearBabies": false,
+      "HasPlacesNearPlayground": false,
+      "HasPlacesNearPets": false,
+      "HasNonRefundableTariff": false,
+      "OnlyNonRefundableTariff": false,
+      "IsAdditionalPassengerAllowed": false,
+      "IsChildTariffTypeAllowed": true,
+      "CarPlaceType": "NoValue",
+      "CarPlaceCode": "",
+      "CarPlaceNameRu": "Обычное место",
+      "CarPlaceNameEn": "Regular place",
+      "Discounts": [
+        {
+          "DiscountType": "Birthday",
+          "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "BirthdayAccompanying",
+          "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+        },
+        {
+          "DiscountType": "UniversalCard",
+          "Description": "Скидка по дорожной карте"
+        },
+        {
+          "DiscountType": "BusinessTravelCard",
+          "Description": "Оформление по Деловому проездному"
+        }
+      ],
+      "AllowedTariffs": [],
+      "IsSaleForbidden": false,
+      "AvailabilityIndication": "Available",
+      "IsThreeHoursReservationAvailable": true,
+      "Road": "В-СИБ",
+      "InfoRequestSchema": "StandardIncludingInvalids",
+      "PassengerSpecifyingRules": "Standard",
+      "IsMealOptionPossible": false,
+      "IsAdditionalMealOptionPossible": false,
+      "IsOnRequestMealOptionPossible": false,
+      "MealSalesOpenedTill": "2025-09-08T00:00:00",
+      "IsTransitDocumentRequired": false,
+      "IsInterstate": false,
+      "ClientFeeCalculation": null,
+      "AgentFeeCalculation": null,
+      "IsBranded": false,
+      "IsBuffet": false,
+      "TripDirection": "Internal",
+      "IsFromUkrainianCalcCenter": false,
+      "IsForDisabledPersons": false,
+      "IsSpecialSaleMode": false,
+      "BoardingSystemType": "NoValue",
+      "AvailableBaggageTypes": [],
+      "IsTourPackageAvailable": false,
+      "ArePlacesForBusinessTravelBooking": false,
+      "IsCarTransportationCoach": false,
+      "CarNumeration": "Unknown",
+      "IsGroupTransportaionAvailable": false,
+      "IsAutoBookingAvailable": false,
+      "TrainNumberFromFormingStation": "068ЫА",
+      "PlacesWithConditionalRefundableTariffQuantity": 0,
+      "HasPlacesWithChild": false,
+      "HasPlacesForLargeFamily": false,
+      "CarPlaceName": "Обычное место",
+      "HasFssBenefit": false,
+      "ServiceClassName": ""
+    }
+  ],
+  "RoutePolicy": "Internal",
+  "TrainInfo": {
+    "TrainNumber": "068Ы",
+    "TrainNumberToGetRoute": "068Ы",
+    "DisplayTrainNumber": "068Ы",
+    "TrainDescription": "СК",
+    "TrainName": "",
+    "TrainNameEn": "",
+    "TransportType": "Train",
+    "OriginName": "Москва Ярославская (Ярославский вокзал)",
+    "InitialStationName": "Москва Ярославская",
+    "OriginStationCode": "2000002",
+    "OriginStationInfo": {
+      "StationName": "Москва Ярославская",
+      "StationCode": "2000002",
+      "CnsiCode": "4114",
+      "RegionName": "Москва",
+      "IsoCode": "RU-MOW"
+    },
+    "InitialTrainStationInfo": {
+      "StationName": "Москва Ярославская",
+      "StationCode": "2000002",
+      "CnsiCode": "4114",
+      "RegionName": "Москва",
+      "IsoCode": "RU-MOW"
+    },
+    "InitialTrainStationCode": "2000002",
+    "InitialTrainStationCnsiCode": "4114",
+    "DestinationName": "Пермь 2",
+    "FinalStationName": "Абакан",
+    "DestinationStationCode": "2030400",
+    "DestinationStationInfo": {
+      "StationName": "Пермь 2",
+      "StationCode": "2030400",
+      "CnsiCode": "16776",
+      "RegionName": "Пермский край",
+      "IsoCode": "RU-PER"
+    },
+    "FinalTrainStationInfo": {
+      "StationName": "Абакан",
+      "StationCode": "2038230",
+      "CnsiCode": "19610",
+      "RegionName": "Республика Хакасия",
+      "IsoCode": "RU-KK"
+    },
+    "FinalTrainStationCode": "2038230",
+    "FinalTrainStationCnsiCode": "19610",
+    "DestinationNames": [
+      "АБАКАН"
+    ],
+    "FinalStationNames": [
+      "АБАКАН"
+    ],
+    "DepartureDateTime": "2025-09-10T23:20:00",
+    "LocalDepartureDateTime": "2025-09-10T23:20:00",
+    "ArrivalDateTime": "2025-09-11T21:45:00",
+    "LocalArrivalDateTime": "2025-09-11T23:45:00",
+    "ArrivalDateTimes": [
+      "2025-09-11T21:45:00"
+    ],
+    "LocalArrivalDateTimes": [
+      "2025-09-11T23:45:00"
+    ],
+    "DepartureDateFromFormingStation": "2025-09-10T00:00:00",
+    "DepartureStopTime": 0,
+    "ArrivalStopTime": 23,
+    "TripDuration": 1345.0,
+    "TripDistance": 1437,
+    "IsSuburban": false,
+    "IsComponent": false,
+    "CarServices": [
+      "Bedclothes"
+    ],
+    "IsSaleForbidden": false,
+    "IsTicketPrintRequiredForBoarding": false,
+    "BookingSystem": "Express3",
+    "IsVrStorageSystem": false,
+    "PlacesStorageType": "Russia",
+    "BoardingSystemTypes": [
+      "PassengerBoardingControl",
+      "NoValue"
+    ],
+    "TrainBrandCode": "3033",
+    "TrainClassNames": null
+  },
+  "IsFromUkrain": false,
+  "AllowedDocumentTypes": [
+    "ForeignPassport",
+    "RussianForeignPassport",
+    "StatelessPersonIdentityCard",
+    "DiplomaticPassport",
+    "ServicePassport",
+    "ReturnToCisCertificate",
+    "RussianPassport",
+    "UssrPassport",
+    "BirthCertificate",
+    "MilitaryCard",
+    "SailorPassport",
+    "PrisonReleaseCertificate",
+    "LostPassportCertificate",
+    "RefugeeCertificate",
+    "RefugeeIdentity",
+    "ResidencePermit",
+    "MilitaryOfficerCard",
+    "RussianTemporaryIdentityCard",
+    "MedicalBirthCertificate",
+    "ConvictedPersonIdentity",
+    "AcknowledgmentOfIdentityOfAForeignCitizenOrStatelessPerson",
+    "CertificateIssuedForAForeignCitizenGoingToDiplomaticOffice",
+    "AnotherDocumentOfAForeignCitizenRecognizedInTheRussianFederation"
+  ],
+  "ClientFeeCalculation": null,
+  "AgentFeeCalculation": null,
+  "BookingSystem": "Express3",
+  "CarTariffPrices": null
+}

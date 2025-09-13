@@ -13,14 +13,18 @@ import java.util.Map;
 import static net.osandman.rzdmonitoring.bot.command.Buttons.CHANGE_INTERVAL;
 import static net.osandman.rzdmonitoring.bot.command.Buttons.DELETE;
 import static net.osandman.rzdmonitoring.bot.command.Buttons.DELETE_ALL;
-import static net.osandman.rzdmonitoring.bot.command.Buttons.START;
-import static net.osandman.rzdmonitoring.bot.command.Buttons.STOP;
+import static net.osandman.rzdmonitoring.bot.command.Buttons.START_ALL;
+import static net.osandman.rzdmonitoring.bot.command.Buttons.STOP_ALL;
 
 @Component
 @RequiredArgsConstructor
 public class TasksCommand extends AbstractTelegramCommand implements ITelegramCommand {
 
     private final MultiTaskScheduler taskScheduler;
+
+    public static final String DELETE_ICON1 = "\uD83D\uDDD1"; // 🗑
+    public static final String DELETE_ICON2 = "\uD83D\uDDD1\uFE0F"; // 🗑️
+    public static final String EMPTY_ICON = "\uD83D\uDCED"; // 📭️
 
     @Override
     public Command getCommand() {
@@ -41,11 +45,11 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                     }
                     sendMessage(command.chatId(), "Текущие задачи: \n" + tasks);
                     String startOrStop = taskMap.entrySet().iterator().next().getValue().getState() == State.ACTIVE
-                        ? STOP : START;
+                        ? STOP_ALL : START_ALL;
                     List<String> buttons = List.of(DELETE, startOrStop, CHANGE_INTERVAL);
                     sendButtons(command.chatId(), "Выберите действия с задачами:", buttons);
                 } else {
-                    sendMessage(command.chatId(), "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
+                    sendMessage(command.chatId(), EMPTY_ICON + " Задачи отсутствуют");
                 }
                 command.state().incrementStep();
             }
@@ -54,10 +58,12 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                     case DELETE -> {
                         List<String> taskNames = new ArrayList<>(taskMap.keySet());
                         taskNames.add(DELETE_ALL);
-                        sendButtons(command.chatId(), "Выберите задачу или '%s' для удаления:".formatted(DELETE_ALL), taskNames);
+                        sendButtons(
+                            command.chatId(), "Выберите задачу или '%s' для удаления:".formatted(DELETE_ALL), taskNames
+                        );
                         command.state().setStep(3);
                     }
-                    case START, STOP -> {
+                    case START_ALL, STOP_ALL -> {
                         State currentState = taskMap.entrySet().iterator().next().getValue().getState();
                         currentState = (currentState == State.ACTIVE) ? State.PAUSED : State.ACTIVE;
                         taskScheduler.changeState(currentState);
@@ -89,16 +95,16 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
         if (DELETE_ALL.equalsIgnoreCase(messageText)) {
             Integer removedCount = taskScheduler.removeAllTasks(chatId);
             if (removedCount == null || removedCount == 0) {
-                sendMessage(chatId, "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
+                sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
             } else {
-                sendMessage(chatId, "Все (%d) задачи удалены".formatted(removedCount));
+                sendMessage(chatId, DELETE_ICON2 + " Все (%d) задачи удалены".formatted(removedCount));
             }
         } else if (taskMap.containsKey(messageText)) {
             Boolean check = taskScheduler.removeTask(chatId, messageText);
             if (check == null) {
-                sendMessage(chatId, "\uD83D\uDDD1\uFE0F Задачи отсутствуют"); // 🗑️
+                sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
             } else if (check) {
-                sendMessage(chatId, "Задача '%s' удалена".formatted(messageText));
+                sendMessage(chatId, DELETE_ICON1 + " Задача '%s' удалена".formatted(messageText));
             } else {
                 sendMessage(chatId, "Ошибка при удалении задачи '%s'".formatted(messageText));
             }

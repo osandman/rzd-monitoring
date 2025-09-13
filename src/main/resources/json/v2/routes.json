@@ -1,0 +1,1806 @@
+{
+  "OriginStationCode": "2030120",
+  "DestinationStationCode": "2000000",
+  "Trains": [
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 8,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 8,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": false,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": {
+        "StationInfo": {
+          "NameRu": "БАДА",
+          "NameEn": null,
+          "ExpressCode": "2050498",
+          "CnsiCode": "20631"
+        },
+        "Deviation": -1.0,
+        "DeviationType": 1
+      },
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "А"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": true,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 1,
+      "IsBranded": true,
+      "TrainNumber": "069Ь",
+      "TrainNumberToGetRoute": "069Ь",
+      "DisplayTrainNumber": "069Ь",
+      "TrainDescription": "СК ФИРМ",
+      "TrainName": "Чита – Москва",
+      "TrainNameEn": "Chita – Moscow",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Чита 2",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Чита 2",
+        "StationCode": "2050001",
+        "CnsiCode": "20609",
+        "RegionName": "Забайкальский край",
+        "IsoCode": "RU-ZAB"
+      },
+      "InitialTrainStationCode": "2050001",
+      "InitialTrainStationCnsiCode": "20609",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T03:50:00",
+      "LocalDepartureDateTime": "2025-01-09T05:50:00",
+      "ArrivalDateTime": "2025-01-10T04:56:00",
+      "LocalArrivalDateTime": "2025-01-10T04:56:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T04:56:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T04:56:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-05T15:00:00",
+      "DepartureStopTime": 23,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1506.0,
+      "TripDistance": 1437,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [
+        "InfotainmentService"
+      ],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "NoValue"
+      ],
+      "TrainBrandCode": "3033",
+      "TrainClassNames": [
+        "BrandedTrain"
+      ],
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    },
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            "3Б"
+          ],
+          "MinPrice": 3147.8,
+          "MaxPrice": 3147.8,
+          "CarType": "ReservedSeat",
+          "CarTypeName": "ПЛАЦ",
+          "PlaceQuantity": 0,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 1,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            "Ж"
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            232.6
+          ],
+          "IsBeddingSelectionPossible": true,
+          "BoardingSystemTypes": [
+            "PassengerBoardingControl"
+          ],
+          "HasElectronicRegistration": true,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": true,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [
+            {
+              "Type": "HandLuggage",
+              "Name": "Ручная кладь",
+              "Description": null,
+              "CarBaggageInfo": null
+            },
+            {
+              "Type": "OversizedLuggage",
+              "Name": "Негабаритный багаж",
+              "Description": null,
+              "CarBaggageInfo": null
+            },
+            {
+              "Type": "LuggageInBaggageRoom",
+              "Name": "Багаж в специально оборудованных купе",
+              "Description": null,
+              "CarBaggageInfo": null
+            }
+          ],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Pupil",
+              "Description": "Скидка для школьников"
+            },
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 1,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": true,
+          "TripPointQuantity": 942,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": true
+        },
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 8,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 8,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": true,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": null,
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "А"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": false,
+      "HasElectronicRegistration": true,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 2,
+      "IsBranded": false,
+      "TrainNumber": "229Е",
+      "TrainNumberToGetRoute": "229Е",
+      "DisplayTrainNumber": "229Е",
+      "TrainDescription": "СК",
+      "TrainName": "",
+      "TrainNameEn": "",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Пермь 2",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationCode": "2030400",
+      "InitialTrainStationCnsiCode": "16776",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T09:21:00",
+      "LocalDepartureDateTime": "2025-01-09T11:21:00",
+      "ArrivalDateTime": "2025-01-10T05:30:00",
+      "LocalArrivalDateTime": "2025-01-10T05:30:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T05:30:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T05:30:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-09T09:21:00",
+      "DepartureStopTime": 0,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1209.0,
+      "TripDistance": 1397,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "PassengerBoardingControl",
+        "NoValue"
+      ],
+      "TrainBrandCode": "3033",
+      "TrainClassNames": null,
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    },
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 7,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 7,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": false,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": null,
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "А"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": true,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 3,
+      "IsBranded": true,
+      "TrainNumber": "091И",
+      "TrainNumberToGetRoute": "091И",
+      "DisplayTrainNumber": "091И",
+      "TrainDescription": "СК ФИРМ",
+      "TrainName": "Северобайкальск – Москва",
+      "TrainNameEn": "Severobaykalsk – Moscow",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Северобайкальск",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Северобайкальск",
+        "StationCode": "2054052",
+        "CnsiCode": "19907",
+        "RegionName": "Республика Бурятия",
+        "IsoCode": "RU-BU"
+      },
+      "InitialTrainStationCode": "2054052",
+      "InitialTrainStationCnsiCode": "19907",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T09:31:00",
+      "LocalDepartureDateTime": "2025-01-09T11:31:00",
+      "ArrivalDateTime": "2025-01-10T06:28:00",
+      "LocalArrivalDateTime": "2025-01-10T06:28:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T06:28:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T06:28:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-06T12:24:00",
+      "DepartureStopTime": 38,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1257.0,
+      "TripDistance": 1397,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "NoValue"
+      ],
+      "TrainBrandCode": "3033",
+      "TrainClassNames": [
+        "BrandedTrain"
+      ],
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    },
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 8,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 8,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": false,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": {
+        "StationInfo": {
+          "NameRu": "ПРИИСКОВАЯ",
+          "NameEn": null,
+          "ExpressCode": "2050390",
+          "CnsiCode": "20792"
+        },
+        "Deviation": 1.0,
+        "DeviationType": 3
+      },
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "А"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": true,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 4,
+      "IsBranded": true,
+      "TrainNumber": "001Э",
+      "TrainNumberToGetRoute": "001Э",
+      "DisplayTrainNumber": "001Э",
+      "TrainDescription": "СК ФИРМ",
+      "TrainName": "Россия",
+      "TrainNameEn": "Russia",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Владивосток",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Владивосток",
+        "StationCode": "2034130",
+        "CnsiCode": "21254",
+        "RegionName": "Приморский край",
+        "IsoCode": "RU-PRI"
+      },
+      "InitialTrainStationCode": "2034130",
+      "InitialTrainStationCnsiCode": "21254",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T09:41:00",
+      "LocalDepartureDateTime": "2025-01-09T11:41:00",
+      "ArrivalDateTime": "2025-01-10T11:10:00",
+      "LocalArrivalDateTime": "2025-01-10T11:10:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T11:10:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T11:10:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-03T15:25:00",
+      "DepartureStopTime": 25,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1529.0,
+      "TripDistance": 1438,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [
+        "InfotainmentService"
+      ],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "NoValue"
+      ],
+      "TrainBrandCode": "3033",
+      "TrainClassNames": [
+        "BrandedTrain"
+      ],
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    },
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 8,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 8,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": false,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": null,
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "А"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": true,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 5,
+      "IsBranded": true,
+      "TrainNumber": "011Е",
+      "TrainNumberToGetRoute": "011Е",
+      "DisplayTrainNumber": "011Е",
+      "TrainDescription": "СК ФИРМ",
+      "TrainName": "Ямал",
+      "TrainNameEn": "Yamal",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Новый Уренгой",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Новый Уренгой",
+        "StationCode": "2030319",
+        "CnsiCode": "17716",
+        "RegionName": "Ямало-Ненецкий автономный округ",
+        "IsoCode": "RU-YAN"
+      },
+      "InitialTrainStationCode": "2030319",
+      "InitialTrainStationCnsiCode": "17716",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T11:50:00",
+      "LocalDepartureDateTime": "2025-01-09T13:50:00",
+      "ArrivalDateTime": "2025-01-10T10:30:00",
+      "LocalArrivalDateTime": "2025-01-10T10:30:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T10:30:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T10:30:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-07T10:30:00",
+      "DepartureStopTime": 47,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1360.0,
+      "TripDistance": 1397,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [
+        "InfotainmentService"
+      ],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "NoValue"
+      ],
+      "TrainBrandCode": "3033",
+      "TrainClassNames": [
+        "BrandedTrain"
+      ],
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    },
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 8,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 8,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": true,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": null,
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "А"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": true,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 6,
+      "IsBranded": false,
+      "TrainNumber": "298Е",
+      "TrainNumberToGetRoute": "298Е",
+      "DisplayTrainNumber": "297*Е",
+      "TrainDescription": "СК",
+      "TrainName": "",
+      "TrainNameEn": "",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Челябинск-Главный",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Челябинск-Главный",
+        "StationCode": "2040000",
+        "CnsiCode": "17722",
+        "RegionName": "Челябинская область",
+        "IsoCode": "RU-CHE"
+      },
+      "InitialTrainStationCode": "2040000",
+      "InitialTrainStationCnsiCode": "17722",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T17:58:00",
+      "LocalDepartureDateTime": "2025-01-09T19:58:00",
+      "ArrivalDateTime": "2025-01-10T14:08:00",
+      "LocalArrivalDateTime": "2025-01-10T14:08:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T14:08:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T14:08:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-09T05:38:00",
+      "DepartureStopTime": 24,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1210.0,
+      "TripDistance": 1397,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "NoValue"
+      ],
+      "TrainBrandCode": "3033",
+      "TrainClassNames": null,
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    },
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 6,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 6,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": true,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": null,
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "А"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": true,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 7,
+      "IsBranded": false,
+      "TrainNumber": "077Ы",
+      "TrainNumberToGetRoute": "077Ы",
+      "DisplayTrainNumber": "077Ы",
+      "TrainDescription": "СК",
+      "TrainName": "",
+      "TrainNameEn": "",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Абакан",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Абакан",
+        "StationCode": "2038230",
+        "CnsiCode": "19610",
+        "RegionName": "Республика Хакасия",
+        "IsoCode": "RU-KK"
+      },
+      "InitialTrainStationCode": "2038230",
+      "InitialTrainStationCnsiCode": "19610",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T18:07:00",
+      "LocalDepartureDateTime": "2025-01-09T20:07:00",
+      "ArrivalDateTime": "2025-01-10T17:43:00",
+      "LocalArrivalDateTime": "2025-01-10T17:43:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T17:43:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T17:43:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-07T17:42:00",
+      "DepartureStopTime": 24,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1416.0,
+      "TripDistance": 1437,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "NoValue"
+      ],
+      "TrainBrandCode": "3033",
+      "TrainClassNames": null,
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    },
+    {
+      "CarGroups": [
+        {
+          "Carriers": [
+            "ФПК"
+          ],
+          "CarrierDisplayNames": [
+            "ФПК"
+          ],
+          "ServiceClasses": [
+            ""
+          ],
+          "MinPrice": 0.0,
+          "MaxPrice": 0.0,
+          "CarType": "Baggage",
+          "CarTypeName": "БАГАЖ",
+          "PlaceQuantity": 8,
+          "LowerPlaceQuantity": 0,
+          "UpperPlaceQuantity": 0,
+          "LowerSidePlaceQuantity": 0,
+          "UpperSidePlaceQuantity": 0,
+          "MalePlaceQuantity": 0,
+          "FemalePlaceQuantity": 0,
+          "EmptyCabinQuantity": 0,
+          "MixedCabinQuantity": 0,
+          "IsSaleForbidden": false,
+          "AvailabilityIndication": "Available",
+          "CarDescriptions": [
+            null
+          ],
+          "ServiceClassNameRu": null,
+          "ServiceClassNameEn": null,
+          "InternationalServiceClasses": [
+            ""
+          ],
+          "ServiceCosts": [
+            0.0
+          ],
+          "IsBeddingSelectionPossible": false,
+          "BoardingSystemTypes": [
+            "NoValue"
+          ],
+          "HasElectronicRegistration": false,
+          "HasGenderCabins": false,
+          "HasPlaceNumeration": true,
+          "HasPlacesNearPlayground": false,
+          "HasPlacesNearPets": false,
+          "HasPlacesForDisabledPersons": false,
+          "HasPlacesNearBabies": false,
+          "AvailableBaggageTypes": [],
+          "HasNonRefundableTariff": false,
+          "Discounts": [
+            {
+              "DiscountType": "Birthday",
+              "Description": "Скидка по тарифу ДеньР (день рождения в день отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "BirthdayAccompanying",
+              "Description": "Скидка по тарифу ДеньС (сопровождение именинника, если его день рождения в дату отправления +- 7 дней)"
+            },
+            {
+              "DiscountType": "UniversalCard",
+              "Description": "Скидка по дорожной карте"
+            },
+            {
+              "DiscountType": "BusinessTravelCard",
+              "Description": "Оформление по Деловому проездному"
+            }
+          ],
+          "AllowedTariffs": [],
+          "InfoRequestSchema": "StandardIncludingInvalids",
+          "TotalPlaceQuantity": 8,
+          "PlaceReservationTypes": [
+            "Usual"
+          ],
+          "IsThreeHoursReservationAvailable": true,
+          "IsMealOptionPossible": false,
+          "IsAdditionalMealOptionPossible": false,
+          "IsOnRequestMealOptionPossible": false,
+          "IsTransitDocumentRequired": false,
+          "IsInterstate": false,
+          "ClientFeeCalculation": null,
+          "AgentFeeCalculation": null,
+          "HasNonBrandedCars": true,
+          "TripPointQuantity": 0,
+          "HasPlacesForBusinessTravelBooking": false,
+          "IsCarTransportationCoaches": false,
+          "IsGroupTransportaionAvailable": null,
+          "ServiceClassName": "",
+          "HasFssBenefit": false
+        }
+      ],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": {
+        "StationInfo": {
+          "NameRu": "ЕРОФЕЙ ПАВЛОВИЧ",
+          "NameEn": null,
+          "ExpressCode": "2050337",
+          "CnsiCode": "20875"
+        },
+        "Deviation": -6.0,
+        "DeviationType": 1
+      },
+      "CategoryId": null,
+      "ScheduleId": null,
+      "BaggageCarsThreads": [
+        "Ц"
+      ],
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P1",
+      "IsWaitListAvailable": true,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ФПК"
+      ],
+      "CarrierDisplayNames": [
+        "ФПК"
+      ],
+      "Id": 8,
+      "IsBranded": false,
+      "TrainNumber": "009Н",
+      "TrainNumberToGetRoute": "009Н",
+      "DisplayTrainNumber": "009Н",
+      "TrainDescription": "ПАСС",
+      "TrainName": "",
+      "TrainNameEn": "",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Владивосток",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Владивосток",
+        "StationCode": "2034130",
+        "CnsiCode": "21254",
+        "RegionName": "Приморский край",
+        "IsoCode": "RU-PRI"
+      },
+      "InitialTrainStationCode": "2034130",
+      "InitialTrainStationCnsiCode": "21254",
+      "DestinationName": "Москва Ярославская",
+      "FinalStationName": "Москва Ярославская (Ярославский вокзал)",
+      "DestinationStationCode": "2000002",
+      "DestinationStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Москва Ярославская",
+        "StationCode": "2000002",
+        "CnsiCode": "4114",
+        "RegionName": "Москва",
+        "IsoCode": "RU-MOW"
+      },
+      "FinalTrainStationCode": "2000002",
+      "FinalTrainStationCnsiCode": "4114",
+      "DestinationNames": [
+        "МОСКВА ЯР"
+      ],
+      "FinalStationNames": [
+        "МОСКВА ЯР"
+      ],
+      "DepartureDateTime": "2025-01-09T20:48:00",
+      "LocalDepartureDateTime": "2025-01-09T22:48:00",
+      "ArrivalDateTime": "2025-01-10T16:00:00",
+      "LocalArrivalDateTime": "2025-01-10T16:00:00",
+      "ArrivalDateTimes": [
+        "2025-01-10T16:00:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-01-10T16:00:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-01-04T06:45:00",
+      "DepartureStopTime": 20,
+      "ArrivalStopTime": 0,
+      "TripDuration": 1152.0,
+      "TripDistance": 1397,
+      "IsSuburban": false,
+      "IsComponent": false,
+      "CarServices": [],
+      "IsSaleForbidden": false,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Express3",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [
+        "NoValue"
+      ],
+      "TrainBrandCode": null,
+      "TrainClassNames": null,
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Москва Ярославская (Ярославский вокзал)",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    }
+  ],
+  "ClientFeeCalculation": null,
+  "AgentFeeCalculation": null,
+  "OriginCode": "2030120",
+  "OriginStationInfo": {
+    "StationName": "Пермь",
+    "StationCode": "2030120",
+    "CnsiCode": null,
+    "RegionName": null,
+    "IsoCode": null
+  },
+  "OriginTimeZoneDifference": 2,
+  "DestinationCode": "2000000",
+  "DestinationStationInfo": {
+    "StationName": "Москва",
+    "StationCode": "2000000",
+    "CnsiCode": null,
+    "RegionName": null,
+    "IsoCode": null
+  },
+  "DestinationTimeZoneDifference": 0,
+  "RoutePolicy": "Internal",
+  "DepartureTimeDescription": "Moscow",
+  "ArrivalTimeDescription": "Moscow",
+  "IsFromUkrain": false,
+  "NotAllTrainsReturned": false,
+  "BookingSystem": "Express3",
+  "Id": 0,
+  "DestinationStationName": "Москва",
+  "OriginStationName": "Пермь",
+  "MoscowDateTime": "2025-01-05T21:06:55.660"
+}

@@ -7,6 +7,7 @@ public enum ParamEnum {
     TO_STATION("to_station"),
     DATE("date"),
     TRAIN_NUMBER("train_number");
+
     final String value;
 
     ParamEnum(String value) {

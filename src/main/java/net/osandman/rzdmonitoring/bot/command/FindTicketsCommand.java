@@ -1,17 +1,23 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.dto.Result;
+import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
+import net.osandman.rzdmonitoring.dto.CheckResult;
+import net.osandman.rzdmonitoring.dto.TaskResult;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
+import net.osandman.rzdmonitoring.service.RouteService;
+import net.osandman.rzdmonitoring.service.seat.SeatFilter;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION_CODE;
@@ -24,6 +30,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
 
     private final MultiTaskScheduler multiTaskScheduler;
     private final ScheduleConfig scheduleConfig;
+    private final RouteService routeService;
 
     @Override
     public Command getCommand() {
@@ -58,26 +65,62 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 sendCalendar(command.chatId(), "Введите дату отправления:", update);
                 command.state().incrementStep();
             }
-            case 6 -> { // ввод даты
+            case 6 -> { // ввод даты и выбор маршрута поезда
                 LocalDate localDate = handleDate(update, command);
                 if (localDate == null) {
                     return;
                 }
-                command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)));
-                Result result = createTask(command.chatId(), command.state());
-                if (!result.success()) {
+                String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
+
+                sendMessage(command.chatId(), "Поиск поездов на %s".formatted(dateToSearch));
+                RootRoute rootRoute =
+                    routeService.findRootRoute(
+                        command.state().getParams().get(FROM_STATION_CODE),
+                        command.state().getParams().get(TO_STATION_CODE),
+                        dateToSearch
+                    );
+
+                CheckResult checkResult = routeService.checkRoute(rootRoute);
+                if (!checkResult.success()) {
                     sendMessage(
                         command.chatId(),
-                        "⚠ %s на '%s', попробуйте выбрать другую дату"
-                            .formatted(result.msg(), command.state().getParams().get(DATE))
+                        "⚠ Ошибка: '%s' при поиске маршрутов на дату '%s'".formatted(checkResult.msg(), dateToSearch)
                     );
                     sendCalendar(command.chatId(), "Введите дату отправления:", update);
                     return;
                 }
-                String messageTask = """
-                    ✅ Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
-                    период поиска каждые %s минуты
-                    """.formatted(result.msg(), scheduleConfig.getInterval());
+                List<String> availableNumbers = rootRoute.getTp().stream()
+                    .flatMap(tp -> tp.list.stream().map(route -> route.number))
+                    .toList();
+                sendButtons(
+                    command.chatId(),
+                    "Найдено %d маршрутов, выберите номер поезда:".formatted(availableNumbers.size()),
+                    availableNumbers
+                );
+                command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
+                command.state().incrementStep();
+            }
+            case 7 -> { // запуск мониторинга билетов
+                // TODO дополнить получение фильтра из текстового сообщения телеграма, временно хардкод
+                List<SeatFilter> seatFilters = List.of(
+                    SeatFilter.COMPARTMENT, SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID
+                );
+                TaskResult taskResult = createTask(command, seatFilters);
+//                command.chatId(), command.state(), command.messageText().split(",")
+                String messageTask;
+                if (taskResult.success()) {
+                    messageTask = """
+                        ✅ Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
+                        период поиска каждые %d мин. (фильтр по умолчанию: '%s')
+                        """.formatted(
+                        taskResult.taskId(),
+                        scheduleConfig.getInterval(),
+                        String.join(",", seatFilters.stream().map(SeatFilter::getButtonText).toList())
+                    );
+                } else {
+                    messageTask = "Произошла ошибка при запуске мониторинга билетов: '%s'".formatted(taskResult.msg());
+                    command.state().decrementStep();
+                }
                 sendMessage(command.chatId(), messageTask);
                 userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             }
@@ -89,19 +132,28 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         return true;
     }
 
-    private Result createTask(Long chatId, UserState.CommandState commandState, String... trainNumbers) {
-        String date = commandState.getParams().get(DATE);
-        String from = commandState.getParams().get(FROM_STATION);
-        String to = commandState.getParams().get(TO_STATION);
-        String taskId = "task-" + date + "-from-" + from + "-to-" + to + "-chatId-" + chatId;
+    private TaskResult createTask(CommandContext commandContext, List<SeatFilter> seatFilters) {
+        UserState.CommandState state = commandContext.state();
+        String date = state.getParams().get(DATE);
+        String from = state.getParams().get(FROM_STATION);
+        String to = state.getParams().get(TO_STATION);
+        long chatId = commandContext.chatId();
+        String[] trainNumbers = commandContext.messageText().split(",");
+        String taskId = "task-" + date + "-" + from + "-" + to + "-" +
+                        String.join("_", trainNumbers) + "-chatId-" + chatId;
         TicketsTask ticketsTask = TicketsTask.builder()
             .chatId(chatId)
             .taskId(taskId)
             .date(date)
-            .fromCode(commandState.getParams().get(FROM_STATION_CODE))
-            .toCode(commandState.getParams().get(TO_STATION_CODE))
+            .fromCode(state.getParams().get(FROM_STATION_CODE))
+            .toCode(state.getParams().get(TO_STATION_CODE))
             .routeNumbers(trainNumbers)
             .build();
-        return multiTaskScheduler.addTask(ticketsTask);
+        try {
+            multiTaskScheduler.addTask(ticketsTask, seatFilters);
+        } catch (Exception e) {
+            return new TaskResult(false, e.getMessage(), taskId);
+        }
+        return new TaskResult(true, "Задача добавлена", taskId);
     }
 }

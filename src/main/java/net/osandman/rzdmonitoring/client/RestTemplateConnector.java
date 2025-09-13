@@ -34,9 +34,12 @@ public class RestTemplateConnector implements RestConnector {
     private String baseAppUrl;
 
     static {
-//        httpHeaders.set("Host", HOST);
-//        httpHeaders.set("Cookie", "JSESSIONID=4054C174E5CD78D5FDD8BD8D155FC233");
-//        httpHeaders.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
+        //httpHeaders.set("Host", "ticket.rzd.ru");
+        //httpHeaders.set("Cookie", "JSESSIONID=4054C174E5CD78D5FDD8BD8D155FC233");
+        //httpHeaders.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
+        httpHeaders.set("Accept", "application/json, text/plain, */*");
+        httpHeaders.set("Accept-Language", "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7");
+        httpHeaders.set("Content-Type", "application/json");
     }
 
     @Override
@@ -52,6 +55,12 @@ public class RestTemplateConnector implements RestConnector {
     @Override
     public String callGetRequest(String endpoint, MultiValueMap<String, String> params) {
         return callExchange("", endpoint, params, String.class, HttpMethod.GET, null);
+    }
+
+    public <T> T callPostRequest(
+        String baseUrl, String endpoint, MultiValueMap<String, String> params, Class<T> respClass, String requestBody
+    ) {
+        return callExchange(baseUrl, endpoint, params, respClass, HttpMethod.POST, requestBody);
     }
 
     private <T> T callExchange(

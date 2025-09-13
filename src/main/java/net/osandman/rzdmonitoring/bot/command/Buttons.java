@@ -5,8 +5,8 @@ package net.osandman.rzdmonitoring.bot.command;
  */
 public interface Buttons {
     String DELETE_ALL = "Удалить все";
-    String DELETE = "Удалить";
-    String STOP = "Остановить";
-    String START = "Запустить";
-    String CHANGE_INTERVAL = "Изменить интервал";
+    String DELETE = "Удалить ...";
+    String STOP_ALL = "Остановить все";
+    String START_ALL = "Запустить все";
+    String CHANGE_INTERVAL = "Изменить интервал ...";
 }

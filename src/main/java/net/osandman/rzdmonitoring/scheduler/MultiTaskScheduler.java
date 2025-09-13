@@ -5,11 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
-import net.osandman.rzdmonitoring.client.dto.route.Tp;
-import net.osandman.rzdmonitoring.dto.Result;
-import net.osandman.rzdmonitoring.service.RouteService;
-import net.osandman.rzdmonitoring.service.TicketService;
+import net.osandman.rzdmonitoring.service.seat.SeatFilter;
+import net.osandman.rzdmonitoring.service.seat.SeatService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -18,6 +15,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -29,8 +27,8 @@ import java.util.concurrent.ScheduledFuture;
 public class MultiTaskScheduler implements SchedulingConfigurer {
 
     private final ScheduleConfig scheduleConfig;
-    private final TicketService ticketService;
-    private final RouteService routeService;
+    private final SeatService seatService;
+
     @Getter
     private final Map<Long, Map<String, TaskInfo>> scheduledTasks = new ConcurrentHashMap<>();
     private ScheduledTaskRegistrar taskRegistrar;
@@ -61,16 +59,9 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
         this.taskRegistrar = taskRegistrar;
     }
 
-    public Result addTask(TicketsTask ticketsTask) {
-        // предварительная проверка, что заданный маршрут существует
-        RootRoute rootRoute =
-            routeService.findRootRoute(ticketsTask.fromCode(), ticketsTask.toCode(), ticketsTask.date());
-        Result result = checkRoute(rootRoute, ticketsTask.taskId());
-        if (!result.success()) {
-            return result;
-        }
+    public void addTask(TicketsTask ticketsTask, List<SeatFilter> seatFilters) {
         removeTask(ticketsTask.chatId(), ticketsTask.taskId());  // Удаляем задачу, если она уже существует
-        Runnable task = () -> ticketService.process(ticketsTask);
+        Runnable task = () -> seatService.monitoringProcess(ticketsTask, seatFilters);
         TaskScheduler scheduler = taskRegistrar.getScheduler();
         if (scheduler != null) {
             ScheduledFuture<?> scheduledTask = scheduler.scheduleWithFixedDelay(
@@ -88,7 +79,6 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
             taskMap.put(ticketsTask.taskId(), taskInfo);
             scheduledTasks.putIfAbsent(ticketsTask.chatId(), taskMap);
         }
-        return result;
     }
 
     public void changeInterval(long newInterval) {
@@ -102,8 +92,6 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
                 }
             }
         }
-        // Обновляем глобальную конфигурацию
-        scheduleConfig.setInterval(newInterval);
         log.info("Обновлен интервал выполнения задач: {} минут", newInterval);
     }
 
@@ -129,8 +117,6 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
                 taskInfo.setState(newState);
             }
         }
-        // Обновляем глобальную конфигурацию
-        scheduleConfig.setState(newState);
         log.info("Обновлено состояние задач: {}", newState);
     }
 
@@ -160,29 +146,6 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
             );
             taskInfo.setScheduledFuture(newFuture);
         }
-    }
-
-    private static Result checkRoute(RootRoute rootRoute, String taskId) {
-        // проверка того, что маршрут существует, только после этого добавлять задание
-        if (rootRoute == null || rootRoute.result.toLowerCase().contains("fail")) { // || rootRoute.tp.get(0).list.isEmpty()
-            return new Result(false, "Не найден маршрут или ошибка запроса");
-        }
-        if (!rootRoute.tp.isEmpty()) {
-            Tp tp = rootRoute.tp.get(0);
-            long countType = tp.list.stream()
-                .filter(route -> route.type == 1) // 1 - пригородные, 0 - междугородние
-                .count();
-            if (countType >= tp.list.size()) {
-                return new Result(false, "Найдены только пригородные поезда");
-            }
-            long countNotTrain = tp.msgList.stream()
-                .filter(map -> map.get("message").toLowerCase().contains("в указанную дату поезд не ходит"))
-                .count();
-            if (countNotTrain >= tp.list.size()) {
-                return new Result(false, "В указанную дату поезд не ходит");
-            }
-        }
-        return new Result(true, taskId);
     }
 
     public Boolean removeTask(long chatId, String taskId) {

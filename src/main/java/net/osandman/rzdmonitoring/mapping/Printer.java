@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static net.osandman.rzdmonitoring.service.seat.SeatServiceImpl.TRAIN_ICON1;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +28,6 @@ public class Printer {
     private final Notifier notifier;
     private static final String GREEN = "\033[42m";
     private static final String RESET = "\033[0m";
-    private static final String TRAIN_ICON = "\uD83D\uDE86"; // 🚆 🚉
 
     public TrainDto ticketsMapping(RootTrain rootTrain, Long chatId) {
         List<SeatDto> findSeats = new LinkedList<>();
@@ -76,7 +77,7 @@ public class Printer {
                 Objects.requireNonNullElse(train.localDate1, train.date1) + " " + Objects.requireNonNullElse(train.localTime1, train.time1),
                 DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
             ));
-        trainParams.put(TRAIN_ICON + " ", train.number);
+        trainParams.put(TRAIN_ICON1 + " ", train.number);
         trainParams.put("от ", train.station0);
         trainParams.put("до ", train.station1);
         trainParams.put("дата: ", Objects.requireNonNullElse(train.localDate0, train.date0));

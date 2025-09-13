@@ -3,6 +3,7 @@ package net.osandman.rzdmonitoring.service;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Tp;
+import net.osandman.rzdmonitoring.dto.CheckResult;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.RouteMapper;
 import net.osandman.rzdmonitoring.util.JsonParser;
@@ -53,6 +54,32 @@ public class RouteService extends BaseService {
             log.error("Произошла ошибка, обратитесь к администратору", e);
         }
         return rootRoute;
+    }
+
+    public CheckResult checkRoute(RootRoute rootRoute) {
+        // проверка того, что маршрут существует, только после этого добавлять задание
+        if (rootRoute == null || rootRoute.tp == null || rootRoute.tp.isEmpty()) { // || rootRoute.tp.get(0).list.isEmpty()
+            return new CheckResult(false, "Не найден маршрут или ошибка запроса");
+        }
+        if (rootRoute.result != null && rootRoute.result.toLowerCase().contains("fail")) {
+            return new CheckResult(false, "Ошибка запроса");
+        }
+        Tp tp = rootRoute.tp.get(0);
+        if (!tp.list.isEmpty()) {
+            long countType = tp.list.stream()
+                .filter(route -> route.type == 1) // 1 - пригородные, 0 - междугородние
+                .count();
+            if (countType >= tp.list.size()) {
+                return new CheckResult(false, "Найдены только пригородные поезда");
+            }
+        }
+        long countNotTrain = tp.msgList.stream()
+            .filter(map -> map.get("message").toLowerCase().contains("в указанную дату поезд не ходит"))
+            .count();
+        if (countNotTrain >= tp.list.size()) {
+            return new CheckResult(false, "В указанную дату поезд не ходит");
+        }
+        return new CheckResult(true, "Маршрут(ы) найден(ы)");
     }
 
     private static Map<String, String> buildAllParams(String fromStationCode, String toStationCode, String date) {
