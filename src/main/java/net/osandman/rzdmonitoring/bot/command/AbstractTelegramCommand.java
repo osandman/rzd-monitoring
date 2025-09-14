@@ -156,7 +156,7 @@ public abstract class AbstractTelegramCommand {
             }
             // return to the next or previous months
             if (InlineCalendarCommandUtil.isCalendarNavigationButtonClicked(update)) {
-                sendCalendar(command.chatId(), "Введите дату отправления", update);
+                sendCalendar(command.chatId(), "Введите дату отправления:", update);
                 return null;
             }
             localDate = InlineCalendarCommandUtil.extractDate(update);

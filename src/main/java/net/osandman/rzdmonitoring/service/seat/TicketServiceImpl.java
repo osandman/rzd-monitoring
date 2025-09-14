@@ -1,20 +1,23 @@
 package net.osandman.rzdmonitoring.service.seat;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.client.RestTemplateConnector;
-import net.osandman.rzdmonitoring.client.dto.v2.train.RootDto;
-import net.osandman.rzdmonitoring.dto.SeatDto;
-import net.osandman.rzdmonitoring.dto.TicketsResult;
-import net.osandman.rzdmonitoring.dto.TrainDto;
+import net.osandman.rzdmonitoring.client.dto.v2.train.RootTrainDto;
+import net.osandman.rzdmonitoring.dto.train.SeatDto;
+import net.osandman.rzdmonitoring.dto.train.TicketsResult;
+import net.osandman.rzdmonitoring.dto.train.TrainDto;
 import net.osandman.rzdmonitoring.mapping.TrainMapper;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpStatusCodeException;
 
-import java.time.format.DateTimeFormatter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +26,12 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SeatServiceImpl implements SeatService {
+public class TicketServiceImpl implements TicketService {
 
     private final TrainMapper trainMapper;
     private final RestTemplateConnector restTemplateConnector;
     private final Notifier notifier;
+    private final ObjectMapper objectMapper;
 
     public static final String TRAIN_ICON1 = "\uD83D\uDE86"; // 🚆
     public static final String TRAIN_ICON2 = "\uD83D\uDE89"; // 🚉
@@ -55,20 +59,24 @@ public class SeatServiceImpl implements SeatService {
                 }
                 """.formatted(ticketsTask.fromCode(), ticketsTask.toCode(), ticketsTask.date(), routNumber);
 
-            RootDto root;
+            RootTrainDto root;
             try {
                 root = restTemplateConnector.callPostRequest(
-                    "https://ticket.rzd.ru", "apib2b/p/Railway/V1/Search/CarPricing", params, RootDto.class, body
+                    "https://ticket.rzd.ru", "apib2b/p/Railway/V1/Search/CarPricing", params, RootTrainDto.class, body
                 );
             } catch (Exception e) {
-                String errMsg = "Ошибка при получении данных для поезда %s, '%s'".formatted(routNumber, e.getMessage());
-                log.error(errMsg);
-                notifier.sendMessage(
-                    "Ошибка при получении данных для поезда %s. Если ошибка повторится удалите задачу"
-                        .formatted(routNumber),
-                    ticketsTask.chatId()
-                );
-                trains.add(TrainDto.builder().error(errMsg).trainNumber(routNumber).build());
+                log.error("Ошибка при получении данных для поезда {}, '{}'", routNumber, e.getMessage());
+                String errMsg = extractErrorMessageFromException(e);
+                if (!errMsg.toLowerCase().contains("мест нет")) {
+                    String userMessage = ("❌ Ошибка при получении данных для поезда %s: '%s'.\n"
+                                          + "Если ошибка повторится, то удалите задачу").formatted(routNumber, errMsg);
+                    notifier.sendMessage(userMessage, ticketsTask.chatId());
+                }
+
+                trains.add(TrainDto.builder()
+                    .error(errMsg)
+                    .trainNumber(routNumber)
+                    .build());
                 continue;
             }
 
@@ -77,7 +85,7 @@ public class SeatServiceImpl implements SeatService {
                 log.error("Ошибка при преобразовании json: '{}', задача {}, поезд {}",
                     trainDto.getError(), ticketsTask, routNumber);
                 notifier.sendMessage(
-                    "Ошибка при преобразовании данных для поезда %s. Если ошибка повторится удалите задачу"
+                    "Ошибка при преобразовании данных для поезда %s. Если ошибка повторится, то удалите задачу"
                         .formatted(routNumber),
                     ticketsTask.chatId()
                 );
@@ -95,17 +103,6 @@ public class SeatServiceImpl implements SeatService {
 
             if (filteredSeats.isEmpty()) {
                 log.info("Не найдено свободных мест, задача {}, поезд {}", ticketsTask, routNumber);
-                notifier.sendMessage(
-                    "%s для поезда %s[%s-%s] на %s не найдены свободные места"
-                        .formatted(
-                            NOT_FOUND_ICON,
-                            trainDto.getTrainNumber(),
-                            trainDto.getFromStation(),
-                            trainDto.getToStation(),
-                            trainDto.getDateTimeFrom().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-                        ),
-                    ticketsTask.chatId()
-                );
                 continue;
             }
             log.info("Найдено {} свободных мест, задача {}, поезд {}",
@@ -113,7 +110,7 @@ public class SeatServiceImpl implements SeatService {
 
             for (SeatDto filteredSeat : filteredSeats) {
                 String message = "%s №%s[%s-%s] %s".formatted(
-                    TRAIN_ICON1,
+                    TRAIN_ICON2,
                     trainDto.getTrainNumber(),
                     trainDto.getFromStation(),
                     trainDto.getToStation(),
@@ -123,10 +120,33 @@ public class SeatServiceImpl implements SeatService {
             }
         }
         return TicketsResult.builder()
-            .findRoutes(((int) trains.stream().filter(trainDto -> !hasText(trainDto.getError())).count()))
+            .successTrainCount(
+                ((int) trains.stream().filter(trainDto -> !hasText(trainDto.getError())).count())
+            )
             .comment("Поиск свободных мест в поездах [%s] завершен, фильтры поиска: %s"
                 .formatted(String.join(", ", ticketsTask.routeNumbers()), seatFilters))
             .trains(trains)
             .build();
+    }
+
+    private String extractErrorMessageFromException(Exception e) {
+        String errorMessage = e.getMessage();
+        // Если это HttpStatusCodeException, попробуем извлечь JSON из тела ответа
+        if (e instanceof HttpStatusCodeException httpException) {
+            String responseBody = httpException.getResponseBodyAsString();
+            try {
+                JsonNode rootNode = objectMapper.readTree(responseBody);
+                // Пытаемся извлечь сообщение об ошибке из JSON
+                if (rootNode.has("Message")) {
+                    return rootNode.get("Message").asText();
+                } else if (rootNode.has("ProviderError")) {
+                    return rootNode.get("ProviderError").asText();
+                }
+            } catch (IOException ex) {
+                // Если не удалось распарсить JSON, вернем оригинальное сообщение
+                log.warn("Не удалось распарсить тело ошибки: {}", responseBody);
+            }
+        }
+        return errorMessage;
     }
 }

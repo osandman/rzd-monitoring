@@ -24,27 +24,27 @@ import static org.springframework.util.StringUtils.hasText;
 @Primary
 public class StationServiceV2 implements StationService {
 
-    public static final String STATION_URL = "https://ticket.rzd.ru";
+    public static final String BASE_URL = "https://ticket.rzd.ru";
 
     private final RestConnector restConnector;
 
     @Override
     public List<StationDto> findStations(String partName) {
         String lang = Utils.detectLang(partName);
+        String strToFind = partName.replaceAll("\\s*\\(.*?\\)", "").trim(); // убираем скобки и пробелы
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>() {{
             put("GroupResults", List.of("true"));
-            put("Query", List.of(partName));
+            put("Query", List.of(strToFind));
             put("Language", List.of(lang));
         }};
         ObjectNode objectNode = restConnector.callGetRequest(
-            STATION_URL, "/api/v1/suggests", params, ObjectNode.class
+            BASE_URL, "/api/v1/suggests", params, ObjectNode.class
         );
-        List<StationDto> stations = new ArrayList<>();
-        fillStations(objectNode, stations, "city", "train");
+        List<StationDto> stations = fillStations(objectNode, "city", "train");
         return stations.stream()
             .filter(stationDto -> hasText(stationDto.code())) // оставляем только с кодом
             .collect(Collectors.toMap(
-                station -> station.name() + ":" + station.code(), // ключ для исключения дублей
+                StationDto::code, // ключ для исключения дублей
                 station -> station,
                 (firstValue, newValue) -> firstValue // если ключ повторяется, оставляем первый
             ))
@@ -53,23 +53,40 @@ public class StationServiceV2 implements StationService {
             .toList();
     }
 
-    private static void fillStations(ObjectNode objectNode, List<StationDto> stations, String... fields) {
+    private static List<StationDto> fillStations(ObjectNode objectNode, String... fields) {
+        List<StationDto> stations = new ArrayList<>();
         if (fields == null) {
-            return;
+            return stations;
         }
         for (String field : fields) {
             JsonNode jsonNode = objectNode.findPath(field);
-            jsonNode.forEach(
-                node -> stations.add(
+            jsonNode.forEach(node -> {
+                String name = node.path("name").asText();
+                String expressCode = node.path("expressCode").asText();
+                String region = node.path("region").asText();
+                String suburbanCode = node.path("suburbanCode").asText();
+                String regionIso = node.path("regionIso").asText();
+
+                // Проверка: есть ли уже станция с таким name
+                String finalName = name;
+                boolean nameExists = stations.stream()
+                    .anyMatch(st -> st.name().equals(finalName));
+
+                if (nameExists) {
+                    name = name + " (" + expressCode + ")";
+                }
+
+                stations.add(
                     StationDtoV2.builder()
-                        .name(node.path("name").asText())
-                        .expressCode(node.path("expressCode").asText())
-                        .region(node.path("region").asText())
-                        .suburbanCode(node.path("suburbanCode").asText())
-                        .regionIso(node.path("regionIso").asText())
+                        .name(name)
+                        .expressCode(expressCode)
+                        .region(region)
+                        .suburbanCode(suburbanCode)
+                        .regionIso(regionIso)
                         .build()
-                )
-            );
+                );
+            });
         }
+        return stations;
     }
 }

@@ -5,8 +5,8 @@ import net.osandman.rzdmonitoring.client.dto.FirstResponse;
 import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Route;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
-import net.osandman.rzdmonitoring.dto.TicketsResult;
-import net.osandman.rzdmonitoring.dto.TrainDto;
+import net.osandman.rzdmonitoring.dto.train.TicketsResult;
+import net.osandman.rzdmonitoring.dto.train.TrainDto;
 import net.osandman.rzdmonitoring.entity.LayerId;
 import net.osandman.rzdmonitoring.mapping.Printer;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
@@ -90,7 +90,7 @@ public class TicketService extends BaseService {
         notifier.sendMessage("Ищем билеты для поездов: %s".formatted(checkedNumbers), chatId);
 
         TicketsResult ticketsResult = findTickets(rootRoute, ticketsTask.date(), checkedNumbers, chatId);
-        log.info("{}, найдено {} маршрутов", ticketsResult.comment(), ticketsResult.findRoutes());
+        log.info("{}, найдено {} маршрутов", ticketsResult.comment(), ticketsResult.successTrainCount());
         log.info("Ожидание до следующего запроса билетов {} минут", scheduleConfig.getInterval());
         return ticketsResult;
     }

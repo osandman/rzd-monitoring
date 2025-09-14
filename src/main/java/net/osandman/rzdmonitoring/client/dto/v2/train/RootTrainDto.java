@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class RootDto {
+public class RootTrainDto {
 
     @JsonProperty("OriginCode")
     private String originCode;

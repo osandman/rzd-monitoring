@@ -2,7 +2,7 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.entity.UserState;
-import net.osandman.rzdmonitoring.service.RouteService;
+import net.osandman.rzdmonitoring.service.route.RouteService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -60,18 +60,23 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
                     return;
                 }
                 command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)));
-                sendMessage(command.chatId(), "Ищу маршруты от %s до %s, на %s".formatted(
+                sendMessage(command.chatId(), "Ищу маршруты %s - %s на %s".formatted(
                     command.state().getParams().get(FROM_STATION),
                     command.state().getParams().get(TO_STATION),
                     command.state().getParams().get(DATE)));
-                String answer = getRoutes(command.state());
-                if ("В указанную дату поезд не ходит".equals(answer)) {
+                UserState.CommandState commandState = command.state();
+                String answer = routeService.getRoutesAsString(
+                    commandState.getParams().get(FROM_STATION_CODE),
+                    commandState.getParams().get(TO_STATION_CODE),
+                    commandState.getParams().get(DATE)
+                );
+                if (answer.toLowerCase().contains("не найдены")) {
                     sendMessage(
                         command.chatId(),
-                        "⚠ %s на '%s', попробуйте выбрать другую дату"
+                        "%s на '%s', попробуйте выбрать другую дату"
                             .formatted(answer, command.state().getParams().get(DATE))
                     );
-                    sendCalendar(command.chatId(), "Введите дату отправления:", update);
+                    sendCalendar(command.chatId(), "Введите новую дату отправления:", update);
                     return;
                 }
                 sendMessage(command.chatId(), answer);
@@ -83,12 +88,5 @@ public class FindRoutesCommand extends AbstractTelegramCommand implements ITeleg
     @Override
     public boolean canToShow() {
         return true;
-    }
-
-    private String getRoutes(UserState.CommandState commandState) {
-        return routeService.getPrettyStringRoutes(
-            commandState.getParams().get(FROM_STATION_CODE),
-            commandState.getParams().get(TO_STATION_CODE),
-            commandState.getParams().get(DATE));
     }
 }

@@ -1,4 +1,4 @@
-package net.osandman.rzdmonitoring.dto;
+package net.osandman.rzdmonitoring.dto.train;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

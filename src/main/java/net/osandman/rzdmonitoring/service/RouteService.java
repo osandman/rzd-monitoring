@@ -5,22 +5,24 @@ import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
 import net.osandman.rzdmonitoring.client.dto.route.Tp;
 import net.osandman.rzdmonitoring.dto.CheckResult;
 import net.osandman.rzdmonitoring.entity.LayerId;
-import net.osandman.rzdmonitoring.mapping.RouteMapper;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.StringUtils.hasText;
 
 @Service
 @Slf4j
 public class RouteService extends BaseService {
     public static final String ROUTE_ENDPOINT = "";
-    private final RouteMapper routeMapper;
 
-    public RouteService(RouteMapper routeMapper) {
+    public RouteService() {
         super(ROUTE_ENDPOINT);
-        this.routeMapper = routeMapper;
     }
 
     public String getPrettyStringRoutes(String fromStationCode, String toStationCode, String date) {
@@ -36,10 +38,31 @@ public class RouteService extends BaseService {
             return "В указанную дату поезд не ходит";
         }
         try {
-            return routeMapper.getPrettyString(rootRoute);
+            return getPrettyString(rootRoute);
         } catch (Exception e) {
             return "Произошла ошибка, обратитесь к администратору";
         }
+    }
+
+    /**
+     * Преобразование сущности с маршрутами поездов в строку для удобного чтения в телеграм.
+     */
+    private String getPrettyString(RootRoute rootRoute) {
+        List<String> routes = new ArrayList<>();
+        rootRoute.tp.stream().collect(Collectors.toMap(tp -> tp.from, tp -> tp))
+            .values().forEach(el -> el.list
+                .forEach(route -> routes.add(
+                        String.format("\uD83D\uDE9D %s%s, из %s - %s в %s, прибытие в %s - %s в %s", // ➤ 🚝
+                            route.number, hasText(route.brand) ? "(" + route.brand + ")" : "",
+                            route.station0,
+                            route.localDate0 != null ? route.localDate0 : route.date0,
+                            route.localTime0 != null ? route.localTime0 : route.time0,
+                            route.station1,
+                            route.localDate1 != null ? route.localDate1 : route.date1,
+                            route.localTime1 != null ? route.localTime1 : route.time1)
+                    )
+                ));
+        return String.join(System.lineSeparator(), routes);
     }
 
     public RootRoute findRootRoute(String fromStationCode, String toStationCode, String date) {

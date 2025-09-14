@@ -1,8 +1,8 @@
 package net.osandman.rzdmonitoring.util;
 
-import net.osandman.rzdmonitoring.client.dto.v2.train.RootDto;
-import net.osandman.rzdmonitoring.dto.SeatDto;
-import net.osandman.rzdmonitoring.dto.TrainDto;
+import net.osandman.rzdmonitoring.client.dto.v2.train.RootTrainDto;
+import net.osandman.rzdmonitoring.dto.train.SeatDto;
+import net.osandman.rzdmonitoring.dto.train.TrainDto;
 import net.osandman.rzdmonitoring.mapping.TrainMapperImpl;
 import net.osandman.rzdmonitoring.service.seat.SeatFilter;
 import org.junit.jupiter.api.Test;
@@ -13,18 +13,19 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TrainJsonV2ParseTest {
+class JsonV2ParseTrainTest {
+
+    private final TrainMapperImpl ticketMapper = new TrainMapperImpl();
 
     @Test
     void parseTrain068() throws IOException {
-        RootDto rootTrain = JsonParser.parse(
+        RootTrainDto rootTrain = JsonParser.parse(
             requireNonNull(this.getClass().getClassLoader().getResource("json/068Ы_Москва-Пермь.json"))
                 .openStream(),
-            RootDto.class
+            RootTrainDto.class
         );
         assertThat(rootTrain).isNotNull();
 
-        TrainMapperImpl ticketMapper = new TrainMapperImpl();
         TrainDto trainDto = ticketMapper.map(rootTrain);
         assertThat(trainDto).isNotNull();
         assertThat(trainDto.getSeats()).hasSize(11);
@@ -40,14 +41,13 @@ class TrainJsonV2ParseTest {
 
     @Test
     void parseTrain114() throws IOException {
-        RootDto rootTrain = JsonParser.parse(
+        RootTrainDto rootTrain = JsonParser.parse(
             requireNonNull(this.getClass().getClassLoader().getResource("json/114Э_Краснодар-Москва.json"))
                 .openStream(),
-            RootDto.class
+            RootTrainDto.class
         );
         assertThat(rootTrain).isNotNull();
 
-        TrainMapperImpl ticketMapper = new TrainMapperImpl();
         TrainDto trainDto = ticketMapper.map(rootTrain);
         assertThat(trainDto).isNotNull();
         assertThat(trainDto.getSeats()).hasSize(35);

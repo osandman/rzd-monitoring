@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.client.dto.train.Lst;
 import net.osandman.rzdmonitoring.client.dto.train.RootTrain;
-import net.osandman.rzdmonitoring.dto.SeatDto;
-import net.osandman.rzdmonitoring.dto.TrainDto;
+import net.osandman.rzdmonitoring.dto.train.SeatDto;
+import net.osandman.rzdmonitoring.dto.train.TrainDto;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static net.osandman.rzdmonitoring.service.seat.SeatServiceImpl.TRAIN_ICON1;
+import static net.osandman.rzdmonitoring.service.seat.TicketServiceImpl.TRAIN_ICON1;
 
 @Component
 @Slf4j

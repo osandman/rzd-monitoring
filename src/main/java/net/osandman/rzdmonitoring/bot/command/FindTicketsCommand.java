@@ -1,14 +1,14 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
-import net.osandman.rzdmonitoring.client.dto.route.RootRoute;
-import net.osandman.rzdmonitoring.dto.CheckResult;
 import net.osandman.rzdmonitoring.dto.TaskResult;
+import net.osandman.rzdmonitoring.dto.route.RouteDto;
+import net.osandman.rzdmonitoring.dto.route.RoutesResult;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
-import net.osandman.rzdmonitoring.service.RouteService;
+import net.osandman.rzdmonitoring.service.route.RouteService;
 import net.osandman.rzdmonitoring.service.seat.SeatFilter;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -31,6 +31,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
     private final MultiTaskScheduler multiTaskScheduler;
     private final ScheduleConfig scheduleConfig;
     private final RouteService routeService;
+
 
     @Override
     public Command getCommand() {
@@ -73,25 +74,41 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
 
                 sendMessage(command.chatId(), "Поиск поездов на %s".formatted(dateToSearch));
-                RootRoute rootRoute =
-                    routeService.findRootRoute(
-                        command.state().getParams().get(FROM_STATION_CODE),
-                        command.state().getParams().get(TO_STATION_CODE),
-                        dateToSearch
-                    );
-
-                CheckResult checkResult = routeService.checkRoute(rootRoute);
-                if (!checkResult.success()) {
+                RoutesResult routesResult = routeService.findRoutes(
+                    command.state().getParams().get(FROM_STATION_CODE),
+                    command.state().getParams().get(TO_STATION_CODE),
+                    dateToSearch
+                );
+                if (routesResult.error() != null) {
                     sendMessage(
                         command.chatId(),
-                        "⚠ Ошибка: '%s' при поиске маршрутов на дату '%s'".formatted(checkResult.msg(), dateToSearch)
+                        "⚠ Ошибка: '%s' при поиске маршрутов на дату '%s'".formatted(routesResult.error(), dateToSearch)
                     );
                     sendCalendar(command.chatId(), "Введите дату отправления:", update);
                     return;
                 }
-                List<String> availableNumbers = rootRoute.getTp().stream()
-                    .flatMap(tp -> tp.list.stream().map(route -> route.number))
-                    .toList();
+                List<String> availableNumbers;
+                if (routesResult.routesCount() != 0) {
+                    availableNumbers = routesResult.routes().stream()
+                        .filter(route -> !route.getIsSuburban())
+                        .map(RouteDto::getTrainNumber)
+                        .toList();
+                } else {
+                    sendMessage(
+                        command.chatId(),
+                        "⚠ не найдены поезда на дату '%s'".formatted(dateToSearch)
+                    );
+                    sendCalendar(command.chatId(), "Введите дату отправления:", update);
+                    return;
+                }
+                if (availableNumbers.isEmpty()) {
+                    sendMessage(
+                        command.chatId(),
+                        "Нет подходящих поездов на дату '%s'".formatted(dateToSearch)
+                    );
+                    sendCalendar(command.chatId(), "Введите дату отправления:", update);
+                    return;
+                }
                 sendButtons(
                     command.chatId(),
                     "Найдено %d маршрутов, выберите номер поезда:".formatted(availableNumbers.size()),

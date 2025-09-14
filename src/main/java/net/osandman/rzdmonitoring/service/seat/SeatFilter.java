@@ -2,7 +2,7 @@ package net.osandman.rzdmonitoring.service.seat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.osandman.rzdmonitoring.dto.SeatDto;
+import net.osandman.rzdmonitoring.dto.train.SeatDto;
 
 import java.util.function.Predicate;
 

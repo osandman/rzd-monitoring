@@ -1,0 +1,141 @@
+{
+  "OriginStationCode": "2030120",
+  "DestinationStationCode": "2030104",
+  "Trains": [
+    {
+      "CarGroups": [],
+      "IsFromSchedule": false,
+      "IsTourPackagePossible": false,
+      "CarTransportationsFreePlacesCount": null,
+      "ActualMovement": null,
+      "CategoryId": 2,
+      "ScheduleId": 2990287,
+      "BaggageCarsThreads": null,
+      "CarTransportationCoachesThreads": null,
+      "Provider": "P13",
+      "IsWaitListAvailable": false,
+      "BaggageTotalPlaceQuantity": 0,
+      "HasElectronicRegistration": false,
+      "HasCarTransportationCoaches": false,
+      "HasDynamicPricingCars": false,
+      "HasTwoStoreyCars": false,
+      "HasSpecialSaleMode": false,
+      "Carriers": [
+        "ППК"
+      ],
+      "CarrierDisplayNames": [
+        "ППК"
+      ],
+      "Id": 1,
+      "IsBranded": false,
+      "TrainNumber": "7134",
+      "TrainNumberToGetRoute": "7134",
+      "DisplayTrainNumber": "7134",
+      "TrainDescription": "Пригородный скорый  (городской)",
+      "TrainName": "",
+      "TrainNameEn": "",
+      "TransportType": "Train",
+      "OriginName": "Пермь 2",
+      "InitialStationName": "Пермь 2",
+      "OriginStationCode": "2030400",
+      "OriginStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationInfo": {
+        "StationName": "Пермь 2",
+        "StationCode": "2030400",
+        "CnsiCode": "16776",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "InitialTrainStationCode": "2030400",
+      "InitialTrainStationCnsiCode": "16776",
+      "DestinationName": "Лысьва",
+      "FinalStationName": "Лысьва",
+      "DestinationStationCode": "2030104",
+      "DestinationStationInfo": {
+        "StationName": "Лысьва",
+        "StationCode": "2030104",
+        "CnsiCode": "17337",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "FinalTrainStationInfo": {
+        "StationName": "Лысьва",
+        "StationCode": "2030104",
+        "CnsiCode": "17337",
+        "RegionName": "Пермский край",
+        "IsoCode": "RU-PER"
+      },
+      "FinalTrainStationCode": "2030104",
+      "FinalTrainStationCnsiCode": "17337",
+      "DestinationNames": null,
+      "FinalStationNames": null,
+      "DepartureDateTime": "2025-10-27T15:58:00",
+      "LocalDepartureDateTime": "2025-10-27T17:58:00",
+      "ArrivalDateTime": "2025-10-27T18:38:00",
+      "LocalArrivalDateTime": "2025-10-27T20:38:00",
+      "ArrivalDateTimes": [
+        "2025-10-27T18:38:00"
+      ],
+      "LocalArrivalDateTimes": [
+        "2025-10-27T20:38:00"
+      ],
+      "DepartureDateFromFormingStation": "2025-10-27T15:58:00",
+      "DepartureStopTime": 0,
+      "ArrivalStopTime": 0,
+      "TripDuration": 160.0,
+      "TripDistance": 0,
+      "IsSuburban": true,
+      "IsComponent": false,
+      "CarServices": [],
+      "IsSaleForbidden": true,
+      "IsTicketPrintRequiredForBoarding": false,
+      "BookingSystem": "Cbdpr",
+      "IsVrStorageSystem": false,
+      "PlacesStorageType": "Russia",
+      "BoardingSystemTypes": [],
+      "TrainBrandCode": null,
+      "TrainClassNames": null,
+      "ServiceProvider": "B2B_RZD",
+      "DestinationStationName": "Лысьва",
+      "OriginStationName": "Пермь 2",
+      "IsPlaceRangeAllowed": true,
+      "IsTrainRouteAllowed": true
+    }
+  ],
+  "ClientFeeCalculation": null,
+  "AgentFeeCalculation": null,
+  "OriginCode": "2030120",
+  "OriginStationInfo": {
+    "StationName": "Пермь",
+    "StationCode": "2030120",
+    "CnsiCode": null,
+    "RegionName": null,
+    "IsoCode": null
+  },
+  "OriginTimeZoneDifference": 2,
+  "DestinationCode": "2030104",
+  "DestinationStationInfo": {
+    "StationName": "Лысьва",
+    "StationCode": "2030104",
+    "CnsiCode": "17337",
+    "RegionName": "Пермский край",
+    "IsoCode": "RU-PER"
+  },
+  "DestinationTimeZoneDifference": 2,
+  "RoutePolicy": "Internal",
+  "DepartureTimeDescription": "Moscow",
+  "ArrivalTimeDescription": "Moscow",
+  "IsFromUkrain": false,
+  "NotAllTrainsReturned": false,
+  "BookingSystem": "Express3",
+  "Id": 0,
+  "DestinationStationName": "Лысьва",
+  "OriginStationName": "Пермь",
+  "MoscowDateTime": "2025-09-13T18:43:39.628"
+}

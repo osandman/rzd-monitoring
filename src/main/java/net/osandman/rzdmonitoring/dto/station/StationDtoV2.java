@@ -14,7 +14,7 @@ public record StationDtoV2(
 
     @Override
     public String region() {
-        return region.replace(", Российская Федерация", ", РФ");
+        return region.replace("Российская Федерация", "РФ");
     }
 
     @Override
@@ -24,6 +24,13 @@ public record StationDtoV2(
 
     @Override
     public String printStr() {
-        return "код=%s; регион=%s; iso=%s".formatted(code(), region(), regionIso());
+        return "%s код=%s%s; регион=%s; iso=%s"
+            .formatted(
+                name(),
+                code(),
+                suburbanCode() != null ? "(пригород. код=" + suburbanCode() + ")" : "",
+                region(),
+                regionIso()
+            );
     }
 }

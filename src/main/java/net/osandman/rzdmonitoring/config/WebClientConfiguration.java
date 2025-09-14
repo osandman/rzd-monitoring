@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 import static org.springframework.http.MediaType.ALL;
 
@@ -40,6 +42,7 @@ public class WebClientConfiguration {
     @Bean
     public RestTemplate restTemplate() {
         JettyClientHttpRequestFactory jettyClientHttpRequestFactory = new JettyClientHttpRequestFactory();
+        jettyClientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(10));
         RestTemplate restTemplate = new RestTemplate(jettyClientHttpRequestFactory);
         restTemplate.getInterceptors().add(new RestTemplateRequestInterceptor());
         return restTemplate;

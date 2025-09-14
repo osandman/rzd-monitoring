@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.service.seat.SeatFilter;
-import net.osandman.rzdmonitoring.service.seat.SeatService;
+import net.osandman.rzdmonitoring.service.seat.TicketService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -27,7 +27,7 @@ import java.util.concurrent.ScheduledFuture;
 public class MultiTaskScheduler implements SchedulingConfigurer {
 
     private final ScheduleConfig scheduleConfig;
-    private final SeatService seatService;
+    private final TicketService ticketService;
 
     @Getter
     private final Map<Long, Map<String, TaskInfo>> scheduledTasks = new ConcurrentHashMap<>();
@@ -61,7 +61,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
 
     public void addTask(TicketsTask ticketsTask, List<SeatFilter> seatFilters) {
         removeTask(ticketsTask.chatId(), ticketsTask.taskId());  // Удаляем задачу, если она уже существует
-        Runnable task = () -> seatService.monitoringProcess(ticketsTask, seatFilters);
+        Runnable task = () -> ticketService.monitoringProcess(ticketsTask, seatFilters);
         TaskScheduler scheduler = taskRegistrar.getScheduler();
         if (scheduler != null) {
             ScheduledFuture<?> scheduledTask = scheduler.scheduleWithFixedDelay(

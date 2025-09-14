@@ -1,10 +1,10 @@
 package net.osandman.rzdmonitoring.mapping;
 
-import net.osandman.rzdmonitoring.dto.SeatDto;
-import net.osandman.rzdmonitoring.dto.TrainDto;
 import net.osandman.rzdmonitoring.client.dto.v2.train.CarDto;
-import net.osandman.rzdmonitoring.client.dto.v2.train.RootDto;
+import net.osandman.rzdmonitoring.client.dto.v2.train.RootTrainDto;
 import net.osandman.rzdmonitoring.client.dto.v2.train.TrainInfoDto;
+import net.osandman.rzdmonitoring.dto.train.SeatDto;
+import net.osandman.rzdmonitoring.dto.train.TrainDto;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class TrainMapperImpl implements TrainMapper {
 
     @Override
     @NonNull
-    public TrainDto map(RootDto json) {
+    public TrainDto map(RootTrainDto json) {
         // Если нет информации о поезде, возвращаем пустой результат
         TrainInfoDto trainInfo = json.getTrainInfo();
         if (trainInfo == null) {
