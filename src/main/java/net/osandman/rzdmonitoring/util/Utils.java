@@ -8,6 +8,10 @@ public final class Utils {
         return Pattern.matches(".*\\p{InCYRILLIC}.*", text) ? "ru" : "en";
     }
 
+    public static String removeBracketsWithContent(String text) {
+        return text.replaceAll("\\s*\\(.*?\\)", "").trim();
+    }
+
     public static void sleep(int millis) {
         try {
             Thread.sleep(millis);

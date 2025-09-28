@@ -1,5 +1,6 @@
 package net.osandman.rzdmonitoring.bot;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.bot.command.ITelegramCommand;
 import net.osandman.rzdmonitoring.entity.UserState;
@@ -20,6 +21,7 @@ import static net.osandman.rzdmonitoring.bot.command.Command.UNKNOWN;
 
 @Component
 @Slf4j
+@Getter
 public class RzdMonitoringBot extends TelegramLongPollingBot {
 
     @Value("${bot.username}")
@@ -57,7 +59,7 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
             return;
         }
         if (message.isCommand()) {
-            userStateRepository.getOrCreate(chatId).deleteAll();
+            userStateRepository.getOrCreate(chatId).deleteAllCommands();
             String messageText = message.getText();
             for (ITelegramCommand telegramCommand : telegramCommands) {
                 String commandStr = telegramCommand.getCommand().getCommandStr();
@@ -70,8 +72,8 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
                 .filter(command -> UNKNOWN.equals(command.getCommand()))
                 .findAny().ifPresent(command -> command.handleCommand(update));
         } else if (message.hasText()) {
+            UserState userState = userStateRepository.get(chatId);
             for (ITelegramCommand telegramCommand : telegramCommands) {
-                UserState userState = userStateRepository.get(chatId);
                 // TODO подумать нужно ли хранить набор команд, если по факту только одна активная, остальные обнуляются
                 if (userState != null && userState.getUserStates().containsKey(telegramCommand.getCommand())) {
                     telegramCommand.handleCommand(update);
@@ -84,8 +86,8 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
     private void handleCallback(@NonNull Update update) {
         MaybeInaccessibleMessage message = update.getCallbackQuery().getMessage();
         long chatId = message.getChatId();
+        UserState userState = userStateRepository.get(chatId);
         for (ITelegramCommand telegramCommand : telegramCommands) {
-            UserState userState = userStateRepository.get(chatId);
             // TODO подумать нужно ли хранить набор команд, если по факту только одна активная, остальные обнуляются
             if (userState != null && userState.getUserStates().containsKey(telegramCommand.getCommand())) {
                 telegramCommand.handleCommand(update);

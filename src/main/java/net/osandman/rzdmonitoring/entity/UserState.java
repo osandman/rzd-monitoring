@@ -2,11 +2,14 @@ package net.osandman.rzdmonitoring.entity;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import net.osandman.rzdmonitoring.bot.command.Command;
-import net.osandman.rzdmonitoring.bot.command.ParamEnum;
+import net.osandman.rzdmonitoring.bot.command.ParamType;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Data
@@ -22,14 +25,31 @@ public class UserState {
         userStates.remove(command);
     }
 
-    public void deleteAll() {
+    public void deleteAllCommands() {
         userStates.clear();
     }
 
     @Data
     public static class CommandState {
         private int step = 1;
-        private Map<ParamEnum, String> params = new HashMap<>();
+        private Map<ParamType, String> params = new HashMap<>();
+        private Map<MultiSelectType, MultiSelect> multiSelectParams = new HashMap<>();
+
+        public MultiSelect createMultiSelectParam(MultiSelectType type, String initialMessage) {
+            return multiSelectParams.computeIfAbsent(type, k -> new MultiSelect(initialMessage));
+        }
+
+        public MultiSelect getMultiSelectParam(MultiSelectType type) {
+            return multiSelectParams.get(type);
+        }
+
+        public void deleteMultiSelectParam(MultiSelectType type) {
+            multiSelectParams.remove(type);
+        }
+
+        public void deleteAllMultiSelectParams() {
+            multiSelectParams.clear();
+        }
 
         public void incrementStep() {
             this.step++;
@@ -39,8 +59,35 @@ public class UserState {
             this.step--;
         }
 
-        public void addKey(ParamEnum key, String value) {
+        public void addKey(ParamType key, String value) {
             params.put(key, value);
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class MultiSelect {
+        private String initialMessage;
+        private Set<String> selectedOptions = new HashSet<>();
+        private Integer messageId;
+
+        public MultiSelect(String initialMessage) {
+            this.initialMessage = initialMessage;
+        }
+
+        public String getCurrentText() {
+            if (selectedOptions.isEmpty()) {
+                return initialMessage;
+            }
+            return initialMessage + "\n\nВыбрано: " + String.join(", ", selectedOptions);
+        }
+
+        public void toggleOption(String option) {
+            if (selectedOptions.contains(option)) {
+                selectedOptions.remove(option);
+            } else {
+                selectedOptions.add(option);
+            }
         }
     }
 }

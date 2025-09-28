@@ -4,6 +4,7 @@ import io.github.dostonhamrakulov.InlineCalendarBuilder;
 import io.github.dostonhamrakulov.InlineCalendarCommandUtil;
 import io.github.dostonhamrakulov.LanguageEnum;
 import lombok.RequiredArgsConstructor;
+import net.osandman.rzdmonitoring.bot.RzdMonitoringBot;
 import net.osandman.rzdmonitoring.dto.station.StationDto;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
@@ -15,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.InaccessibleMessage;
 import org.telegram.telegrambots.meta.api.objects.MaybeInaccessibleMessage;
@@ -44,7 +44,7 @@ public abstract class AbstractTelegramCommand {
 
     @Autowired
     @Lazy // для избежания циклической зависимости реализаций команд с Set<ITelegramCommand> commands
-    protected TelegramLongPollingBot sender;
+    protected RzdMonitoringBot sender;
 
     protected final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
     public static final String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
@@ -97,19 +97,25 @@ public abstract class AbstractTelegramCommand {
         }
     }
 
-    protected void executeMessage(SendMessage sendMessage) {
+    protected Message executeMessage(SendMessage sendMessage) {
+        Message message = null;
         try {
-            sender.execute(sendMessage);
+            message = sender.execute(sendMessage);
             log.info("Сообщение '{}' отправлено пользователю, chatId={}",
                 sendMessage.getText(), sendMessage.getChatId());
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке сообщения '{}'", e.getMessage());
+            log.error("Ошибка при отправке сообщения", e);
         } catch (Exception e) {
-            log.error("Произошла непредвиденная ошибка '{}'", e.getMessage());
+            log.error("Произошла непредвиденная ошибка", e);
         }
+        return message;
     }
 
     protected <T> void sendButtons(long chatId, String message, List<T> toButtons) {
+        sendButtons(chatId, message, toButtons, 3);
+    }
+
+    protected <T> void sendButtons(long chatId, String message, List<T> toButtons, int totalColumns) {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setSelective(true);
         keyboardMarkup.setResizeKeyboard(true);
@@ -121,7 +127,7 @@ public abstract class AbstractTelegramCommand {
 
         for (T button : toButtons) {
             buttons.add(new KeyboardButton(button.toString()));
-            if (buttons.size() >= 3) {
+            if (buttons.size() >= totalColumns) {
                 currentRow.addAll(buttons);
                 keyboard.add(currentRow);
                 buttons.clear();
@@ -185,7 +191,7 @@ public abstract class AbstractTelegramCommand {
         commandState.incrementStep();
     }
 
-    protected boolean checkStationAndSetStates(CommandContext command, ParamEnum stationCode, ParamEnum stationName) {
+    protected boolean checkStationAndSetStates(CommandContext command, ParamType stationCode, ParamType stationName) {
         StationDto stationDto = getFoundStationDto(
             command.messageText(), stationService.findStations(command.messageText())
         );

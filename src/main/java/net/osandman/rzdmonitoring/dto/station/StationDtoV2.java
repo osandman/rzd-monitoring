@@ -2,9 +2,11 @@ package net.osandman.rzdmonitoring.dto.station;
 
 import lombok.Builder;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Builder
 public record StationDtoV2(
-    String name, String expressCode, String region, String suburbanCode, String regionIso
+    String name, String expressCode, String foreignCode, String region, String suburbanCode, String regionIso
 ) implements StationDto {
 
     @Override
@@ -19,7 +21,7 @@ public record StationDtoV2(
 
     @Override
     public String code() {
-        return expressCode;
+        return hasText(expressCode) ? expressCode : hasText(foreignCode) ? foreignCode + "(иностр.)" : "";
     }
 
     @Override
@@ -28,9 +30,9 @@ public record StationDtoV2(
             .formatted(
                 name(),
                 code(),
-                suburbanCode() != null ? "(пригород. код=" + suburbanCode() + ")" : "",
+                hasText(suburbanCode) ? " (пригород.код=" + suburbanCode + ")" : "",
                 region(),
-                regionIso()
+                regionIso
             );
     }
 }

@@ -9,11 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION_CODE;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.DATE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
 
 @Component
 @RequiredArgsConstructor

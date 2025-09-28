@@ -15,14 +15,17 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.DATE;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.FROM_STATION_CODE;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION;
-import static net.osandman.rzdmonitoring.bot.command.ParamEnum.TO_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.DATE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.SEAT_FILTERS;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.TRAIN_NUMBERS;
 
 @Component
 @RequiredArgsConstructor
@@ -117,26 +120,48 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
                 command.state().incrementStep();
             }
-            case 7 -> { // запуск мониторинга билетов
-                // TODO дополнить получение фильтра из текстового сообщения телеграма, временно хардкод
-                List<SeatFilter> seatFilters = List.of(
-                    SeatFilter.COMPARTMENT, SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID
+            case 7 -> { // вывод фильтров
+                command.state().addKey(TRAIN_NUMBERS, command.messageText());
+                sendMessage(command.chatId(), "Выбран поезд(а) №%s".formatted(command.messageText()));
+
+                FilterData filterData = createFilterData();
+                // TODO сделать метод который позволяет множественный выбор фильтров и поездов с кнопок
+                sendButtons(
+                    command.chatId(),
+                    "Выберите фильтры поиска билетов:",
+                    List.of(
+                        String.join(",", toStringButtons(filterData.seatFilters1())),
+                        String.join(",", toStringButtons(filterData.seatFilters2())),
+                        String.join(",", toStringButtons(filterData.seatFilters3())),
+                        String.join(",", toStringButtons(filterData.seatFilters4())),
+                        String.join(",", toStringButtons(filterData.seatFilters5()))
+                    ),
+                    2
                 );
-                TaskResult taskResult = createTask(command, seatFilters);
-//                command.chatId(), command.state(), command.messageText().split(",")
+//                sendMultiSelectButtons(
+//                    command.chatId(),
+//                    MultiSelectType.SEAT_FILTER,
+//                    "Выберите фильтры поиска билетов:",
+//                    Set.of(SeatFilter.values())
+//                );
+                command.state().incrementStep();
+            }
+            case 8 -> { // запуск мониторинга билетов
+                command.state().addKey(SEAT_FILTERS, command.messageText());
+                TaskResult taskResult = createTask(command);
                 String messageTask;
                 if (taskResult.success()) {
                     messageTask = """
                         ✅ Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
-                        период поиска каждые %d мин. (фильтр по умолчанию: '%s')
+                        период поиска каждые %d мин. (фильтры поиска: '%s')
                         """.formatted(
                         taskResult.taskId(),
                         scheduleConfig.getInterval(),
-                        String.join(",", seatFilters.stream().map(SeatFilter::getButtonText).toList())
+                        command.state().getParams().get(SEAT_FILTERS)
                     );
                 } else {
                     messageTask = "Произошла ошибка при запуске мониторинга билетов: '%s'".formatted(taskResult.msg());
-                    command.state().decrementStep();
+                    command.state().setStep(1);
                 }
                 sendMessage(command.chatId(), messageTask);
                 userStateRepository.get(command.chatId()).deleteCommand(getCommand());
@@ -144,18 +169,55 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         }
     }
 
+    private static FilterData createFilterData() {
+        List<SeatFilter> seatFilters1 = List.of(
+            SeatFilter.COMPARTMENT, SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID
+        );
+        List<SeatFilter> seatFilters2 = List.of(
+            SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID
+        );
+        List<SeatFilter> seatFilters3 = List.of(
+            SeatFilter.COMPARTMENT
+        );
+        List<SeatFilter> seatFilters4 = List.of(
+            SeatFilter.PLATZKART
+        );
+        List<SeatFilter> seatFilters5 = List.of(
+            SeatFilter.ALL_SEATS
+        );
+        return new FilterData(seatFilters1, seatFilters2, seatFilters3, seatFilters4, seatFilters5);
+    }
+
+    private record FilterData(
+        List<SeatFilter> seatFilters1,
+        List<SeatFilter> seatFilters2,
+        List<SeatFilter> seatFilters3,
+        List<SeatFilter> seatFilters4,
+        List<SeatFilter> seatFilters5
+    ) {
+    }
+
     @Override
     public boolean canToShow() {
         return true;
     }
 
-    private TaskResult createTask(CommandContext commandContext, List<SeatFilter> seatFilters) {
+    List<String> toStringButtons(List<SeatFilter> seatFilters) {
+        return seatFilters.stream()
+            .map(SeatFilter::getButtonText)
+            .toList();
+    }
+
+    private TaskResult createTask(CommandContext commandContext) {
         UserState.CommandState state = commandContext.state();
         String date = state.getParams().get(DATE);
         String from = state.getParams().get(FROM_STATION);
         String to = state.getParams().get(TO_STATION);
+        String[] trainNumbers = state.getParams().get(TRAIN_NUMBERS).split(",");
+        List<SeatFilter> seatFilters = Arrays.stream(state.getParams().get(SEAT_FILTERS).split(","))
+            .map(SeatFilter::getByButtonText)
+            .toList();
         long chatId = commandContext.chatId();
-        String[] trainNumbers = commandContext.messageText().split(",");
         String taskId = "task-" + date + "-" + from + "-" + to + "-" +
                         String.join("_", trainNumbers) + "-chatId-" + chatId;
         TicketsTask ticketsTask = TicketsTask.builder()

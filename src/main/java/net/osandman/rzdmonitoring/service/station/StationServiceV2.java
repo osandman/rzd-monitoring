@@ -31,7 +31,7 @@ public class StationServiceV2 implements StationService {
     @Override
     public List<StationDto> findStations(String partName) {
         String lang = Utils.detectLang(partName);
-        String strToFind = partName.replaceAll("\\s*\\(.*?\\)", "").trim(); // убираем скобки и пробелы
+        String strToFind = Utils.removeBracketsWithContent(partName);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>() {{
             put("GroupResults", List.of("true"));
             put("Query", List.of(strToFind));
@@ -63,6 +63,7 @@ public class StationServiceV2 implements StationService {
             jsonNode.forEach(node -> {
                 String name = node.path("name").asText();
                 String expressCode = node.path("expressCode").asText();
+                String foreignCode = node.path("foreignCode").asText();
                 String region = node.path("region").asText();
                 String suburbanCode = node.path("suburbanCode").asText();
                 String regionIso = node.path("regionIso").asText();
@@ -71,15 +72,16 @@ public class StationServiceV2 implements StationService {
                 String finalName = name;
                 boolean nameExists = stations.stream()
                     .anyMatch(st -> st.name().equals(finalName));
-
+                // если есть дубль, то добавляем в скобках код к имени, чтобы различать
                 if (nameExists) {
-                    name = name + " (" + expressCode + ")";
+                    name = name + " (" + (hasText(expressCode) ? expressCode : foreignCode) + ")";
                 }
 
                 stations.add(
                     StationDtoV2.builder()
                         .name(name)
                         .expressCode(expressCode)
+                        .foreignCode(foreignCode)
                         .region(region)
                         .suburbanCode(suburbanCode)
                         .regionIso(regionIso)

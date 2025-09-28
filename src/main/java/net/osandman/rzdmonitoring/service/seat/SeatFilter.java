@@ -35,4 +35,9 @@ public enum SeatFilter {
         }
         throw new IllegalArgumentException("No such filter: '%s'".formatted(buttonText));
     }
+
+    @Override
+    public String toString() {
+        return getButtonText();
+    }
 }
