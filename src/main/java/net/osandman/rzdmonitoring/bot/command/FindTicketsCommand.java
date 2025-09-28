@@ -2,14 +2,15 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.TaskResult;
-import net.osandman.rzdmonitoring.dto.route.RouteDto;
 import net.osandman.rzdmonitoring.dto.route.RoutesResult;
 import net.osandman.rzdmonitoring.entity.UserState;
+import net.osandman.rzdmonitoring.mapping.RouteMapper;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import net.osandman.rzdmonitoring.service.route.RouteService;
 import net.osandman.rzdmonitoring.service.seat.SeatFilter;
+import net.osandman.rzdmonitoring.util.Utils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -34,6 +35,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
     private final MultiTaskScheduler multiTaskScheduler;
     private final ScheduleConfig scheduleConfig;
     private final RouteService routeService;
+    private final RouteMapper routeMapper;
 
 
     @Override
@@ -90,38 +92,24 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                     sendCalendar(command.chatId(), "Введите дату отправления:", update);
                     return;
                 }
-                List<String> availableNumbers;
-                if (routesResult.routesCount() != 0) {
-                    availableNumbers = routesResult.routes().stream()
-                        .filter(route -> !route.getIsSuburban())
-                        .map(RouteDto::getTrainNumber)
-                        .toList();
-                } else {
-                    sendMessage(
-                        command.chatId(),
-                        "⚠ не найдены поезда на дату '%s'".formatted(dateToSearch)
-                    );
-                    sendCalendar(command.chatId(), "Введите дату отправления:", update);
-                    return;
-                }
+                List<String> availableNumbers = routeMapper.toFindTicketsList(routesResult.routes());
                 if (availableNumbers.isEmpty()) {
-                    sendMessage(
-                        command.chatId(),
-                        "Нет подходящих поездов на дату '%s'".formatted(dateToSearch)
-                    );
+                    sendMessage(command.chatId(), "⚠ не найдены поезда на дату '%s'".formatted(dateToSearch));
                     sendCalendar(command.chatId(), "Введите дату отправления:", update);
                     return;
                 }
                 sendButtons(
                     command.chatId(),
                     "Найдено %d маршрутов, выберите номер поезда:".formatted(availableNumbers.size()),
-                    availableNumbers
+                    availableNumbers,
+                    1
                 );
                 command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
                 command.state().incrementStep();
             }
             case 7 -> { // вывод фильтров
-                command.state().addKey(TRAIN_NUMBERS, command.messageText());
+                String trainNumbers = Utils.getFirstWord(command.messageText());
+                command.state().addKey(TRAIN_NUMBERS, trainNumbers);
                 sendMessage(command.chatId(), "Выбран поезд(а) №%s".formatted(command.messageText()));
 
                 FilterData filterData = createFilterData();

@@ -5,13 +5,13 @@ import net.osandman.rzdmonitoring.client.dto.v2.route.RootRouteDto;
 import net.osandman.rzdmonitoring.client.dto.v2.route.Train;
 import net.osandman.rzdmonitoring.dto.route.CarriageDto;
 import net.osandman.rzdmonitoring.dto.route.RouteDto;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 
 @Component
 public class RouteMapperImpl implements RouteMapper {
@@ -73,7 +73,21 @@ public class RouteMapperImpl implements RouteMapper {
         if (routes == null || routes.isEmpty()) {
             return "🚫 Маршруты не найдены";
         }
-        StringJoiner result = new StringJoiner(System.lineSeparator());
+        List<String> result = getStrings(TRAIN_ICON, routes);
+        return String.join(System.lineSeparator(), result);
+    }
+
+    @Override
+    @NonNull
+    public List<String> toFindTicketsList(List<RouteDto> routes) {
+        if (routes == null || routes.isEmpty()) {
+            return List.of();
+        }
+        return getStrings("", routes);
+    }
+
+    private static List<String> getStrings(String prefix, List<RouteDto> routes) {
+        List<String> result = new ArrayList<>();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         String departureDate = routes.get(0).getDepartureDateTime().format(dateFormatter);
@@ -89,7 +103,7 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getArrivalDateTime().format(dateFormatter) : "N/A";
             String arrivalTime = route.getArrivalDateTime() != null ?
                 route.getArrivalDateTime().format(timeFormatter) : "N/A";
-            String routeInfo = TRAIN_ICON + " %s%s отправление в %s прибытие %s в %s, свободных мест %s".formatted(
+            String routeInfo = prefix + " %s%s отправление в %s прибытие %s в %s, свободных мест %s".formatted(
                 route.getTrainNumber(),
                 route.getIsSuburban() ? "(пригород.) " : "",
                 departureTime,
@@ -101,6 +115,6 @@ public class RouteMapperImpl implements RouteMapper {
             );
             result.add(routeInfo);
         }
-        return result.toString();
+        return result;
     }
 }

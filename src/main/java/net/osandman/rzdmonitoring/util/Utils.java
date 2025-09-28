@@ -8,8 +8,15 @@ public final class Utils {
         return Pattern.matches(".*\\p{InCYRILLIC}.*", text) ? "ru" : "en";
     }
 
-    public static String removeBracketsWithContent(String text) {
-        return text.replaceAll("\\s*\\(.*?\\)", "").trim();
+    public static String removeBracketsWithContent(String input) {
+        return input.replaceAll("\\s*\\(.*?\\)", "").trim();
+    }
+
+    public static String getFirstWord(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return "";
+        }
+        return input.trim().split("\\s+")[0];
     }
 
     public static void sleep(int millis) {

@@ -19,4 +19,9 @@ public interface RouteMapper {
      * Преобразовать список RouteDto в формат для вывода пользователю.
      */
     String toPrettyString(List<RouteDto> routes);
+
+    /**
+     * Преобразовать список RouteDto в формат для поиска билетов.
+     */
+    List<String> toFindTicketsList(List<RouteDto> routes);
 }
