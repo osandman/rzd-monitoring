@@ -36,24 +36,11 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
         CommandContext command = buildCommandContext(update, getCommand());
         Map<String, MultiTaskScheduler.TaskInfo> taskMap = taskScheduler.getScheduledTasks().get(command.chatId());
         switch (command.state().getStep()) {
-            case 1 -> { // начало команды
-                StringBuilder tasks = new StringBuilder();
-                if (taskMap != null && !taskMap.isEmpty()) {
-                    for (Map.Entry<String, MultiTaskScheduler.TaskInfo> taskEntry : taskMap.entrySet()) {
-                        tasks.append("✳ ").append(taskEntry.getKey()).append("-")
-                            .append(taskEntry.getValue().getState()).append(System.lineSeparator());
-                    }
-                    sendMessage(command.chatId(), "Текущие задачи: \n" + tasks);
-                    String startOrStop = taskMap.entrySet().iterator().next().getValue().getState() == State.ACTIVE
-                        ? STOP_ALL : START_ALL;
-                    List<String> buttons = List.of(DELETE, startOrStop, CHANGE_INTERVAL);
-                    sendButtons(command.chatId(), "Выберите действия с задачами:", buttons);
-                } else {
-                    sendMessage(command.chatId(), EMPTY_ICON + " Задачи отсутствуют");
-                }
+            case 1 -> { // приглашение к вводу команды
+                beginHandle(command, taskMap);
                 command.state().incrementStep();
             }
-            case 2 -> {
+            case 2 -> { // обработка команды
                 switch (command.messageText()) {
                     case DELETE -> {
                         List<String> taskNames = new ArrayList<>(taskMap.keySet());
@@ -64,12 +51,12 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                         command.state().setStep(3);
                     }
                     case START_ALL, STOP_ALL -> {
-                        State currentState = taskMap.entrySet().iterator().next().getValue().getState();
-                        currentState = (currentState == State.ACTIVE) ? State.PAUSED : State.ACTIVE;
-                        taskScheduler.changeState(currentState);
-                        State newState = taskMap.entrySet().iterator().next().getValue().getState();
-                        sendMessage(command.chatId(), "Текущий статус задач: '%s'".formatted(newState));
-                        userStateRepository.get(command.chatId()).deleteCommand(getCommand());
+                        State toState = (taskMap.entrySet().iterator().next().getValue().getState() == State.ACTIVE)
+                            ? State.PAUSED
+                            : State.ACTIVE;
+                        taskScheduler.changeState(toState);
+                        List<String> buttons = buildButtons(taskMap);
+                        sendButtons(command.chatId(), "Текущий статус задач: '%s'".formatted(toState), buttons);
                     }
                     case CHANGE_INTERVAL -> {
                         List<Integer> buttons = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -79,19 +66,44 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
                 }
             }
             case 3 -> { // удалить задачи
-                deleteTasks(command.messageText(), command.chatId(), taskMap);
-                userStateRepository.get(command.chatId()).deleteCommand(getCommand());
+                deleteTasks(command, taskMap);
             }
             case 4 -> { // изменить интервал
                 taskScheduler.changeInterval(Long.parseLong(command.messageText()));
                 long newInterval = taskMap.entrySet().iterator().next().getValue().getInterval();
-                sendMessage(command.chatId(), "Интервал мониторинга изменен на %d минут".formatted(newInterval));
-                userStateRepository.get(command.chatId()).deleteCommand(getCommand());
+                List<String> buttons = buildButtons(taskMap);
+                sendButtons(
+                    command.chatId(), "Интервал мониторинга изменен на %d минут".formatted(newInterval), buttons
+                );
+                command.state().setStep(2);
             }
         }
     }
 
-    private void deleteTasks(String messageText, long chatId, Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
+    private void beginHandle(CommandContext command, Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
+        StringBuilder tasks = new StringBuilder();
+        if (taskMap != null && !taskMap.isEmpty()) {
+            for (Map.Entry<String, MultiTaskScheduler.TaskInfo> taskEntry : taskMap.entrySet()) {
+                tasks.append("✳ ").append(taskEntry.getKey()).append("-")
+                    .append(taskEntry.getValue().getState()).append(System.lineSeparator());
+            }
+            sendMessage(command.chatId(), "Текущие задачи: \n" + tasks);
+            List<String> buttons = buildButtons(taskMap);
+            sendButtons(command.chatId(), "Выберите действия с задачами:", buttons);
+        } else {
+            sendMessage(command.chatId(), EMPTY_ICON + " Задачи отсутствуют");
+        }
+    }
+
+    private static List<String> buildButtons(Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
+        String startOrStop = taskMap.entrySet().iterator().next().getValue().getState() == State.ACTIVE
+            ? STOP_ALL : START_ALL;
+        return List.of(DELETE, startOrStop, CHANGE_INTERVAL);
+    }
+
+    private void deleteTasks(CommandContext command, Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
+        String messageText = command.messageText();
+        long chatId = command.chatId();
         if (DELETE_ALL.equalsIgnoreCase(messageText)) {
             Integer removedCount = taskScheduler.removeAllTasks(chatId);
             if (removedCount == null || removedCount == 0) {
@@ -99,7 +111,10 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
             } else {
                 sendMessage(chatId, DELETE_ICON2 + " Все (%d) задачи удалены".formatted(removedCount));
             }
-        } else if (taskMap.containsKey(messageText)) {
+            userStateRepository.get(command.chatId()).deleteCommand(getCommand());
+            return;
+        }
+        if (taskMap.containsKey(messageText)) {
             Boolean check = taskScheduler.removeTask(chatId, messageText);
             if (check == null) {
                 sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
@@ -111,6 +126,8 @@ public class TasksCommand extends AbstractTelegramCommand implements ITelegramCo
         } else {
             sendMessage(chatId, "Задача '%s' не существует".formatted(messageText));
         }
+        beginHandle(command, taskMap);
+        command.state().setStep(2);
     }
 
     @Override
