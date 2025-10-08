@@ -158,6 +158,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
             if (taskInfo.getScheduledFuture() != null) {
                 taskInfo.getScheduledFuture().cancel(true);
             }
+            log.info("Удалена задача: '{}'", taskId);
             return true;
         }
         return false;
@@ -175,6 +176,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
                 count++;
             }
         }
+        log.info("Удалены все ({}) задачи", count);
         return count;
     }
 }

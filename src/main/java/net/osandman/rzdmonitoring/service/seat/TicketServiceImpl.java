@@ -10,8 +10,10 @@ import net.osandman.rzdmonitoring.dto.train.SeatDto;
 import net.osandman.rzdmonitoring.dto.train.TicketsResult;
 import net.osandman.rzdmonitoring.dto.train.TrainDto;
 import net.osandman.rzdmonitoring.mapping.TrainMapper;
+import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -32,6 +34,8 @@ public class TicketServiceImpl implements TicketService {
     private final RestTemplateConnector restTemplateConnector;
     private final Notifier notifier;
     private final ObjectMapper objectMapper;
+    @Lazy
+    private final MultiTaskScheduler taskScheduler;
 
     public static final String TRAIN_ICON1 = "\uD83D\uDE86"; // 🚆
     public static final String TRAIN_ICON2 = "\uD83D\uDE89"; // 🚉
@@ -44,6 +48,7 @@ public class TicketServiceImpl implements TicketService {
             put("isBonusPurchase", List.of("false"));
         }};
         List<TrainDto> trains = new ArrayList<>();
+        int errorCount = 0;
         for (String routNumber : ticketsTask.routeNumbers()) {
             String body = """
                 {
@@ -67,12 +72,20 @@ public class TicketServiceImpl implements TicketService {
             } catch (Exception e) {
                 log.error("Ошибка при получении данных для поезда {}, '{}'", routNumber, e.getMessage());
                 String errMsg = extractErrorMessageFromException(e);
+                String userMessage = errMsg;
                 if (!errMsg.toLowerCase().contains("мест нет")) {
-                    String userMessage = ("❌ Ошибка при получении данных для поезда %s: '%s'.\n"
-                                          + "Если ошибка повторится, то удалите задачу").formatted(routNumber, errMsg);
-                    notifier.sendMessage(userMessage, ticketsTask.chatId());
+                    userMessage = ("❌ Ошибка при получении данных для поезда %s: '%s'.\n"
+                                   + "Если ошибка повторится, то удалите задачу").formatted(routNumber, errMsg);
                 }
-
+                if (errMsg.contains("Некорректное значение") && errMsg.contains("DepartureDate")) {
+                    errorCount++;
+                    userMessage = "❌ Некорректная дата отправления поезда %s".formatted(routNumber);
+                    if (ticketsTask.routeNumbers().length == errorCount) {
+                        taskScheduler.removeTask(ticketsTask.chatId(), ticketsTask.taskId());
+                        userMessage = userMessage + ". Задача '%s' удалена".formatted(ticketsTask.taskId());
+                    }
+                }
+                notifier.sendMessage(userMessage, ticketsTask.chatId());
                 trains.add(TrainDto.builder()
                     .error(errMsg)
                     .trainNumber(routNumber)
