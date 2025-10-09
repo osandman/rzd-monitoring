@@ -13,7 +13,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Component
 @RequiredArgsConstructor
-public class StartCommand extends AbstractTelegramCommand implements ITelegramCommand {
+public class StartCommand extends AbstractTelegramCommand {
 
     @Qualifier("sortedTelegramCommands")
     @Lazy

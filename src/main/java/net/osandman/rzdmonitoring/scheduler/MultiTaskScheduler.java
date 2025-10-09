@@ -15,8 +15,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
@@ -59,7 +59,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
         this.taskRegistrar = taskRegistrar;
     }
 
-    public void addTask(TicketsTask ticketsTask, List<SeatFilter> seatFilters) {
+    public void addTask(TicketsTask ticketsTask, Set<SeatFilter> seatFilters) {
         removeTask(ticketsTask.chatId(), ticketsTask.taskId());  // Удаляем задачу, если она уже существует
         Runnable task = () -> ticketService.monitoringProcess(ticketsTask, seatFilters);
         TaskScheduler scheduler = taskRegistrar.getScheduler();

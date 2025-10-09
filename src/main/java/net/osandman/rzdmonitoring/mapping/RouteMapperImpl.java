@@ -91,11 +91,6 @@ public class RouteMapperImpl implements RouteMapper {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         String departureDate = routes.get(0).getDepartureDateTime().format(dateFormatter);
-        result.add("Найдены маршруты [%s] - [%s] на %s".formatted(
-            routes.get(0).getFromStation(),
-            routes.get(0).getToStation(),
-            departureDate
-        ));
         for (RouteDto route : routes) {
             String departureTime = route.getDepartureDateTime() != null ?
                 route.getDepartureDateTime().format(timeFormatter) : "N/A";

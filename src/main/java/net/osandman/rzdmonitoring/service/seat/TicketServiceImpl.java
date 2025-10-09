@@ -22,6 +22,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -42,7 +43,7 @@ public class TicketServiceImpl implements TicketService {
     public static final String NOT_FOUND_ICON = "\uD83D\uDE1E"; // 😞
 
     @Override
-    public TicketsResult monitoringProcess(TicketsTask ticketsTask, List<SeatFilter> seatFilters) {
+    public TicketsResult monitoringProcess(TicketsTask ticketsTask, Set<SeatFilter> seatFilters) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>() {{
             put("service_provider", List.of("B2B_RZD"));
             put("isBonusPurchase", List.of("false"));

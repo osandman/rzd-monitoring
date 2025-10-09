@@ -3,6 +3,7 @@ package net.osandman.rzdmonitoring.bot.command;
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.TaskResult;
 import net.osandman.rzdmonitoring.dto.route.RoutesResult;
+import net.osandman.rzdmonitoring.entity.MultiSelectType;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.mapping.RouteMapper;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
@@ -12,31 +13,33 @@ import net.osandman.rzdmonitoring.service.route.RouteService;
 import net.osandman.rzdmonitoring.service.seat.SeatFilter;
 import net.osandman.rzdmonitoring.util.Utils;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION_CODE;
-import static net.osandman.rzdmonitoring.bot.command.ParamType.SEAT_FILTERS;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TRAIN_NUMBERS;
 
 @Component
 @RequiredArgsConstructor
-public class FindTicketsCommand extends AbstractTelegramCommand implements ITelegramCommand {
+public class FindTicketsCommand extends AbstractTelegramCommand {
 
     private final MultiTaskScheduler multiTaskScheduler;
     private final ScheduleConfig scheduleConfig;
     private final RouteService routeService;
     private final RouteMapper routeMapper;
-
 
     @Override
     public Command getCommand() {
@@ -80,8 +83,8 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
 
                 sendMessage(command.chatId(), "Поиск поездов на %s".formatted(dateToSearch));
                 RoutesResult routesResult = routeService.findRoutes(
-                    command.state().getParams().get(FROM_STATION_CODE),
-                    command.state().getParams().get(TO_STATION_CODE),
+                    command.state().getParam(FROM_STATION_CODE),
+                    command.state().getParam(TO_STATION_CODE),
                     dateToSearch
                 );
                 if (routesResult.error() != null) {
@@ -100,7 +103,12 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 }
                 sendButtons(
                     command.chatId(),
-                    "Найдено %d маршрутов, выберите номер поезда:".formatted(availableNumbers.size()),
+                    "Найдено %d маршрутов [%s] - [%s] на %s, выберите поезд:".formatted(
+                        availableNumbers.size(),
+                        command.state().getParam(FROM_STATION),
+                        command.state().getParam(TO_STATION),
+                        dateToSearch
+                    ),
                     availableNumbers,
                     1
                 );
@@ -112,30 +120,22 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 command.state().addKey(TRAIN_NUMBERS, trainNumbers);
                 sendMessage(command.chatId(), "Выбран поезд(а) №%s".formatted(command.messageText()));
 
-                FilterData filterData = createFilterData();
-                // TODO сделать метод который позволяет множественный выбор фильтров и поездов с кнопок
-                sendButtons(
+                // Отправляем кнопки для множественного выбора фильтров поиска билетов
+                sendMultiSelectButtons(
                     command.chatId(),
+                    MultiSelectType.SEAT_FILTER,
                     "Выберите фильтры поиска билетов:",
-                    List.of(
-                        String.join(",", toStringButtons(filterData.seatFilters1())),
-                        String.join(",", toStringButtons(filterData.seatFilters2())),
-                        String.join(",", toStringButtons(filterData.seatFilters3())),
-                        String.join(",", toStringButtons(filterData.seatFilters4())),
-                        String.join(",", toStringButtons(filterData.seatFilters5()))
-                    ),
-                    2
+                    getAllOptionsForType(MultiSelectType.SEAT_FILTER)
                 );
-//                sendMultiSelectButtons(
-//                    command.chatId(),
-//                    MultiSelectType.SEAT_FILTER,
-//                    "Выберите фильтры поиска билетов:",
-//                    Set.of(SeatFilter.values())
-//                );
                 command.state().incrementStep();
             }
             case 8 -> { // запуск мониторинга билетов
-                command.state().addKey(SEAT_FILTERS, command.messageText());
+                CallbackQuery callbackQuery = checkCallbackQuery(update, command, MultiSelectType.SEAT_FILTER);
+                if (callbackQuery == null) {
+                    return;
+                }
+                handleComplete(command, MultiSelectType.SEAT_FILTER, callbackQuery, false);
+//                command.state().addKey(SEAT_FILTERS, command.messageText());
                 TaskResult taskResult = createTask(command);
                 String messageTask;
                 if (taskResult.success()) {
@@ -145,7 +145,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                         """.formatted(
                         taskResult.taskId(),
                         scheduleConfig.getInterval(),
-                        command.state().getParams().get(SEAT_FILTERS)
+                        command.state().getMultiSelectParam(MultiSelectType.SEAT_FILTER).getSelectedText()
                     );
                 } else {
                     messageTask = "Произошла ошибка при запуске мониторинга билетов: '%s'".formatted(taskResult.msg());
@@ -154,35 +154,51 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
                 sendMessage(command.chatId(), messageTask);
                 userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             }
+            default -> {
+                sendMessage(command.chatId(), "Шаг команды не найден, обратитесь к разработчику");
+            }
         }
     }
 
-    private static FilterData createFilterData() {
-        List<SeatFilter> seatFilters1 = List.of(
-            SeatFilter.COMPARTMENT, SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID
-        );
-        List<SeatFilter> seatFilters2 = List.of(
-            SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID
-        );
-        List<SeatFilter> seatFilters3 = List.of(
-            SeatFilter.COMPARTMENT
-        );
-        List<SeatFilter> seatFilters4 = List.of(
-            SeatFilter.PLATZKART
-        );
-        List<SeatFilter> seatFilters5 = List.of(
-            SeatFilter.ALL_SEATS
-        );
-        return new FilterData(seatFilters1, seatFilters2, seatFilters3, seatFilters4, seatFilters5);
+    private CallbackQuery checkCallbackQuery(Update update, CommandContext command, MultiSelectType multiSelectType) {
+        // Проверяем, является ли это callback query для множественного выбора
+        if (!update.hasCallbackQuery()) {
+            showAlert(null, command.chatId(), "Нужно выбрать значение!");
+            return null;
+        }
+        CallbackQuery callbackQuery = update.getCallbackQuery();
+        if (!callbackQuery.getData().startsWith("multiselect:done")) {
+            handleMultiSelectCallback(update, multiSelectType);
+            return null;
+        }
+        if (command.state().getMultiSelectParam(multiSelectType).getSelectedOptions().isEmpty()) {
+            showAlert(callbackQuery, command.chatId(), "Нужно выбрать хотя бы одно значение!");
+            return null;
+        }
+        return callbackQuery;
     }
 
-    private record FilterData(
-        List<SeatFilter> seatFilters1,
-        List<SeatFilter> seatFilters2,
-        List<SeatFilter> seatFilters3,
-        List<SeatFilter> seatFilters4,
-        List<SeatFilter> seatFilters5
+    private void handleComplete(
+        CommandContext command, MultiSelectType seatFilter, CallbackQuery callbackQuery, boolean hideButtons
     ) {
+        UserState.MultiSelect multiSelect = command.state().getMultiSelectParam(seatFilter);
+
+        if (hideButtons) {
+            // Удаляем inline keyboard
+            Integer messageId = callbackQuery.getMessage().getMessageId();
+            EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
+            editMarkup.setChatId(String.valueOf(command.chatId()));
+            editMarkup.setMessageId(messageId);
+            editMarkup.setReplyMarkup(null);
+            executeMessage(editMarkup);
+        }
+
+        // Отправляем сообщение с выбранными опциями
+        sendMessage(command.chatId(), "Выбраны: " + multiSelect.getSelectedText());
+
+        // ОБЯЗАТЕЛЬНО отвечаем на callback query
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(callbackQuery.getId());
+        executeMessage(answerCallbackQuery);
     }
 
     @Override
@@ -190,21 +206,16 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
         return true;
     }
 
-    List<String> toStringButtons(List<SeatFilter> seatFilters) {
-        return seatFilters.stream()
-            .map(SeatFilter::getButtonText)
-            .toList();
-    }
-
     private TaskResult createTask(CommandContext commandContext) {
         UserState.CommandState state = commandContext.state();
-        String date = state.getParams().get(DATE);
-        String from = state.getParams().get(FROM_STATION);
-        String to = state.getParams().get(TO_STATION);
-        String[] trainNumbers = state.getParams().get(TRAIN_NUMBERS).split(",");
-        List<SeatFilter> seatFilters = Arrays.stream(state.getParams().get(SEAT_FILTERS).split(","))
+        String date = state.getParam(DATE);
+        String from = state.getParam(FROM_STATION);
+        String to = state.getParam(TO_STATION);
+        String[] trainNumbers = state.getParam(TRAIN_NUMBERS).split(",");
+        Set<SeatFilter> seatFilters = commandContext.state().getMultiSelectParam(MultiSelectType.SEAT_FILTER)
+            .getSelectedOptions().stream()
             .map(SeatFilter::getByButtonText)
-            .toList();
+            .collect(Collectors.toSet());
         long chatId = commandContext.chatId();
         String taskId = "task-" + date + "-" + from + "-" + to + "-" +
                         String.join("_", trainNumbers) + "-chatId-" + chatId;
@@ -212,8 +223,8 @@ public class FindTicketsCommand extends AbstractTelegramCommand implements ITele
             .chatId(chatId)
             .taskId(taskId)
             .date(date)
-            .fromCode(state.getParams().get(FROM_STATION_CODE))
-            .toCode(state.getParams().get(TO_STATION_CODE))
+            .fromCode(state.getParam(FROM_STATION_CODE))
+            .toCode(state.getParam(TO_STATION_CODE))
             .routeNumbers(trainNumbers)
             .build();
         try {

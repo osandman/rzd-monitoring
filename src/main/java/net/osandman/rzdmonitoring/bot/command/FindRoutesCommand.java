@@ -17,7 +17,7 @@ import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
 
 @Component
 @RequiredArgsConstructor
-public class FindRoutesCommand extends AbstractTelegramCommand implements ITelegramCommand {
+public class FindRoutesCommand extends AbstractTelegramCommand {
 
     private final RouteService routeService;
 

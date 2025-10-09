@@ -18,7 +18,7 @@ import static net.osandman.rzdmonitoring.bot.command.Buttons.STOP_ALL;
 
 @Component
 @RequiredArgsConstructor
-public class TasksCommand extends AbstractTelegramCommand implements ITelegramCommand {
+public class TasksCommand extends AbstractTelegramCommand {
 
     private final MultiTaskScheduler taskScheduler;
 

@@ -6,8 +6,10 @@ import io.github.dostonhamrakulov.LanguageEnum;
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.bot.RzdMonitoringBot;
 import net.osandman.rzdmonitoring.dto.station.StationDto;
+import net.osandman.rzdmonitoring.entity.MultiSelectType;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
+import net.osandman.rzdmonitoring.service.seat.SeatFilter;
 import net.osandman.rzdmonitoring.service.station.StationService;
 import net.osandman.rzdmonitoring.util.Utils;
 import net.osandman.rzdmonitoring.validate.CheckDateResult;
@@ -16,22 +18,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.Nullable;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.InaccessibleMessage;
 import org.telegram.telegrambots.meta.api.objects.MaybeInaccessibleMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public abstract class AbstractTelegramCommand {
+public abstract class AbstractTelegramCommand implements ITelegramCommand {
 
     @Autowired
     protected StationService stationService;
@@ -97,18 +111,20 @@ public abstract class AbstractTelegramCommand {
         }
     }
 
-    protected Message executeMessage(SendMessage sendMessage) {
-        Message message = null;
+    protected <T extends Serializable, Method extends BotApiMethod<T>> T executeMessage(Method method) {
+        T result = null;
         try {
-            message = sender.execute(sendMessage);
-            log.info("Сообщение '{}' отправлено пользователю, chatId={}",
-                sendMessage.getText(), sendMessage.getChatId());
+            result = sender.execute(method);
+            if (method instanceof SendMessage sendMessage) {
+                log.info("Сообщение '{}' отправлено пользователю, chatId={}",
+                    sendMessage.getText(), sendMessage.getChatId());
+            }
         } catch (TelegramApiException e) {
             log.error("Ошибка при отправке сообщения", e);
         } catch (Exception e) {
             log.error("Произошла непредвиденная ошибка", e);
         }
-        return message;
+        return result;
     }
 
     protected <T> void sendButtons(long chatId, String message, List<T> toButtons) {
@@ -211,4 +227,133 @@ public abstract class AbstractTelegramCommand {
                 .filter(stationDto -> stationDto.name().equalsIgnoreCase(searchName))
                 .findAny().orElse(null);
     }
+
+    protected void sendMultiSelectButtons(
+        long chatId, MultiSelectType type, String initialMessage, Set<?> options
+    ) {
+        UserState userState = userStateRepository.get(chatId);
+        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand());
+        UserState.MultiSelect multiSelect = commandState.createMultiSelectParam(type, initialMessage);
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = createMultiSelectMarkup(
+            options, multiSelect.getSelectedOptions(), type.getColumnCount()
+        );
+
+        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), multiSelect.getSelectedText());
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+
+        Message sentMessage = executeMessage(sendMessage);
+        if (sentMessage != null) {
+            multiSelect.setMessageId(sentMessage.getMessageId());
+        }
+    }
+
+    private InlineKeyboardMarkup createMultiSelectMarkup(
+        Set<?> options, Set<String> selectedOptions, int columnsCount
+    ) {
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        List<InlineKeyboardButton> currentRow = new ArrayList<>();
+
+        // Создаем кнопки для каждой опции
+        for (Object option : options) {
+            String optionText = option.toString();
+            String displayText = selectedOptions.contains(optionText) ? "✅ " + optionText : optionText;
+            String callbackData = "multiselect:" + optionText;
+
+            InlineKeyboardButton button = InlineKeyboardButton.builder()
+                .text(displayText)
+                .callbackData(callbackData)
+                .build();
+
+            currentRow.add(button);
+
+            // Если достигли нужного количества столбцов или это последняя опция
+            if (currentRow.size() == columnsCount) {
+                keyboard.add(new ArrayList<>(currentRow));
+                currentRow.clear();
+            }
+        }
+
+        // Добавляем оставшиеся кнопки, если есть неполная строка
+        if (!currentRow.isEmpty()) {
+            keyboard.add(currentRow);
+        }
+
+        // Добавляем кнопку "Готово" в отдельную строку
+        InlineKeyboardButton doneButton = InlineKeyboardButton.builder()
+            .text("✅ Готово")
+            .callbackData("multiselect:done")
+            .build();
+
+        keyboard.add(List.of(doneButton));
+
+        return InlineKeyboardMarkup.builder()
+            .keyboard(keyboard)
+            .build();
+    }
+
+    protected void handleMultiSelectCallback(Update update, MultiSelectType type) {
+        CallbackQuery callbackQuery = update.getCallbackQuery();
+        String callbackData = callbackQuery.getData();
+        long chatId = callbackQuery.getMessage().getChatId();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
+
+        UserState userState = userStateRepository.get(chatId);
+        UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand());
+        UserState.MultiSelect multiSelect = commandState.getMultiSelectParam(type);
+
+        if (multiSelect == null) {
+            return;
+        }
+
+        if (callbackData.startsWith("multiselect:")) {
+            // Переключение опции
+            String option = callbackData.substring("multiselect:".length());
+            multiSelect.toggleOption(option);
+
+            // Обновляем keyboard с новым состоянием
+            Set<String> allOptions = getAllOptionsForType(type);
+            InlineKeyboardMarkup newMarkup = createMultiSelectMarkup(
+                allOptions, multiSelect.getSelectedOptions(), type.getColumnCount()
+            );
+
+            EditMessageText editText = new EditMessageText();
+            editText.setChatId(String.valueOf(chatId));
+            editText.setMessageId(messageId);
+            editText.setText(multiSelect.getInitialMessage());
+            editText.setReplyMarkup(newMarkup);
+            executeMessage(editText);
+        }
+        // Отвечаем на callback query чтобы убрать индикатор загрузки
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(callbackQuery.getId());
+        executeMessage(answerCallbackQuery);
+    }
+
+    protected void showAlert(@Nullable CallbackQuery callbackQuery, long chatId, String messageText) {
+        if (callbackQuery != null) {
+            // Пытаемся показать popup alert
+            AnswerCallbackQuery alertQuery = new AnswerCallbackQuery(callbackQuery.getId());
+            alertQuery.setText(messageText);
+            alertQuery.setShowAlert(true);
+            executeMessage(alertQuery);
+            return; // Успешно показали alert
+        }
+        // Показываем как обычное сообщение
+        sendMessage(chatId, "⚠️ " + messageText);
+    }
+
+    protected Set<String> getAllOptionsForType(MultiSelectType type) {
+        // Возвращаем все доступные опции для данного типа
+        switch (type) {
+            case SEAT_FILTER -> {
+                return Arrays.stream(SeatFilter.values())
+                    .map(SeatFilter::getButtonText)
+                    .collect(Collectors.toSet());
+            }
+            default -> {
+                return new HashSet<>();
+            }
+        }
+    }
+
 }

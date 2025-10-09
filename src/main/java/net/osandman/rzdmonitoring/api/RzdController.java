@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/v1/rzd")
@@ -31,11 +32,11 @@ public class RzdController {
 
     @GetMapping("/tickets")
     private TicketsResult findTickets(
-        @RequestParam List<SeatFilter> seatFilters,
+        @RequestParam Set<SeatFilter> seatFilters,
         @RequestBody TicketsTask ticketsTask
     ) {
         if (CollectionUtils.isEmpty(seatFilters)) {
-            seatFilters = List.of(SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID, SeatFilter.COMPARTMENT);
+            seatFilters = Set.of(SeatFilter.DOWN_SEATS, SeatFilter.NOT_INVALID, SeatFilter.COMPARTMENT);
         }
         return ticketService.monitoringProcess(ticketsTask, seatFilters);
     }

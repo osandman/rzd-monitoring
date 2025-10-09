@@ -39,6 +39,10 @@ public class UserState {
             return multiSelectParams.computeIfAbsent(type, k -> new MultiSelect(initialMessage));
         }
 
+        public String getParam(ParamType type) {
+            return params.get(type);
+        }
+
         public MultiSelect getMultiSelectParam(MultiSelectType type) {
             return multiSelectParams.get(type);
         }
@@ -75,11 +79,11 @@ public class UserState {
             this.initialMessage = initialMessage;
         }
 
-        public String getCurrentText() {
+        public String getSelectedText() {
             if (selectedOptions.isEmpty()) {
                 return initialMessage;
             }
-            return initialMessage + "\n\nВыбрано: " + String.join(", ", selectedOptions);
+            return String.join(", ", selectedOptions);
         }
 
         public void toggleOption(String option) {

@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
 @RequiredArgsConstructor
-public class FindStationsCommand extends AbstractTelegramCommand implements ITelegramCommand {
+public class FindStationsCommand extends AbstractTelegramCommand {
 
     @Override
     public Command getCommand() {

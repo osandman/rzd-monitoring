@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
-public class UnknownCommand extends AbstractTelegramCommand implements ITelegramCommand {
+public class UnknownCommand extends AbstractTelegramCommand {
 
     @Override
     public void handleCommand(Update update) {
