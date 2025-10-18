@@ -9,7 +9,6 @@ import net.osandman.rzdmonitoring.dto.station.StationDto;
 import net.osandman.rzdmonitoring.entity.MultiSelectType;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
-import net.osandman.rzdmonitoring.service.seat.SeatFilter;
 import net.osandman.rzdmonitoring.service.station.StationService;
 import net.osandman.rzdmonitoring.util.Utils;
 import net.osandman.rzdmonitoring.validate.CheckDateResult;
@@ -30,6 +29,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -38,11 +38,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public abstract class AbstractTelegramCommand implements ITelegramCommand {
@@ -62,6 +61,13 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
 
     protected final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
     public static final String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
+
+    private static final InlineCalendarBuilder inlineCalendarBuilder;
+
+    static {
+        inlineCalendarBuilder = new InlineCalendarBuilder(LanguageEnum.RU);
+        inlineCalendarBuilder.setShowFullMonthName(false);
+    }
 
     protected CommandContext buildCommandContext(Update update, Command command) {
         MaybeInaccessibleMessage message = getMessage(update);
@@ -94,6 +100,10 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
     }
 
     protected void sendMessage(long chatId, String message) {
+        sendMessage(chatId, message, false);
+    }
+
+    protected void sendMessage(long chatId, String message, boolean hideKeyboard) {
         int maxLength = 4096;
         List<String> messageBlocks = new ArrayList<>();
         while (message.length() > maxLength) {
@@ -104,8 +114,21 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
         if (!message.isEmpty()) {
             messageBlocks.add(message);
         }
-        for (String block : messageBlocks) {
-            SendMessage sendMessage = new SendMessage(String.valueOf(chatId), block);
+        boolean isHide = false;
+        Iterator<String> iterator = messageBlocks.iterator();
+        while (iterator.hasNext()) {
+            SendMessage sendMessage = new SendMessage(String.valueOf(chatId), iterator.next());
+            if (!isHide && hideKeyboard) {
+                ReplyKeyboardRemove removeKeyboard = new ReplyKeyboardRemove();
+                removeKeyboard.setRemoveKeyboard(true);
+                sendMessage.setReplyMarkup(removeKeyboard);
+                executeMessage(sendMessage);
+                Utils.sleep(1000);
+                isHide = true;
+                if (!iterator.hasNext()) {
+                    return;
+                }
+            }
             executeMessage(sendMessage);
             Utils.sleep(1000);
         }
@@ -161,11 +184,20 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
     }
 
     protected void sendCalendar(long chatId, String message, Update update) {
-        InlineCalendarBuilder inlineCalendarBuilder = new InlineCalendarBuilder(LanguageEnum.RU);
-        inlineCalendarBuilder.setShowFullMonthName(false);
-        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
-        sendMessage.setReplyMarkup(inlineCalendarBuilder.build(update));
-        executeMessage(sendMessage);
+        if (!update.hasCallbackQuery()) {
+            SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
+            sendMessage.setReplyMarkup(inlineCalendarBuilder.build(update));
+            executeMessage(sendMessage);
+        } else {
+            EditMessageText editText = new EditMessageText();
+            editText.setChatId(String.valueOf(chatId));
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            Integer messageId = callbackQuery.getMessage().getMessageId();
+            editText.setMessageId(messageId);
+            editText.setText(message);
+            editText.setReplyMarkup(inlineCalendarBuilder.build(update));
+            executeMessage(editText);
+        }
     }
 
     protected LocalDate handleDate(Update update, CommandContext command) {
@@ -203,7 +235,7 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
             sendMessage(chatId, "Станция '%s' не найдена, введите заново".formatted(messageText));
             return;
         }
-        sendButtons(chatId, "Выберите станцию или введите текст для нового поиска:", stationDtos);
+        sendButtons(chatId, "Выберите станцию из найденных или введите текст для нового поиска:", stationDtos);
         commandState.incrementStep();
     }
 
@@ -229,11 +261,18 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
     }
 
     protected void sendMultiSelectButtons(
-        long chatId, MultiSelectType type, String initialMessage, Set<?> options
+        long chatId, MultiSelectType type, String initialMessage, List<String> options
     ) {
         UserState userState = userStateRepository.get(chatId);
         UserState.CommandState commandState = userState.getOrCreateCommandState(getCommand());
-        UserState.MultiSelect multiSelect = commandState.createMultiSelectParam(type, initialMessage);
+        UserState.MultiSelect multiSelect = commandState.getOrCreateMultiSelectParam(type, initialMessage);
+
+        // создаем map с индексами для callbackData и значениями опций для текста кнопок
+        Map<Integer, String> indexToOptionMap = new HashMap<>();
+        for (int i = 0; i < options.size(); i++) {
+            indexToOptionMap.put(i, options.get(i));
+        }
+        multiSelect.setIndexToOptionMapping(indexToOptionMap);
 
         InlineKeyboardMarkup inlineKeyboardMarkup = createMultiSelectMarkup(
             options, multiSelect.getSelectedOptions(), type.getColumnCount()
@@ -249,16 +288,17 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
     }
 
     private InlineKeyboardMarkup createMultiSelectMarkup(
-        Set<?> options, Set<String> selectedOptions, int columnsCount
+        List<String> options, List<String> selectedOptions, int columnsCount
     ) {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> currentRow = new ArrayList<>();
 
-        // Создаем кнопки для каждой опции
-        for (Object option : options) {
-            String optionText = option.toString();
+        for (int i = 0; i < options.size(); i++) {
+            String optionText = options.get(i);
             String displayText = selectedOptions.contains(optionText) ? "✅ " + optionText : optionText;
-            String callbackData = "multiselect:" + optionText;
+
+            // Используем индекс для callbackData - короткий, чтобы не было ошибки BUTTON_DATA_INVALID
+            String callbackData = "multiselect:" + i;
 
             InlineKeyboardButton button = InlineKeyboardButton.builder()
                 .text(displayText)
@@ -267,7 +307,6 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
 
             currentRow.add(button);
 
-            // Если достигли нужного количества столбцов или это последняя опция
             if (currentRow.size() == columnsCount) {
                 keyboard.add(new ArrayList<>(currentRow));
                 currentRow.clear();
@@ -306,15 +345,20 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
             return;
         }
 
-        if (callbackData.startsWith("multiselect:")) {
+        if (callbackData.startsWith("multiselect:") && !callbackData.equals("multiselect:done")) {
             // Переключение опции
-            String option = callbackData.substring("multiselect:".length());
-            multiSelect.toggleOption(option);
+            String index = callbackData.substring("multiselect:".length());
+            // Получаем реальную опцию по индексу
+            String actualOption = multiSelect.getOptionByIndex(Integer.valueOf(index));
+            multiSelect.toggleOption(actualOption);
 
+            // Получаем список опций из маппинга для правильного порядка
+            List<String> optionsList = multiSelect.getIndexToOptionMap().values()
+                .stream()
+                .toList();
             // Обновляем keyboard с новым состоянием
-            Set<String> allOptions = getAllOptionsForType(type);
             InlineKeyboardMarkup newMarkup = createMultiSelectMarkup(
-                allOptions, multiSelect.getSelectedOptions(), type.getColumnCount()
+                optionsList, multiSelect.getSelectedOptions(), type.getColumnCount()
             );
 
             EditMessageText editText = new EditMessageText();
@@ -341,19 +385,4 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
         // Показываем как обычное сообщение
         sendMessage(chatId, "⚠️ " + messageText);
     }
-
-    protected Set<String> getAllOptionsForType(MultiSelectType type) {
-        // Возвращаем все доступные опции для данного типа
-        switch (type) {
-            case SEAT_FILTER -> {
-                return Arrays.stream(SeatFilter.values())
-                    .map(SeatFilter::getButtonText)
-                    .collect(Collectors.toSet());
-            }
-            default -> {
-                return new HashSet<>();
-            }
-        }
-    }
-
 }

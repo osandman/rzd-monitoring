@@ -19,7 +19,7 @@ public class FindStationsCommand extends AbstractTelegramCommand {
         CommandContext command = buildCommandContext(update, getCommand());
         switch (command.state().getStep()) {
             case 1 -> { // начало команды
-                sendMessage(command.chatId(), "Введите текст для поиска станции");
+                sendMessage(command.chatId(), "Введите текст для поиска станции", true);
                 command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления

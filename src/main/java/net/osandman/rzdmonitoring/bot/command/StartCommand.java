@@ -49,7 +49,7 @@ public class StartCommand extends AbstractTelegramCommand {
                 .toList()
         );
         String message = START_MESSAGE.formatted(fullName, allCommands);
-        sendMessage(chatId, message);
+        sendMessage(chatId, message, true);
         sendButtons(chatId, "Выберите опцию:",
             telegramCommands.stream()
                 .filter(ITelegramCommand::canToShow)

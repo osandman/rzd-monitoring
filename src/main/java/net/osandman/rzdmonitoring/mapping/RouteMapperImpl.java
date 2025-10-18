@@ -73,7 +73,7 @@ public class RouteMapperImpl implements RouteMapper {
         if (routes == null || routes.isEmpty()) {
             return "🚫 Маршруты не найдены";
         }
-        List<String> result = getStrings(TRAIN_ICON, routes);
+        List<String> result = getFullInfo(TRAIN_ICON, routes);
         return String.join(System.lineSeparator(), result);
     }
 
@@ -83,10 +83,10 @@ public class RouteMapperImpl implements RouteMapper {
         if (routes == null || routes.isEmpty()) {
             return List.of();
         }
-        return getStrings("", routes);
+        return getSmallInfo(routes);
     }
 
-    private static List<String> getStrings(String prefix, List<RouteDto> routes) {
+    private static List<String> getFullInfo(String prefix, List<RouteDto> routes) {
         List<String> result = new ArrayList<>();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -98,13 +98,40 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getArrivalDateTime().format(dateFormatter) : "N/A";
             String arrivalTime = route.getArrivalDateTime() != null ?
                 route.getArrivalDateTime().format(timeFormatter) : "N/A";
-            String routeInfo = prefix + " %s%s отправление в %s прибытие %s в %s, свободных мест %s".formatted(
+            String routeInfo = prefix + " %s%s отправление в %s прибытие %s в %s, %s".formatted(
                 route.getTrainNumber(),
                 route.getIsSuburban() ? "(пригород.) " : "",
                 departureTime,
                 arrivalDate.equals(departureDate) ? "" : arrivalDate,
                 arrivalTime,
-                route.getIsSuburban() ? "" : route.getCarriages().stream()
+                route.getIsSuburban() ? "" : "свободных мест " + route.getCarriages().stream()
+                    .mapToInt(CarriageDto::getTotalSeats)
+                    .sum()
+            );
+            result.add(routeInfo);
+        }
+        return result;
+    }
+
+    private static List<String> getSmallInfo(List<RouteDto> routes) {
+        List<String> result = new ArrayList<>();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        String departureDate = routes.get(0).getDepartureDateTime().format(dateFormatter);
+        for (RouteDto route : routes) {
+            String departureTime = route.getDepartureDateTime() != null ?
+                route.getDepartureDateTime().format(timeFormatter) : "N/A";
+            String arrivalDate = route.getArrivalDateTime() != null ?
+                route.getArrivalDateTime().format(dateFormatter) : "N/A";
+            String arrivalTime = route.getArrivalDateTime() != null ?
+                route.getArrivalDateTime().format(timeFormatter) : "N/A";
+            String routeInfo = "%s%s в %s → %s в %s %s ".formatted(
+                route.getTrainNumber(),
+                route.getIsSuburban() ? "(пригород.) " : "",
+                departureTime,
+                arrivalDate.equals(departureDate) ? "" : arrivalDate,
+                arrivalTime,
+                route.getIsSuburban() ? "" : "мест " + route.getCarriages().stream()
                     .mapToInt(CarriageDto::getTotalSeats)
                     .sum()
             );

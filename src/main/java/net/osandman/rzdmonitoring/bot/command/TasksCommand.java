@@ -46,7 +46,9 @@ public class TasksCommand extends AbstractTelegramCommand {
                         List<String> taskNames = new ArrayList<>(taskMap.keySet());
                         taskNames.add(DELETE_ALL);
                         sendButtons(
-                            command.chatId(), "Выберите задачу или '%s' для удаления:".formatted(DELETE_ALL), taskNames
+                            command.chatId(), "Выберите задачу или '%s' для удаления:".formatted(DELETE_ALL),
+                            taskNames,
+                            1
                         );
                         command.state().setStep(3);
                     }

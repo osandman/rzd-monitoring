@@ -30,7 +30,6 @@ import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION_CODE;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
-import static net.osandman.rzdmonitoring.bot.command.ParamType.TRAIN_NUMBERS;
 
 @Component
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
         CommandContext command = buildCommandContext(update, getCommand());
         switch (command.state().getStep()) {
             case 1 -> { // начало команды
-                sendMessage(command.chatId(), "Введите станцию отправления:");
+                sendMessage(command.chatId(), "Введите станцию отправления:", true);
                 command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
@@ -81,61 +80,69 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 }
                 String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
 
-                sendMessage(command.chatId(), "Поиск поездов на %s".formatted(dateToSearch));
+                sendMessage(command.chatId(), "Поиск поездов на %s".formatted(dateToSearch), true);
                 RoutesResult routesResult = routeService.findRoutes(
                     command.state().getParam(FROM_STATION_CODE),
                     command.state().getParam(TO_STATION_CODE),
                     dateToSearch
                 );
+
+                // проверки что маршруты найдены
                 if (routesResult.error() != null) {
                     sendMessage(
                         command.chatId(),
-                        "⚠ Ошибка: '%s' при поиске маршрутов на дату '%s'".formatted(routesResult.error(), dateToSearch)
+                        "⚠ Ошибка: '%s' при поиске маршрутов на дату %s, попробуйте выбрать другую дату"
+                            .formatted(routesResult.error(), dateToSearch)
                     );
-                    sendCalendar(command.chatId(), "Введите дату отправления:", update);
                     return;
                 }
-                List<String> availableNumbers = routeMapper.toFindTicketsList(routesResult.routes());
-                if (availableNumbers.isEmpty()) {
-                    sendMessage(command.chatId(), "⚠ не найдены поезда на дату '%s'".formatted(dateToSearch));
-                    sendCalendar(command.chatId(), "Введите дату отправления:", update);
+                List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes());
+                if (availableRoutes.isEmpty()) {
+                    sendMessage(
+                        command.chatId(),
+                        "⚠ Не найдены поезда на дату %s, попробуйте выбрать другую дату"
+                            .formatted(dateToSearch)
+                    );
                     return;
                 }
-                sendButtons(
+                command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
+
+                sendMultiSelectButtons(
                     command.chatId(),
-                    "Найдено %d маршрутов [%s] - [%s] на %s, выберите поезд:".formatted(
-                        availableNumbers.size(),
+                    MultiSelectType.ROUTES,
+                    "Найдены маршруты (%d) [%s - %s] на %s, выберите поезд:".formatted(
+                        availableRoutes.size(),
                         command.state().getParam(FROM_STATION),
                         command.state().getParam(TO_STATION),
                         dateToSearch
                     ),
-                    availableNumbers,
-                    1
+                    availableRoutes
                 );
-                command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
+
                 command.state().incrementStep();
             }
-            case 7 -> { // вывод фильтров
-                String trainNumbers = Utils.getFirstWord(command.messageText());
-                command.state().addKey(TRAIN_NUMBERS, trainNumbers);
-                sendMessage(command.chatId(), "Выбран поезд(а) №%s".formatted(command.messageText()));
+            case 7 -> { // выбор поездов и вывод фильтров
+                CallbackQuery callbackQuery = checkCallbackQuery(update, command, MultiSelectType.ROUTES);
+                if (callbackQuery == null) {
+                    return;
+                }
+                handleComplete(command, MultiSelectType.ROUTES, callbackQuery, false);
 
                 // Отправляем кнопки для множественного выбора фильтров поиска билетов
                 sendMultiSelectButtons(
                     command.chatId(),
-                    MultiSelectType.SEAT_FILTER,
+                    MultiSelectType.SEAT_FILTERS,
                     "Выберите фильтры поиска билетов:",
-                    getAllOptionsForType(MultiSelectType.SEAT_FILTER)
+                    SeatFilter.getButtons()
                 );
                 command.state().incrementStep();
             }
             case 8 -> { // запуск мониторинга билетов
-                CallbackQuery callbackQuery = checkCallbackQuery(update, command, MultiSelectType.SEAT_FILTER);
+                CallbackQuery callbackQuery = checkCallbackQuery(update, command, MultiSelectType.SEAT_FILTERS);
                 if (callbackQuery == null) {
                     return;
                 }
-                handleComplete(command, MultiSelectType.SEAT_FILTER, callbackQuery, false);
-//                command.state().addKey(SEAT_FILTERS, command.messageText());
+                handleComplete(command, MultiSelectType.SEAT_FILTERS, callbackQuery, false);
                 TaskResult taskResult = createTask(command);
                 String messageTask;
                 if (taskResult.success()) {
@@ -145,7 +152,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                         """.formatted(
                         taskResult.taskId(),
                         scheduleConfig.getInterval(),
-                        command.state().getMultiSelectParam(MultiSelectType.SEAT_FILTER).getSelectedText()
+                        command.state().getMultiSelectParam(MultiSelectType.SEAT_FILTERS).getSelectedText()
                     );
                 } else {
                     messageTask = "Произошла ошибка при запуске мониторинга билетов: '%s'".formatted(taskResult.msg());
@@ -163,7 +170,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
     private CallbackQuery checkCallbackQuery(Update update, CommandContext command, MultiSelectType multiSelectType) {
         // Проверяем, является ли это callback query для множественного выбора
         if (!update.hasCallbackQuery()) {
-            showAlert(null, command.chatId(), "Нужно выбрать значение!");
+            showAlert(null, command.chatId(), "Нужно выбрать значение из списка!");
             return null;
         }
         CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -211,8 +218,11 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
         String date = state.getParam(DATE);
         String from = state.getParam(FROM_STATION);
         String to = state.getParam(TO_STATION);
-        String[] trainNumbers = state.getParam(TRAIN_NUMBERS).split(",");
-        Set<SeatFilter> seatFilters = commandContext.state().getMultiSelectParam(MultiSelectType.SEAT_FILTER)
+        String[] trainNumbers = state.getMultiSelectParam(MultiSelectType.ROUTES)
+            .getSelectedOptions().stream()
+            .map(Utils::getFirstWord)
+            .toList().toArray(new String[0]);
+        Set<SeatFilter> seatFilters = commandContext.state().getMultiSelectParam(MultiSelectType.SEAT_FILTERS)
             .getSelectedOptions().stream()
             .map(SeatFilter::getByButtonText)
             .collect(Collectors.toSet());

@@ -6,10 +6,10 @@ import lombok.Setter;
 import net.osandman.rzdmonitoring.bot.command.Command;
 import net.osandman.rzdmonitoring.bot.command.ParamType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Getter
 @Data
@@ -35,7 +35,7 @@ public class UserState {
         private Map<ParamType, String> params = new HashMap<>();
         private Map<MultiSelectType, MultiSelect> multiSelectParams = new HashMap<>();
 
-        public MultiSelect createMultiSelectParam(MultiSelectType type, String initialMessage) {
+        public MultiSelect getOrCreateMultiSelectParam(MultiSelectType type, String initialMessage) {
             return multiSelectParams.computeIfAbsent(type, k -> new MultiSelect(initialMessage));
         }
 
@@ -72,8 +72,18 @@ public class UserState {
     @Setter
     public static class MultiSelect {
         private String initialMessage;
-        private Set<String> selectedOptions = new HashSet<>();
+        private List<String> selectedOptions = new ArrayList<>();
         private Integer messageId;
+        private Map<Integer, String> indexToOptionMap = new HashMap<>();
+
+        // Методы для работы с маппингом
+        public void setIndexToOptionMapping(Map<Integer, String> mapping) {
+            this.indexToOptionMap = mapping;
+        }
+
+        public String getOptionByIndex(Integer index) {
+            return indexToOptionMap.get(index);
+        }
 
         public MultiSelect(String initialMessage) {
             this.initialMessage = initialMessage;

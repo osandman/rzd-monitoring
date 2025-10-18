@@ -31,7 +31,7 @@ public class FindRoutesCommand extends AbstractTelegramCommand {
         CommandContext command = buildCommandContext(update, getCommand());
         switch (command.state().getStep()) {
             case 1 -> { // начало команды
-                sendMessage(command.chatId(), "Введите станцию отправления:");
+                sendMessage(command.chatId(), "Введите станцию отправления:", true);
                 command.state().incrementStep();
             }
             case 2 -> { // ввод вручную станции отправления
@@ -61,22 +61,21 @@ public class FindRoutesCommand extends AbstractTelegramCommand {
                 }
                 command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)));
                 sendMessage(command.chatId(), "Ищу маршруты %s - %s на %s".formatted(
-                    command.state().getParams().get(FROM_STATION),
-                    command.state().getParams().get(TO_STATION),
-                    command.state().getParams().get(DATE)));
+                    command.state().getParam(FROM_STATION),
+                    command.state().getParam(TO_STATION),
+                    command.state().getParam(DATE)));
                 UserState.CommandState commandState = command.state();
                 String answer = routeService.getRoutesAsString(
-                    commandState.getParams().get(FROM_STATION_CODE),
-                    commandState.getParams().get(TO_STATION_CODE),
-                    commandState.getParams().get(DATE)
+                    commandState.getParam(FROM_STATION_CODE),
+                    commandState.getParam(TO_STATION_CODE),
+                    commandState.getParam(DATE)
                 );
                 if (answer.toLowerCase().contains("не найдены")) {
                     sendMessage(
                         command.chatId(),
-                        "%s на '%s', попробуйте выбрать другую дату"
-                            .formatted(answer, command.state().getParams().get(DATE))
+                        "%s на %s, попробуйте выбрать другую дату"
+                            .formatted(answer, command.state().getParam(DATE))
                     );
-                    sendCalendar(command.chatId(), "Введите новую дату отправления:", update);
                     return;
                 }
                 sendMessage(command.chatId(), answer);

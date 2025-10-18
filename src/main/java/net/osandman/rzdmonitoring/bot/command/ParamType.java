@@ -6,7 +6,6 @@ public enum ParamType {
     TO_STATION_CODE("to_station_code"),
     TO_STATION("to_station"),
     DATE("date"),
-    TRAIN_NUMBERS("train_numbers"), // TODO удалить после реализации множественного выбора
     ;
 
     final String value;
