@@ -13,6 +13,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Component
 public class RouteMapperImpl implements RouteMapper {
 
@@ -29,6 +31,7 @@ public class RouteMapperImpl implements RouteMapper {
         for (Train train : response.getTrains()) {
             RouteDto route = new RouteDto();
             route.setTrainNumber(train.getTrainNumber());
+            route.setTrainName(train.getTrainName());
             route.setFromStation(train.getOriginName());
             route.setToStation(train.getDestinationName());
             route.setFromStationCode(train.getOriginStationCode());
@@ -98,9 +101,10 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getArrivalDateTime().format(dateFormatter) : "N/A";
             String arrivalTime = route.getArrivalDateTime() != null ?
                 route.getArrivalDateTime().format(timeFormatter) : "N/A";
-            String routeInfo = prefix + " %s%s отправление в %s прибытие %s в %s, %s".formatted(
+            String routeInfo = prefix + " %s%s%s отправление в %s прибытие %s в %s, %s".formatted(
                 route.getTrainNumber(),
-                route.getIsSuburban() ? "(пригород.) " : "",
+                hasText(route.getTrainName()) ? " \"" + route.getTrainName() + "\" " : "",
+                route.getIsSuburban() ? " (пригород.) " : "",
                 departureTime,
                 arrivalDate.equals(departureDate) ? "" : arrivalDate,
                 arrivalTime,
@@ -127,7 +131,7 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getArrivalDateTime().format(timeFormatter) : "N/A";
             String routeInfo = "%s%s в %s → %s в %s %s ".formatted(
                 route.getTrainNumber(),
-                route.getIsSuburban() ? "(пригород.) " : "",
+                route.getIsSuburban() ? " (пригород.) " : "",
                 departureTime,
                 arrivalDate.equals(departureDate) ? "" : arrivalDate,
                 arrivalTime,
