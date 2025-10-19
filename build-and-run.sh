@@ -6,20 +6,11 @@ CONTAINER_NAME="rzd-monitoring"
 IMAGE_NAME="rzd-monitoring"
 PORT="${1:-8088}"   # Можно передать порт первым аргументом или по умолчанию 8088
 
-echo "🛑 Останавливаю контейнер $CONTAINER_NAME (если он существует)…"
-if docker ps -q --filter "name=^/${CONTAINER_NAME}$" | grep -q .; then
-  docker stop "$CONTAINER_NAME"
-  docker rm "$CONTAINER_NAME"
-else
-  echo "Контейнер $CONTAINER_NAME не найден, пропускаем."
-fi
+echo "🛑 Принудительно удаляю контейнер $CONTAINER_NAME (если он существует)…"
+docker rm -f "$CONTAINER_NAME" 2>/dev/null || echo "Контейнер $CONTAINER_NAME не найден, пропускаем."
 
-echo "🗑 Удаляю образ $IMAGE_NAME (если он существует)…"
-if docker images -q "$IMAGE_NAME" | grep -q .; then
-  docker rmi "$IMAGE_NAME"
-else
-  echo "Образ $IMAGE_NAME не найден, пропускаем."
-fi
+echo "🗑 Принудительно удаляю образ $IMAGE_NAME (если он существует)…"
+docker rmi -f "$IMAGE_NAME" 2>/dev/null || echo "Образ $IMAGE_NAME не найден, пропускаем."
 
 echo "🔨 Собираю новый образ $IMAGE_NAME…"
 docker build -t "$IMAGE_NAME" .
