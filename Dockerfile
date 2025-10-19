@@ -5,6 +5,7 @@ FROM eclipse-temurin:17-jdk-jammy AS builder
 WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml .env ./
+RUN chmod +x mvnw
 RUN ./mvnw dependency:go-offline
 COPY src ./src
 RUN ./mvnw clean package
@@ -13,7 +14,7 @@ RUN ./mvnw clean package
 FROM eclipse-temurin:17-jre-jammy
 LABEL "com.docker.compose.project"="osandman"
 WORKDIR /app
-EXPOSE 8088
+EXPOSE 8089
 COPY --from=builder /app/target/rzd-monitoring-0.0.1.jar ./rzd-monitoring.jar
 COPY .env .env
 ENTRYPOINT ["java", "-jar", "rzd-monitoring.jar"]
