@@ -9,7 +9,7 @@ public class UnknownCommand extends AbstractTelegramCommand {
     @Override
     public void handleCommand(Update update) {
         long chatId = update.getMessage().getChatId();
-        sendMessage(chatId, getCommand().getDesc());
+        sendMessage(chatId, getCommand().getDesc(), true);
     }
 
     @Override

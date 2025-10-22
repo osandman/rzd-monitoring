@@ -78,8 +78,7 @@ public class FindRoutesCommand extends AbstractTelegramCommand {
                     );
                     return;
                 }
-                sendMessage(command.chatId(), answer);
-                userStateRepository.get(command.chatId()).deleteCommand(getCommand());
+                sendMessage(command.chatId(), answer, true);
             }
         }
     }

@@ -93,7 +93,7 @@ public class TasksCommand extends AbstractTelegramCommand {
             List<String> buttons = buildButtons(taskMap);
             sendButtons(command.chatId(), "Выберите действия с задачами:", buttons);
         } else {
-            sendMessage(command.chatId(), EMPTY_ICON + " Задачи отсутствуют");
+            sendMessage(command.chatId(), EMPTY_ICON + " Задачи отсутствуют", true);
         }
     }
 
