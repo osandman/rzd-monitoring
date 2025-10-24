@@ -20,7 +20,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class TicketService extends BaseService {
             notifier.sendMessage(errorMsg, chatId);
             return new TicketsResult(0, errorMsg, List.of());
         }
-        List<String> routeNumbersToFind = Arrays.asList(ticketsTask.routeNumbers());
+        List<String> routeNumbersToFind = ticketsTask.routeNumbers();
         List<String> availableNumbers = rootRoute.getTp().stream()
             .flatMap(route -> route.list.stream().map(r -> r.number))
             .toList();

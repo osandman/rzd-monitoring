@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -84,7 +85,7 @@ public class TicketServiceImpl implements TicketService {
                 if (errMsg.contains("Некорректное значение") && errMsg.contains("DepartureDate")) {
                     errorCountForDate++;
                     userMessage = "❌ Некорректная дата отправления поезда %s".formatted(routNumber);
-                    if (ticketsTask.routeNumbers().length == errorCountForDate) {
+                    if (ticketsTask.routeNumbers().size() == errorCountForDate) {
                         taskScheduler.removeTask(ticketsTask.chatId(), ticketsTask.taskId());
                         userMessage = userMessage + ". Задача '%s' удалена".formatted(ticketsTask.taskId());
                     }
@@ -125,11 +126,12 @@ public class TicketServiceImpl implements TicketService {
                 filteredSeats.size(), ticketsTask, trainDto.getTrainNumber());
 
             for (SeatDto filteredSeat : filteredSeats) {
-                String message = "%s №%s[%s-%s] %s".formatted(
+                String message = "%s №%s [%s-%s] %s %s".formatted(
                     TRAIN_ICON2,
                     trainDto.getTrainNumber(),
                     trainDto.getFromStation(),
                     trainDto.getToStation(),
+                    trainDto.getDateTimeFrom().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
                     filteredSeat.toString()
                 );
                 notifier.sendMessage(message, ticketsTask.chatId());
@@ -139,8 +141,8 @@ public class TicketServiceImpl implements TicketService {
             .successTrainCount(
                 ((int) trains.stream().filter(trainDto -> !hasText(trainDto.getError())).count())
             )
-            .comment("Поиск свободных мест в поездах [%s] завершен, фильтры поиска: %s"
-                .formatted(String.join(", ", ticketsTask.routeNumbers()), seatFilters))
+            .comment("Поиск свободных мест в поездах %s завершен, фильтры поиска: %s"
+                .formatted(ticketsTask.routeNumbers(), seatFilters))
             .trains(trains)
             .build();
     }

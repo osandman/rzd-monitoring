@@ -215,27 +215,26 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
 
     private TaskResult createTask(CommandContext commandContext) {
         UserState.CommandState state = commandContext.state();
-        String date = state.getParam(DATE);
-        String from = state.getParam(FROM_STATION);
-        String to = state.getParam(TO_STATION);
-        String[] trainNumbers = state.getMultiSelectParam(MultiSelectType.ROUTES)
+        List<String> trainNumbers = state.getMultiSelectParam(MultiSelectType.ROUTES)
             .getSelectedOptions().stream()
             .map(Utils::getFirstWord)
-            .toList().toArray(new String[0]);
+            .toList();
         Set<SeatFilter> seatFilters = commandContext.state().getMultiSelectParam(MultiSelectType.SEAT_FILTERS)
             .getSelectedOptions().stream()
             .map(SeatFilter::getByButtonText)
             .collect(Collectors.toSet());
-        long chatId = commandContext.chatId();
-        String taskId = "task-" + date + "-" + from + "-" + to + "-" +
-                        String.join("_", trainNumbers) + "-chatId-" + chatId;
+        String millis = String.valueOf(System.currentTimeMillis());
+        String taskId = millis.substring(5, millis.length() - 1);
         TicketsTask ticketsTask = TicketsTask.builder()
-            .chatId(chatId)
+            .chatId(commandContext.chatId())
             .taskId(taskId)
-            .date(date)
+            .date(state.getParam(DATE))
             .fromCode(state.getParam(FROM_STATION_CODE))
+            .fromStation(state.getParam(FROM_STATION))
             .toCode(state.getParam(TO_STATION_CODE))
+            .toStation(state.getParam(TO_STATION))
             .routeNumbers(trainNumbers)
+            .filters(seatFilters.stream().map(SeatFilter::getButtonText).collect(Collectors.toSet()))
             .build();
         try {
             multiTaskScheduler.addTask(ticketsTask, seatFilters);

@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class RouteDto {
     private String trainNumber;
+    private String displayTrainNumber;
     private String trainName;
     private String fromStation;
     private String toStation;

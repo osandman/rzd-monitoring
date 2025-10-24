@@ -31,6 +31,7 @@ public class RouteMapperImpl implements RouteMapper {
         for (Train train : response.getTrains()) {
             RouteDto route = new RouteDto();
             route.setTrainNumber(train.getTrainNumber());
+            route.setDisplayTrainNumber(train.getDisplayTrainNumber());
             route.setTrainName(train.getTrainName());
             route.setFromStation(train.getOriginName());
             route.setToStation(train.getDestinationName());
@@ -101,8 +102,10 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getArrivalDateTime().format(dateFormatter) : "N/A";
             String arrivalTime = route.getArrivalDateTime() != null ?
                 route.getArrivalDateTime().format(timeFormatter) : "N/A";
-            String routeInfo = prefix + " %s%s%s отправление в %s прибытие %s в %s, %s".formatted(
+            String routeInfo = prefix + " %s%s%s%s отправление в %s прибытие %s в %s, %s".formatted(
                 route.getTrainNumber(),
+                hasText(route.getDisplayTrainNumber()) && !route.getDisplayTrainNumber().equals(route.getTrainNumber())
+                    ? " (" + route.getDisplayTrainNumber() + ")" : "",
                 hasText(route.getTrainName()) ? " \"" + route.getTrainName() + "\" " : "",
                 route.getIsSuburban() ? " (пригород.) " : "",
                 departureTime,
@@ -129,8 +132,10 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getArrivalDateTime().format(dateFormatter) : "N/A";
             String arrivalTime = route.getArrivalDateTime() != null ?
                 route.getArrivalDateTime().format(timeFormatter) : "N/A";
-            String routeInfo = "%s%s в %s → %s в %s %s ".formatted(
+            String routeInfo = "%s%s%s в %s → %s в %s %s ".formatted(
                 route.getTrainNumber(),
+                hasText(route.getDisplayTrainNumber()) && !route.getDisplayTrainNumber().equals(route.getTrainNumber())
+                    ? " (" + route.getDisplayTrainNumber() + ")" : "",
                 route.getIsSuburban() ? " (пригород.) " : "",
                 departureTime,
                 arrivalDate.equals(departureDate) ? "" : arrivalDate,

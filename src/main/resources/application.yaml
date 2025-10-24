@@ -21,7 +21,7 @@ rzd:
   base-url: https://pass.rzd.ru
   scheduler:
     state: ACTIVE
-    interval: 5 # интервал запуска в минутах
+    interval: 10 # интервал запуска в минутах
 
 logging:
   charset:

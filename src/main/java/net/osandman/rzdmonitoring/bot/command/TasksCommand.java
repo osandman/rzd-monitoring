@@ -15,6 +15,7 @@ import static net.osandman.rzdmonitoring.bot.command.Buttons.DELETE;
 import static net.osandman.rzdmonitoring.bot.command.Buttons.DELETE_ALL;
 import static net.osandman.rzdmonitoring.bot.command.Buttons.START_ALL;
 import static net.osandman.rzdmonitoring.bot.command.Buttons.STOP_ALL;
+import static net.osandman.rzdmonitoring.util.Utils.getFirstWord;
 
 @Component
 @RequiredArgsConstructor
@@ -43,7 +44,12 @@ public class TasksCommand extends AbstractTelegramCommand {
             case 2 -> { // обработка команды
                 switch (command.messageText()) {
                     case DELETE -> {
-                        List<String> taskNames = new ArrayList<>(taskMap.keySet());
+                        List<String> taskNames = new ArrayList<>(
+                            taskMap.values().stream()
+                                .map(MultiTaskScheduler.TaskInfo::getTicketsTask)
+                                .map(ticketsTask -> ticketsTask.taskId() + " " + ticketsTask.prettyString())
+                                .toList()
+                        );
                         taskNames.add(DELETE_ALL);
                         sendButtons(
                             command.chatId(), "Выберите задачу или '%s' для удаления:".formatted(DELETE_ALL),
@@ -61,7 +67,7 @@ public class TasksCommand extends AbstractTelegramCommand {
                         sendButtons(command.chatId(), "Текущий статус задач: '%s'".formatted(toState), buttons);
                     }
                     case CHANGE_INTERVAL -> {
-                        List<Integer> buttons = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+                        List<Integer> buttons = List.of(5, 6, 7, 8, 9, 10, 15, 20, 30);
                         sendButtons(command.chatId(), "Укажите время в минутах", buttons);
                         command.state().setStep(4);
                     }
@@ -85,9 +91,9 @@ public class TasksCommand extends AbstractTelegramCommand {
     private void beginHandle(CommandContext command, Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
         StringBuilder tasks = new StringBuilder();
         if (taskMap != null && !taskMap.isEmpty()) {
-            for (Map.Entry<String, MultiTaskScheduler.TaskInfo> taskEntry : taskMap.entrySet()) {
-                tasks.append("✳ ").append(taskEntry.getKey()).append("-")
-                    .append(taskEntry.getValue().getState()).append(System.lineSeparator());
+            for (MultiTaskScheduler.TaskInfo taskInfo : taskMap.values()) {
+                tasks.append("✳ ").append(taskInfo.getTicketsTask().prettyString()).append(" ")
+                    .append(taskInfo.getState()).append(System.lineSeparator());
             }
             sendMessage(command.chatId(), "Текущие задачи: \n" + tasks);
             List<String> buttons = buildButtons(taskMap);
@@ -104,7 +110,7 @@ public class TasksCommand extends AbstractTelegramCommand {
     }
 
     private void deleteTasks(CommandContext command, Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
-        String messageText = command.messageText();
+        final String messageText = command.messageText();
         long chatId = command.chatId();
         if (DELETE_ALL.equalsIgnoreCase(messageText)) {
             Integer removedCount = taskScheduler.removeAllTasks(chatId);
@@ -116,17 +122,18 @@ public class TasksCommand extends AbstractTelegramCommand {
             userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             return;
         }
-        if (taskMap.containsKey(messageText)) {
-            Boolean check = taskScheduler.removeTask(chatId, messageText);
+        String taskId = getFirstWord(messageText);
+        if (taskMap.containsKey(taskId)) {
+            Boolean check = taskScheduler.removeTask(chatId, taskId);
             if (check == null) {
                 sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
             } else if (check) {
-                sendMessage(chatId, DELETE_ICON1 + " Задача '%s' удалена".formatted(messageText));
+                sendMessage(chatId, DELETE_ICON1 + " Задача '%s' удалена".formatted(taskId));
             } else {
-                sendMessage(chatId, "Ошибка при удалении задачи '%s'".formatted(messageText));
+                sendMessage(chatId, "Ошибка при удалении задачи '%s'".formatted(taskId));
             }
         } else {
-            sendMessage(chatId, "Задача '%s' не существует".formatted(messageText));
+            sendMessage(chatId, "Задача '%s' не существует".formatted(taskId));
         }
         beginHandle(command, taskMap);
         command.state().setStep(2);
