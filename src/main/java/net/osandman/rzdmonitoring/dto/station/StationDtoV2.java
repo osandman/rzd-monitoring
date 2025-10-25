@@ -6,7 +6,13 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Builder
 public record StationDtoV2(
-    String name, String expressCode, String foreignCode, String region, String suburbanCode, String regionIso
+    String name,
+    String expressCode,
+    String foreignCode,
+    String region,
+    String suburbanCode,
+    String regionIso,
+    String countryIso
 ) implements StationDto {
 
     @Override
@@ -26,13 +32,14 @@ public record StationDtoV2(
 
     @Override
     public String printStr() {
-        return "%s код=%s%s; регион=%s; iso=%s"
+        return "%s код=%s%s; регион=%s%s%s"
             .formatted(
                 name(),
                 code(),
                 hasText(suburbanCode) ? " (пригород.код=" + suburbanCode + ")" : "",
                 region(),
-                regionIso
+                hasText(regionIso) ? "; region iso=" + regionIso : "",
+                hasText(countryIso) ? "; country iso=" + countryIso : ""
             );
     }
 }

@@ -30,6 +30,7 @@ import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION_CODE;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN;
 
 @Component
 @RequiredArgsConstructor

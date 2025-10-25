@@ -7,18 +7,25 @@ import net.osandman.rzdmonitoring.dto.route.CarriageDto;
 import net.osandman.rzdmonitoring.dto.route.RouteDto;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.config.Constant.TIME_FORMAT_PATTERN;
 import static org.springframework.util.StringUtils.hasText;
 
 @Component
 public class RouteMapperImpl implements RouteMapper {
 
     public static final String TRAIN_ICON = "\uD83D\uDE9D"; // 🚝
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN);
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT_PATTERN);
 
     @Override
     public List<RouteDto> toRoutes(RootRouteDto response) {
@@ -92,8 +99,6 @@ public class RouteMapperImpl implements RouteMapper {
 
     private static List<String> getFullInfo(String prefix, List<RouteDto> routes) {
         List<String> result = new ArrayList<>();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         String departureDate = routes.get(0).getDepartureDateTime().format(dateFormatter);
         for (RouteDto route : routes) {
             String departureTime = route.getDepartureDateTime() != null ?
@@ -102,28 +107,38 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getArrivalDateTime().format(dateFormatter) : "N/A";
             String arrivalTime = route.getArrivalDateTime() != null ?
                 route.getArrivalDateTime().format(timeFormatter) : "N/A";
-            String routeInfo = prefix + " %s%s%s%s отправление в %s прибытие %s в %s, %s".formatted(
-                route.getTrainNumber(),
-                hasText(route.getDisplayTrainNumber()) && !route.getDisplayTrainNumber().equals(route.getTrainNumber())
-                    ? " (" + route.getDisplayTrainNumber() + ")" : "",
-                hasText(route.getTrainName()) ? " \"" + route.getTrainName() + "\" " : "",
-                route.getIsSuburban() ? " (пригород.) " : "",
-                departureTime,
-                arrivalDate.equals(departureDate) ? "" : arrivalDate,
-                arrivalTime,
-                route.getIsSuburban() ? "" : "свободных мест " + route.getCarriages().stream()
+
+            List<String> parts = new ArrayList<>();
+            parts.add(route.getTrainNumber());
+            Optional.ofNullable(route.getDisplayTrainNumber())
+                .filter(StringUtils::hasText)
+                .filter(s -> !s.equals(route.getTrainNumber()))
+                .ifPresent(s -> parts.add("(" + s + ")"));
+            Optional.ofNullable(route.getTrainName())
+                .filter(StringUtils::hasText)
+                .ifPresent(s -> parts.add("\"" + s + "\""));
+            Optional.ofNullable(route.getIsSuburban())
+                .filter(Predicate.isEqual(true))
+                .ifPresent(s -> parts.add("пригород."));
+            parts.add("в " + departureTime + " прибытие");
+            if (!arrivalDate.equals(departureDate)) {
+                parts.add(arrivalDate);
+            }
+            parts.add("в " + arrivalTime);
+            Optional.ofNullable(route.getIsSuburban())
+                .filter(Predicate.isEqual(false))
+                .ifPresent(s -> parts.add("свободных мест " + route.getCarriages().stream()
                     .mapToInt(CarriageDto::getTotalSeats)
-                    .sum()
-            );
-            result.add(routeInfo);
+                    .sum())
+                );
+
+            result.add(prefix + " " + String.join(" ", parts));
         }
         return result;
     }
 
     private static List<String> getSmallInfo(List<RouteDto> routes) {
         List<String> result = new ArrayList<>();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yy");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         String departureDate = routes.get(0).getDepartureDateTime().format(dateFormatter);
         for (RouteDto route : routes) {
             String departureTime = route.getDepartureDateTime() != null ?
@@ -136,7 +151,7 @@ public class RouteMapperImpl implements RouteMapper {
                 route.getTrainNumber(),
                 hasText(route.getDisplayTrainNumber()) && !route.getDisplayTrainNumber().equals(route.getTrainNumber())
                     ? " (" + route.getDisplayTrainNumber() + ")" : "",
-                route.getIsSuburban() ? " (пригород.) " : "",
+                route.getIsSuburban() ? " (пригород.)" : "",
                 departureTime,
                 arrivalDate.equals(departureDate) ? "" : arrivalDate,
                 arrivalTime,

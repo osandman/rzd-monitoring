@@ -5,6 +5,8 @@ import net.osandman.rzdmonitoring.dto.station.StationDto;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class FindStationsCommand extends AbstractTelegramCommand {
@@ -26,9 +28,12 @@ public class FindStationsCommand extends AbstractTelegramCommand {
                 findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
             }
             case 3 -> { // выбор из найденных станций
-                StationDto stationDto = getFoundStationDto(
-                    command.messageText(), stationService.findStations(command.messageText())
+                List<StationDto> stations = command.state().getAdditionalObject(
+                    ParamType.STATIONS, StationDto.class
                 );
+                StationDto stationDto = stations.stream()
+                    .filter(dto -> dto.name().equalsIgnoreCase(command.messageText()))
+                    .findAny().orElse(null);
                 if (stationDto == null) {
                     findAndShowStationsAndIncrementStep(command.messageText(), command.state(), command.chatId());
                     command.state().decrementStep();

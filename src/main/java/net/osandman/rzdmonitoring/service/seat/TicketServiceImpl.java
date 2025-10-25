@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static net.osandman.rzdmonitoring.config.Constant.DATE_TIME_FORMAT_PATTERN;
 import static org.springframework.util.StringUtils.hasText;
 
 @Service
@@ -131,7 +132,7 @@ public class TicketServiceImpl implements TicketService {
                     trainDto.getTrainNumber(),
                     trainDto.getFromStation(),
                     trainDto.getToStation(),
-                    trainDto.getDateTimeFrom().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
+                    trainDto.getDateTimeFrom().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN)),
                     filteredSeat.toString()
                 );
                 notifier.sendMessage(message, ticketsTask.chatId());

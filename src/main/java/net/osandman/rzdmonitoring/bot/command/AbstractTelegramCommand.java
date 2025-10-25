@@ -60,7 +60,6 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
     protected RzdMonitoringBot sender;
 
     protected final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
-    public static final String DATE_FORMAT_PATTERN = "dd.MM.yyyy";
 
     private static final InlineCalendarBuilder inlineCalendarBuilder;
 
@@ -236,6 +235,7 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
             return;
         }
         sendButtons(chatId, "Выберите станцию из найденных или введите текст для нового поиска:", stationDtos);
+        commandState.getAdditionalObjects().put(ParamType.STATIONS, stationDtos);
         commandState.incrementStep();
     }
 

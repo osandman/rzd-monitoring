@@ -6,6 +6,7 @@ public enum ParamType {
     TO_STATION_CODE("to_station_code"),
     TO_STATION("to_station"),
     DATE("date"),
+    STATIONS("stations"),
     ;
 
     final String value;

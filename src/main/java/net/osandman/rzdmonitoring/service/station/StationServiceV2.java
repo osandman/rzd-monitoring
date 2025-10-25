@@ -61,12 +61,13 @@ public class StationServiceV2 implements StationService {
         for (String field : fields) {
             JsonNode jsonNode = objectNode.findPath(field);
             jsonNode.forEach(node -> {
-                String name = node.path("name").asText();
-                String expressCode = node.path("expressCode").asText();
-                String foreignCode = node.path("foreignCode").asText();
-                String region = node.path("region").asText();
-                String suburbanCode = node.path("suburbanCode").asText();
-                String regionIso = node.path("regionIso").asText();
+                String name = node.path("name").textValue();
+                String expressCode = node.path("expressCode").textValue();
+                String foreignCode = node.path("foreignCode").textValue();
+                String region = node.path("region").textValue();
+                String suburbanCode = node.path("suburbanCode").textValue();
+                String regionIso = node.path("regionIso").textValue();
+                String countryIso = node.path("countryIso").textValue();
 
                 // Проверка: есть ли уже станция с таким name
                 String finalName = name;
@@ -85,6 +86,7 @@ public class StationServiceV2 implements StationService {
                         .region(region)
                         .suburbanCode(suburbanCode)
                         .regionIso(regionIso)
+                        .countryIso(countryIso)
                         .build()
                 );
             });

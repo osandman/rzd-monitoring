@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Getter
 @Data
@@ -33,6 +34,7 @@ public class UserState {
     public static class CommandState {
         private int step = 1;
         private Map<ParamType, String> params = new HashMap<>();
+        private Map<ParamType, List<?>> additionalObjects = new HashMap<>();
         private Map<MultiSelectType, MultiSelect> multiSelectParams = new HashMap<>();
 
         public MultiSelect getOrCreateMultiSelectParam(MultiSelectType type, String initialMessage) {
@@ -41,6 +43,14 @@ public class UserState {
 
         public String getParam(ParamType type) {
             return params.get(type);
+        }
+
+        public <T> List<T> getAdditionalObject(ParamType type, Class<T> clazz) {
+            return Optional.ofNullable(additionalObjects.get(type))
+                .map(list -> list.stream()
+                    .map(clazz::cast)
+                    .toList())
+                .orElse(List.of());
         }
 
         public MultiSelect getMultiSelectParam(MultiSelectType type) {
