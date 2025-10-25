@@ -45,8 +45,9 @@ public class RouteMapperImpl implements RouteMapper {
             route.setFromStationCode(train.getOriginStationCode());
             route.setToStationCode(train.getDestinationStationCode());
             DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-            route.setDepartureDateTime(LocalDateTime.parse(train.getLocalDepartureDateTime(), formatter));
-            route.setArrivalDateTime(LocalDateTime.parse(train.getLocalArrivalDateTime(), formatter));
+            route.setLocalDepartureDateTime(LocalDateTime.parse(train.getLocalDepartureDateTime(), formatter));
+            route.setDepartureDateTime(LocalDateTime.parse(train.getDepartureDateTime(), formatter));
+            route.setLocalArrivalDateTime(LocalDateTime.parse(train.getLocalArrivalDateTime(), formatter));
             route.setIsSuburban(train.getIsSuburban());
             route.setCarrier(
                 (train.getCarriers() != null && !train.getCarriers().isEmpty()) ? train.getCarriers().get(0) : null
@@ -99,14 +100,14 @@ public class RouteMapperImpl implements RouteMapper {
 
     private static List<String> getFullInfo(String prefix, List<RouteDto> routes) {
         List<String> result = new ArrayList<>();
-        String departureDate = routes.get(0).getDepartureDateTime().format(dateFormatter);
+        String localDepartureDate = routes.get(0).getLocalDepartureDateTime().format(dateFormatter);
         for (RouteDto route : routes) {
-            String departureTime = route.getDepartureDateTime() != null ?
-                route.getDepartureDateTime().format(timeFormatter) : "N/A";
-            String arrivalDate = route.getArrivalDateTime() != null ?
-                route.getArrivalDateTime().format(dateFormatter) : "N/A";
-            String arrivalTime = route.getArrivalDateTime() != null ?
-                route.getArrivalDateTime().format(timeFormatter) : "N/A";
+            String localDepartureTime = route.getLocalDepartureDateTime() != null ?
+                route.getLocalDepartureDateTime().format(timeFormatter) : "N/A";
+            String localArrivalDate = route.getLocalArrivalDateTime() != null ?
+                route.getLocalArrivalDateTime().format(dateFormatter) : "N/A";
+            String localArrivalTime = route.getLocalArrivalDateTime() != null ?
+                route.getLocalArrivalDateTime().format(timeFormatter) : "N/A";
 
             List<String> parts = new ArrayList<>();
             parts.add(route.getTrainNumber());
@@ -120,11 +121,11 @@ public class RouteMapperImpl implements RouteMapper {
             Optional.ofNullable(route.getIsSuburban())
                 .filter(Predicate.isEqual(true))
                 .ifPresent(s -> parts.add("пригород."));
-            parts.add("в " + departureTime + " прибытие");
-            if (!arrivalDate.equals(departureDate)) {
-                parts.add(arrivalDate);
+            parts.add("в " + localDepartureTime + " прибытие");
+            if (!localArrivalDate.equals(localDepartureDate)) {
+                parts.add(localArrivalDate);
             }
-            parts.add("в " + arrivalTime);
+            parts.add("в " + localArrivalTime);
             Optional.ofNullable(route.getIsSuburban())
                 .filter(Predicate.isEqual(false))
                 .ifPresent(s -> parts.add("свободных мест " + route.getCarriages().stream()
@@ -139,22 +140,22 @@ public class RouteMapperImpl implements RouteMapper {
 
     private static List<String> getSmallInfo(List<RouteDto> routes) {
         List<String> result = new ArrayList<>();
-        String departureDate = routes.get(0).getDepartureDateTime().format(dateFormatter);
+        String localDepartureDate = routes.get(0).getLocalDepartureDateTime().format(dateFormatter);
         for (RouteDto route : routes) {
-            String departureTime = route.getDepartureDateTime() != null ?
-                route.getDepartureDateTime().format(timeFormatter) : "N/A";
-            String arrivalDate = route.getArrivalDateTime() != null ?
-                route.getArrivalDateTime().format(dateFormatter) : "N/A";
-            String arrivalTime = route.getArrivalDateTime() != null ?
-                route.getArrivalDateTime().format(timeFormatter) : "N/A";
+            String localDepartureTime = route.getLocalDepartureDateTime() != null ?
+                route.getLocalDepartureDateTime().format(timeFormatter) : "N/A";
+            String localArrivalDate = route.getLocalArrivalDateTime() != null ?
+                route.getLocalArrivalDateTime().format(dateFormatter) : "N/A";
+            String localArrivalTime = route.getLocalArrivalDateTime() != null ?
+                route.getLocalArrivalDateTime().format(timeFormatter) : "N/A";
             String routeInfo = "%s%s%s в %s → %s в %s %s ".formatted(
                 route.getTrainNumber(),
                 hasText(route.getDisplayTrainNumber()) && !route.getDisplayTrainNumber().equals(route.getTrainNumber())
                     ? " (" + route.getDisplayTrainNumber() + ")" : "",
                 route.getIsSuburban() ? " (пригород.)" : "",
-                departureTime,
-                arrivalDate.equals(departureDate) ? "" : arrivalDate,
-                arrivalTime,
+                localDepartureTime,
+                localArrivalDate.equals(localDepartureDate) ? "" : localArrivalDate,
+                localArrivalTime,
                 route.getIsSuburban() ? "" : "мест " + route.getCarriages().stream()
                     .mapToInt(CarriageDto::getTotalSeats)
                     .sum()

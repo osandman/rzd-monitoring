@@ -14,7 +14,9 @@ public enum Command {
     ROUTES("/routes", "\uD83D\uDE9D поиск маршрутов", 3), // 🚝
     STATIONS("/stations", "\uD83C\uDFEB поиск станций", 4), // 🏫
     TASKS("/tasks", "\uD83D\uDC40 просмотр задач", 5), // 👀
-    UNKNOWN(null, "\uD83D\uDC7D неизвестная команда", 6); // 👽
+    UNKNOWN(null, "\uD83D\uDC7D неизвестная команда", 6), // 👽
+    ADM("/adm", "\uD83D\uDC41 админка", 7), // 👁
+    ;
 
     private final String commandStr;
     private final String desc;

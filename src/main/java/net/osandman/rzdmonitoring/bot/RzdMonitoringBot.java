@@ -53,7 +53,7 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
     private void handleMessage(@NonNull Update update) {
         Message message = update.getMessage();
         long chatId = message.getChatId();
-        log.info("Поступил update для chatId={}, текст='{}'", chatId, message.getText());
+        log.debug("Поступил update для chatId={}, текст='{}'", chatId, message.getText());
         if (!update.hasMessage()) {
             log.info("Update не содержит сообщений");
             return;

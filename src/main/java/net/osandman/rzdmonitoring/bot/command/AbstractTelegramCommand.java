@@ -72,7 +72,7 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
         MaybeInaccessibleMessage message = getMessage(update);
         long chatId = message.getChatId();
         String messageText = null;
-        String userName = null;
+        String userName = "N/A";
         if (message instanceof Message mes) {
             messageText = mes.getText();
             userName = mes.getChat().getUserName();
@@ -85,7 +85,7 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
         UserState userState = userStateRepository.getOrCreate(chatId);
         // устанавливает команду если ее не было
         UserState.CommandState commandState = userState.getOrCreateCommandState(command);
-        return new CommandContext(chatId, messageText, commandState);
+        return new CommandContext(chatId, userName, messageText, commandState);
     }
 
     private MaybeInaccessibleMessage getMessage(Update update) {
@@ -95,7 +95,9 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
         return update.getCallbackQuery().getMessage();
     }
 
-    protected record CommandContext(long chatId, String messageText, UserState.CommandState state) {
+    protected record CommandContext(
+        long chatId, String userName, String messageText, UserState.CommandState state
+    ) {
     }
 
     protected void sendMessage(long chatId, String message) {

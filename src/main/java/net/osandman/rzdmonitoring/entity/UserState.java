@@ -11,12 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Data
 public class UserState {
     // String - команда ("/xxx")
-    private final Map<Command, CommandState> userStates = new HashMap<>();
+    private final Map<Command, CommandState> userStates = new ConcurrentHashMap<>();
 
     public CommandState getOrCreateCommandState(Command command) {
         return userStates.computeIfAbsent(command, k -> new CommandState());
@@ -33,9 +34,9 @@ public class UserState {
     @Data
     public static class CommandState {
         private int step = 1;
-        private Map<ParamType, String> params = new HashMap<>();
-        private Map<ParamType, List<?>> additionalObjects = new HashMap<>();
-        private Map<MultiSelectType, MultiSelect> multiSelectParams = new HashMap<>();
+        private Map<ParamType, String> params = new ConcurrentHashMap<>();
+        private Map<ParamType, List<?>> additionalObjects = new ConcurrentHashMap<>();
+        private Map<MultiSelectType, MultiSelect> multiSelectParams = new ConcurrentHashMap<>();
 
         public MultiSelect getOrCreateMultiSelectParam(MultiSelectType type, String initialMessage) {
             return multiSelectParams.computeIfAbsent(type, k -> new MultiSelect(initialMessage));

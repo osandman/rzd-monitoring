@@ -77,8 +77,9 @@ public class TasksCommand extends AbstractTelegramCommand {
                 deleteTasks(command, taskMap);
             }
             case 4 -> { // изменить интервал
-                taskScheduler.changeInterval(Long.parseLong(command.messageText()));
-                long newInterval = taskMap.entrySet().iterator().next().getValue().getInterval();
+                long newInterval = taskScheduler.changeInterval(
+                    command.chatId(), Long.parseLong(command.messageText())
+                );
                 List<String> buttons = buildButtons(taskMap);
                 sendButtons(
                     command.chatId(), "Интервал мониторинга изменен на %d минут".formatted(newInterval), buttons
@@ -110,10 +111,10 @@ public class TasksCommand extends AbstractTelegramCommand {
     }
 
     private void deleteTasks(CommandContext command, Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
-        final String messageText = command.messageText();
+        String messageText = command.messageText();
         long chatId = command.chatId();
         if (DELETE_ALL.equalsIgnoreCase(messageText)) {
-            Integer removedCount = taskScheduler.removeAllTasks(chatId);
+            Integer removedCount = taskScheduler.removeAllTasksByChatId(chatId);
             if (removedCount == null || removedCount == 0) {
                 sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
             } else {

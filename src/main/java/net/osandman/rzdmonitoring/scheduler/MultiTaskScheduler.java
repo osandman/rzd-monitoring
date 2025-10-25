@@ -81,7 +81,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
         }
     }
 
-    public void changeInterval(long newInterval) {
+    public long changeInterval(long newInterval) {
         for (Map<String, TaskInfo> taskMap : scheduledTasks.values()) {
             for (TaskInfo taskInfo : taskMap.values()) {
                 // Обновляем интервал в задаче
@@ -92,7 +92,22 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
                 }
             }
         }
-        log.info("Обновлен интервал выполнения задач: {} минут", newInterval);
+        log.info("Обновлен интервал выполнения всех задач: {} минут", newInterval);
+        return scheduledTasks.values().iterator().next().values().iterator().next().getInterval();
+    }
+
+    public long changeInterval(long chatId, long newInterval) {
+        Map<String, TaskInfo> taskMap = scheduledTasks.get(chatId);
+        for (TaskInfo taskInfo : taskMap.values()) {
+            // Обновляем интервал в задаче
+            taskInfo.setInterval(newInterval);
+            // Перезапускаем только активные задачи
+            if (taskInfo.getState() == State.ACTIVE) {
+                restartTask(taskInfo);
+            }
+        }
+        log.info("Обновлен интервал выполнения задач для chatId={}: {} минут", chatId, newInterval);
+        return scheduledTasks.get(chatId).values().iterator().next().getInterval();
     }
 
     /**
@@ -164,7 +179,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
         return false;
     }
 
-    public Integer removeAllTasks(long chatId) {
+    public Integer removeAllTasksByChatId(long chatId) {
         Map<String, TaskInfo> taskMap = scheduledTasks.remove(chatId);
         if (taskMap == null) {
             return null;
@@ -174,6 +189,24 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
             if (taskInfo.getScheduledFuture() != null) {
                 taskInfo.getScheduledFuture().cancel(true);
                 count++;
+            }
+        }
+        log.info("Удалены все ({}) задачи для chatId={}", count, chatId);
+        return count;
+    }
+
+    public Integer removeAllTasks() {
+        int count = 0;
+        for (Long chatId : scheduledTasks.keySet()) {
+            Map<String, TaskInfo> taskMap = scheduledTasks.remove(chatId);
+            if (taskMap == null) {
+                continue;
+            }
+            for (TaskInfo taskInfo : taskMap.values()) {
+                if (taskInfo.getScheduledFuture() != null) {
+                    taskInfo.getScheduledFuture().cancel(true);
+                    count++;
+                }
             }
         }
         log.info("Удалены все ({}) задачи", count);

@@ -15,7 +15,8 @@ public class RouteDto {
     private String fromStationCode;
     private String toStationCode;
     private LocalDateTime departureDateTime;
-    private LocalDateTime arrivalDateTime;
+    private LocalDateTime localDepartureDateTime;
+    private LocalDateTime localArrivalDateTime;
     private Boolean isSuburban;
     private String carrier;
     private List<CarriageDto> carriages;

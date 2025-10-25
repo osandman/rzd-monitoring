@@ -228,6 +228,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
         String taskId = millis.substring(5, millis.length() - 1);
         TicketsTask ticketsTask = TicketsTask.builder()
             .chatId(commandContext.chatId())
+            .userName(commandContext.userName())
             .taskId(taskId)
             .date(state.getParam(DATE))
             .fromCode(state.getParam(FROM_STATION_CODE))

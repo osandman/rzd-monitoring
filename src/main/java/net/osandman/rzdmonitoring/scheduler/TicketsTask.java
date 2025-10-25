@@ -12,13 +12,14 @@ import static net.osandman.rzdmonitoring.util.Utils.convertDateString;
 @Builder
 public record TicketsTask(
     Long chatId,
+    String userName,
     String taskId,
     String date,
     String fromCode,
     String fromStation,
     String toCode,
     String toStation,
-    List<String> routeNumbers,
+    List<String> routeNumbers, // TODO заполнять DepartureDateTime для правильного запроса билетов, сделать MAP
     Set<String> filters
 ) {
 
