@@ -1,9 +1,10 @@
 package net.osandman.rzdmonitoring.service.station;
 
+import lombok.RequiredArgsConstructor;
+import net.osandman.rzdmonitoring.client.RestConnector;
 import net.osandman.rzdmonitoring.client.dto.station.Station;
 import net.osandman.rzdmonitoring.dto.station.StationDto;
 import net.osandman.rzdmonitoring.dto.station.StationDtoImpl;
-import net.osandman.rzdmonitoring.service.BaseService;
 import net.osandman.rzdmonitoring.util.JsonParser;
 import net.osandman.rzdmonitoring.util.Utils;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class StationServiceImpl extends BaseService implements StationService {
+@RequiredArgsConstructor
+public class StationServiceImpl implements StationService {
+
     public static final String STATION_ENDPOINT = "/suggester";
 
-    public StationServiceImpl() {
-        super(STATION_ENDPOINT);
-    }
+    private final RestConnector restConnector;
 
     @Override
     public List<StationDto> findStations(String partName) { // часть имени
