@@ -2,6 +2,7 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.TaskResult;
+import net.osandman.rzdmonitoring.dto.route.RouteDto;
 import net.osandman.rzdmonitoring.dto.route.RoutesResult;
 import net.osandman.rzdmonitoring.entity.MultiSelectType;
 import net.osandman.rzdmonitoring.entity.UserState;
@@ -19,18 +20,22 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.util.stream.Collectors.toMap;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.DATE;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION_CODE;
+import static net.osandman.rzdmonitoring.bot.command.ParamType.ROUTES;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
-import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
 
 @Component
 @RequiredArgsConstructor
@@ -79,7 +84,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 if (localDate == null) {
                     return;
                 }
-                String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
+                String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT));
 
                 sendMessage(command.chatId(), "Поиск поездов на %s".formatted(dateToSearch), true);
                 RoutesResult routesResult = routeService.findRoutes(
@@ -97,6 +102,10 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                     );
                     return;
                 }
+                // сохраняем все маршруты чтобы при создании задания
+                // использовать данные даты отправления по МСК (departureDateTime)
+                command.state().setAdditionalObjects(Map.of(ROUTES, routesResult.routes()));
+
                 List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes());
                 if (availableRoutes.isEmpty()) {
                     sendMessage(
@@ -147,13 +156,15 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 TaskResult taskResult = createTask(command);
                 String messageTask;
                 if (taskResult.success()) {
+                    TicketsTask task = taskResult.ticketsTask();
                     messageTask = """
                         ✅ Запущен мониторинг билетов taskId=%s, при нахождении билетов вы получите уведомление в чат,
-                        период поиска каждые %d мин. (фильтры поиска: '%s')
+                        период поиска каждые %d мин. (поезда:%s фильтры поиска:%s). Действия с задачами - команда /tasks
                         """.formatted(
-                        taskResult.taskId(),
-                        scheduleConfig.getInterval(),
-                        command.state().getMultiSelectParam(MultiSelectType.SEAT_FILTERS).getSelectedText()
+                        task.taskId(),
+                        multiTaskScheduler.getScheduledTasks().get(command.chatId()).get(task.taskId()).getInterval(),
+                        task.trainDepartureDateMap().keySet(),
+                        task.filters()
                     );
                 } else {
                     messageTask = "Произошла ошибка при запуске мониторинга билетов: '%s'".formatted(taskResult.msg());
@@ -226,6 +237,11 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
             .collect(Collectors.toSet());
         String millis = String.valueOf(System.currentTimeMillis());
         String taskId = millis.substring(5, millis.length() - 1);
+
+        Map<String, LocalDateTime> trainDepartureDateMap = state.getAdditionalObject(ROUTES, RouteDto.class).stream()
+            .filter(route -> trainNumbers.contains(route.getTrainNumber()))
+            .collect(toMap(RouteDto::getTrainNumber, RouteDto::getDepartureDateTime));
+
         TicketsTask ticketsTask = TicketsTask.builder()
             .chatId(commandContext.chatId())
             .userName(commandContext.userName())
@@ -235,14 +251,14 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
             .fromStation(state.getParam(FROM_STATION))
             .toCode(state.getParam(TO_STATION_CODE))
             .toStation(state.getParam(TO_STATION))
-            .routeNumbers(trainNumbers)
+            .trainDepartureDateMap(trainDepartureDateMap)
             .filters(seatFilters.stream().map(SeatFilter::getButtonText).collect(Collectors.toSet()))
             .build();
         try {
             multiTaskScheduler.addTask(ticketsTask, seatFilters);
         } catch (Exception e) {
-            return new TaskResult(false, e.getMessage(), taskId);
+            return new TaskResult(false, e.getMessage(), null);
         }
-        return new TaskResult(true, "Задача добавлена", taskId);
+        return new TaskResult(true, "Задача добавлена", ticketsTask);
     }
 }

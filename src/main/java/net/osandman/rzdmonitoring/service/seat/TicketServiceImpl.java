@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Set;
 
 import static net.osandman.rzdmonitoring.config.Constant.DATE_TIME_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.config.Constant.JSON_DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.util.Utils.dateToString;
 import static org.springframework.util.StringUtils.hasText;
 
 @Service
@@ -52,7 +54,7 @@ public class TicketServiceImpl implements TicketService {
         }};
         List<TrainDto> trains = new ArrayList<>();
         int errorCountForDate = 0;
-        for (String routNumber : ticketsTask.routeNumbers()) {
+        for (String routNumber : ticketsTask.trainDepartureDateMap().keySet()) {
             String body = """
                 {
                   "OriginCode": "%s",
@@ -65,12 +67,21 @@ public class TicketServiceImpl implements TicketService {
                   "HasPlacesForLargeFamily": false,
                   "CarIssuingType": "All"
                 }
-                """.formatted(ticketsTask.fromCode(), ticketsTask.toCode(), ticketsTask.date(), routNumber);
+                """.formatted(
+                ticketsTask.fromCode(),
+                ticketsTask.toCode(),
+                dateToString(ticketsTask.trainDepartureDateMap().get(routNumber), JSON_DATE_FORMAT_PATTERN), // "2024-01-01"
+                routNumber
+            );
 
             RootTrainDto root;
             try {
                 root = restTemplateConnector.callPostRequest(
-                    "https://ticket.rzd.ru", "apib2b/p/Railway/V1/Search/CarPricing", params, RootTrainDto.class, body
+                    "https://ticket.rzd.ru",
+                    "apib2b/p/Railway/V1/Search/CarPricing",
+                    params,
+                    RootTrainDto.class,
+                    body
                 );
             } catch (Exception e) {
                 log.error("Ошибка при получении данных для поезда {}, '{}'", routNumber, e.getMessage());
@@ -86,7 +97,7 @@ public class TicketServiceImpl implements TicketService {
                 if (errMsg.contains("Некорректное значение") && errMsg.contains("DepartureDate")) {
                     errorCountForDate++;
                     userMessage = "❌ Некорректная дата отправления поезда %s".formatted(routNumber);
-                    if (ticketsTask.routeNumbers().size() == errorCountForDate) {
+                    if (ticketsTask.trainDepartureDateMap().size() == errorCountForDate) {
                         taskScheduler.removeTask(ticketsTask.chatId(), ticketsTask.taskId());
                         userMessage = userMessage + ". Задача '%s' удалена".formatted(ticketsTask.taskId());
                     }
@@ -143,7 +154,7 @@ public class TicketServiceImpl implements TicketService {
                 ((int) trains.stream().filter(trainDto -> !hasText(trainDto.getError())).count())
             )
             .comment("Поиск свободных мест в поездах %s завершен, фильтры поиска: %s"
-                .formatted(ticketsTask.routeNumbers(), seatFilters))
+                .formatted(ticketsTask.trainDepartureDateMap(), seatFilters))
             .trains(trains)
             .build();
     }

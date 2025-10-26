@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
 
 @Component
 public class Validator {
@@ -40,7 +40,7 @@ public class Validator {
 
     private LocalDate parseDate(String dateStr) {
         try {
-            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
+            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT));
         } catch (DateTimeParseException e) {
             return null;
         }

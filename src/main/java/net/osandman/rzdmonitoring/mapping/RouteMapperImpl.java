@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
 import static net.osandman.rzdmonitoring.config.Constant.TIME_FORMAT_PATTERN;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -24,7 +24,7 @@ import static org.springframework.util.StringUtils.hasText;
 public class RouteMapperImpl implements RouteMapper {
 
     public static final String TRAIN_ICON = "\uD83D\uDE9D"; // 🚝
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN);
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT);
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT_PATTERN);
 
     @Override

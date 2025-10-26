@@ -8,6 +8,7 @@ public enum ParamType {
     DATE("date"),
     STATIONS("stations"),
     TASKS("tasks"),
+    ROUTES("routes"),
     ;
 
     final String value;

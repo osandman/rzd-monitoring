@@ -1,6 +1,7 @@
 package net.osandman.rzdmonitoring.util;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
@@ -31,6 +32,11 @@ public final class Utils {
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(outputFormat);
         return localDate.format(formatter);
+    }
+
+    public static String dateToString(LocalDateTime localDateTime, String outputFormat) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(outputFormat);
+        return localDateTime.format(formatter);
     }
 
     public static void sleep(int millis) {

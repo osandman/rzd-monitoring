@@ -14,7 +14,7 @@ import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.FROM_STATION_CODE;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
-import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
 
 @Component
 @RequiredArgsConstructor
@@ -60,7 +60,7 @@ public class FindRoutesCommand extends AbstractTelegramCommand {
                 if (localDate == null) {
                     return;
                 }
-                command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)));
+                command.state().addKey(DATE, localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT)));
                 sendMessage(command.chatId(), "Ищу маршруты %s - %s на %s".formatted(
                     command.state().getParam(FROM_STATION),
                     command.state().getParam(TO_STATION),

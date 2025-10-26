@@ -173,6 +173,9 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
             if (taskInfo.getScheduledFuture() != null) {
                 taskInfo.getScheduledFuture().cancel(true);
             }
+            if (scheduledTasks.get(chatId).isEmpty()) {
+                scheduledTasks.remove(chatId);
+            }
             log.info("Удалена задача: '{}'", taskId);
             return true;
         }

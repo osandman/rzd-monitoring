@@ -150,10 +150,10 @@ public class AdminCommand extends AbstractTelegramCommand {
                 sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
             } else {
                 sendMessage(chatId, DELETE_ICON2 + " Все (%d) задачи удалены".formatted(removedCount));
-                ticketsTasks.forEach(
-                    ticketsTask ->
-                        sendMessage(ticketsTask.chatId(), "⚠️Все задачи удалены администратором", true)
-                );
+                ticketsTasks.stream().map(TicketsTask::chatId).distinct()
+                    .forEach(userChatId ->
+                        sendMessage(userChatId, "⚠️Все задачи удалены администратором", true)
+                    );
             }
             userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             return;

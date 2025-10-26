@@ -1,4 +1,6 @@
 package net.osandman.rzdmonitoring.dto;
 
-public record TaskResult(boolean success, String msg, String taskId) {
+import net.osandman.rzdmonitoring.scheduler.TicketsTask;
+
+public record TaskResult(boolean success, String msg, TicketsTask ticketsTask) {
 }
