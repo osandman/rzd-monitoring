@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.bot.command.ITelegramCommand;
 import net.osandman.rzdmonitoring.entity.UserState;
+import net.osandman.rzdmonitoring.jpa.service.UserService;
 import net.osandman.rzdmonitoring.repository.UserStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,20 +30,25 @@ public class RzdMonitoringBot extends TelegramLongPollingBot {
 
     private final List<ITelegramCommand> telegramCommands;
     private final UserStateRepository userStateRepository;
+    private final UserService userService;
 
     @Autowired
     public RzdMonitoringBot(
         @Value("${bot.token}") String botToken,
         @Qualifier("sortedTelegramCommands")
-        List<ITelegramCommand> telegramCommands, UserStateRepository userStateRepository
+        List<ITelegramCommand> telegramCommands, UserStateRepository userStateRepository, UserService userService
     ) {
         super(botToken);
         this.telegramCommands = telegramCommands;
         this.userStateRepository = userStateRepository;
+        this.userService = userService;
     }
 
     @Override
     public void onUpdateReceived(@NonNull Update update) {
+
+        userService.createOrUpdate(update);
+
         if (update.hasMessage()) {
             handleMessage(update);
         } else if (update.hasCallbackQuery()) {

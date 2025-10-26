@@ -1,0 +1,51 @@
+name: osandman
+services:
+  postgresql:
+    image: postgres:16.1
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=rzd_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5402:5432"
+    volumes:
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - rzd_db_data:/var/lib/postgresql/data
+    networks:
+      - rzd-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "rzd_db" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+  rzd-monitoring:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: rzd-monitoring
+    container_name: rzd-monitoring
+    restart: unless-stopped
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgresql
+      DB_PORT: 5432
+      DB_NAME: rzd_db
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8088:8088"
+    networks:
+      - rzd-network
+
+volumes:
+  rzd_db_data:
+    driver: local
+
+networks:
+  rzd-network:
+    driver: bridge

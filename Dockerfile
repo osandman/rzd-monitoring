@@ -15,6 +15,6 @@ FROM eclipse-temurin:17-jre-jammy
 LABEL "com.docker.compose.project"="osandman"
 WORKDIR /app
 EXPOSE 8088
-COPY --from=builder /app/target/rzd-monitoring-0.0.1.jar ./rzd-monitoring.jar
+COPY --from=builder /app/target/rzd-monitoring-0.0.2.jar ./rzd-monitoring.jar
 COPY .env .env
 ENTRYPOINT ["java", "-jar", "rzd-monitoring.jar"]

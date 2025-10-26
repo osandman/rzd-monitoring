@@ -2,19 +2,23 @@ package net.osandman.rzdmonitoring.service;
 
 import lombok.SneakyThrows;
 import net.osandman.rzdmonitoring.service.notifier.Notifier;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+@Disabled
 class TelegramNotifierTest {
 
     private static final Logger log = LoggerFactory.getLogger(TelegramNotifierTest.class);

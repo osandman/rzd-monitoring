@@ -1,0 +1,1 @@
+create schema if not exists rzd_monitoring;
