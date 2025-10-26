@@ -11,7 +11,7 @@ Write-Host "🗑 Удаляю образ $imageName (если он сущест�
 docker rmi $imageName 2> $null
 
 Write-Host "🔄 Пересборка и запуск..."
-docker-compose -f docker/docker-compose.yaml up -d --build --force-recreate
+docker compose -f docker/docker-compose.yaml up -d --build --force-recreate
 
 Start-Sleep -Seconds 3
 
