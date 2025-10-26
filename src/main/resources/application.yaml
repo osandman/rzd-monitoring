@@ -9,8 +9,8 @@ spring:
     base-path: /api
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5402}/${DB_NAME:rzd_db}?currentSchema=rzd_monitoring
-    username: ${POSTGRES_USER:osandman}
-    password: ${POSTGRES_PASSWORD:password}
+    username: ${DB_USERNAME:osandman}
+    password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false

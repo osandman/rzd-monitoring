@@ -15,7 +15,7 @@ services:
     networks:
       - rzd-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "rzd_db" ]
+      test: ["CMD-SHELL", "pg_isready -U osandman -d rzd_db"]
       interval: 30s
       timeout: 60s
       retries: 5
@@ -35,8 +35,8 @@ services:
       DB_HOST: postgresql
       DB_PORT: 5432
       DB_NAME: rzd_db
-      DB_USERNAME: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_USERNAME: osandman
+      DB_PASSWORD: password
     ports:
       - "8088:8088"
     networks:
