@@ -12,7 +12,7 @@ echo "🗑 Удаляю образ $IMAGE_NAME (если он существуе
 docker rmi $IMAGE_NAME 2>/dev/null
 
 echo "🔄 Пересборка и запуск..."
-docker-compose -f docker/docker-compose.yml up -d --build --force-recreate
+docker compose -f docker/docker-compose.yaml up -d --build --force-recreate
 
 sleep 3
 
