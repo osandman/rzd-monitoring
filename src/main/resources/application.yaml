@@ -2,7 +2,7 @@ spring:
   application:
     name: rzd-monitoring
   aop:
-    proxy-target-class: false
+    proxy-target-class: true
   config:
     import: optional:file:.env[.properties]
   webflux:

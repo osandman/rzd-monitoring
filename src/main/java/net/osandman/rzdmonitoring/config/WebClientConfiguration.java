@@ -13,6 +13,7 @@ import org.springframework.http.client.reactive.JettyClientHttpConnector;
 import org.springframework.http.codec.ClientCodecConfigurer;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -23,6 +24,7 @@ import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS
 import static org.springframework.http.MediaType.ALL;
 
 @Configuration
+@EnableRetry
 public class WebClientConfiguration {
 
     @Value("${rzd.base-url}")

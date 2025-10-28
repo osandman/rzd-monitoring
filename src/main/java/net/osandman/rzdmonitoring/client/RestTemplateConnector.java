@@ -1,5 +1,6 @@
 package net.osandman.rzdmonitoring.client;
 
+import io.netty.channel.ConnectTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,12 +10,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.SocketTimeoutException;
 import java.net.URI;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -57,10 +62,25 @@ public class RestTemplateConnector implements RestConnector {
         return callExchange("", endpoint, params, String.class, HttpMethod.GET, null);
     }
 
+    @Retryable(
+        retryFor = {SocketTimeoutException.class, ConnectTimeoutException.class, RestClientException.class},
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 10000, multiplier = 3),
+        listeners = "rzdRetryListener"
+    )
     public <T> T callPostRequest(
         String baseUrl, String endpoint, MultiValueMap<String, String> params, Class<T> respClass, String requestBody
     ) {
         return callExchange(baseUrl, endpoint, params, respClass, HttpMethod.POST, requestBody);
+    }
+
+    @Recover
+    public <T> T recover(
+        Exception e, String baseUrl, String endpoint, MultiValueMap<String, String> params,
+        Class<T> respClass, String requestBody
+    ) {
+        log.error("Все попытки повторных запросов к {}/{} исчерпаны, ошибка: '{}'", baseUrl, endpoint, e.getMessage());
+        throw new RuntimeException("API недоступен после нескольких попыток", e);
     }
 
     private <T> T callExchange(
@@ -72,7 +92,7 @@ public class RestTemplateConnector implements RestConnector {
         String requestBody
     ) throws RestClientException, IllegalArgumentException {
         HttpEntity<String> requestHttpEntity = new HttpEntity<>(requestBody, httpHeaders);
-        URI url = UriComponentsBuilder.fromHttpUrl(hasText(baseUrl) ? baseUrl : baseAppUrl)
+        URI url = UriComponentsBuilder.fromUriString(hasText(baseUrl) ? baseUrl : baseAppUrl)
             .path(endpoint)
             .queryParams(params)
             .build().encode().toUri();

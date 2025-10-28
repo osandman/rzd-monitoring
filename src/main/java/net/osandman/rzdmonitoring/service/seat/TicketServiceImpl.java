@@ -84,7 +84,8 @@ public class TicketServiceImpl implements TicketService {
                     body
                 );
             } catch (Exception e) {
-                log.error("Ошибка при получении данных для поезда {}, '{}'", routNumber, e.getMessage());
+                log.error("Произошло исключение {} при получении данных для поезда {}, error message='{}'",
+                    e.getClass().getCanonicalName(), routNumber, e.getMessage());
                 String errMsg = extractErrorMessageFromException(e);
                 trains.add(TrainDto.builder()
                     .error(errMsg)
@@ -101,7 +102,7 @@ public class TicketServiceImpl implements TicketService {
                         taskScheduler.removeTask(ticketsTask.chatId(), ticketsTask.taskId());
                         userMessage = userMessage + ". Задача '%s' удалена".formatted(ticketsTask.taskId());
                     }
-                } else {
+                } else { // для всех остальных ошибок
                     userMessage = ("❌ Ошибка при получении данных для поезда %s: '%s'.\n"
                                    + "Если ошибка повторится, то удалите задачу").formatted(routNumber, errMsg);
                 }
