@@ -1,7 +1,5 @@
 package net.osandman.rzdmonitoring.dto.train;
 
-import org.springframework.lang.NonNull;
-
 public record SeatDto(
     String carNumber,
     String carType,
@@ -11,10 +9,8 @@ public record SeatDto(
     Integer seatFree
 ) {
 
-    @Override
-    @NonNull
-    public String toString() {
-        return "вагон " + carNumber + "(" + carType.toLowerCase() + "), "
-               + "свободных мест " + seatFree + "(" + seatLabel.toLowerCase() + "), " + seatTariff + "р";
+    public String toPrettyString() {
+        return "вагон " + carNumber + " (" + carType.toLowerCase() + ")"
+               + " - " + seatFree + " (" + seatLabel.toLowerCase() + ") " + seatTariff + "р";
     }
 }

@@ -138,17 +138,13 @@ public class TicketServiceImpl implements TicketService {
             log.info("Найдено {} свободных мест, задача {}, поезд {}",
                 filteredSeats.size(), ticketsTask, trainDto.getTrainNumber());
 
-            for (SeatDto filteredSeat : filteredSeats) {
-                String message = "%s №%s [%s-%s] %s %s".formatted(
-                    TRAIN_ICON2,
-                    trainDto.getTrainNumber(),
-                    trainDto.getFromStation(),
-                    trainDto.getToStation(),
-                    trainDto.getDateTimeFrom().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN)),
-                    filteredSeat.toString()
-                );
-                notifier.sendMessage(message, ticketsTask.chatId());
-            }
+            List<String> foundSeats = filteredSeats.stream()
+                .map(seatDto -> "➢" + seatDto.toPrettyString()) // ➢ ➤
+                .toList();
+            String message = getFormattedTrain(trainDto) + System.lineSeparator()
+                             + String.join(System.lineSeparator(), foundSeats);
+
+            notifier.sendMessage(message, ticketsTask.chatId());
         }
         return TicketsResult.builder()
             .successTrainCount(
@@ -158,6 +154,19 @@ public class TicketServiceImpl implements TicketService {
                 .formatted(ticketsTask.trainDepartureDateMap(), seatFilters))
             .trains(trains)
             .build();
+    }
+
+    private static String getFormattedTrain(TrainDto trainDto) {
+        return ("%s №%s [%s - %s]" + System.lineSeparator()
+                + "%s - %s" + System.lineSeparator()
+                + "свободные места:").formatted(
+            TRAIN_ICON2,
+            trainDto.getTrainNumber(),
+            trainDto.getFromStation(),
+            trainDto.getToStation(),
+            trainDto.getDateTimeFrom().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN)),
+            trainDto.getDateTimeTo().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN))
+        );
     }
 
     private String extractErrorMessageFromException(Exception e) {
