@@ -64,8 +64,8 @@ public class RestTemplateConnector implements RestConnector {
 
     @Retryable(
         retryFor = {SocketTimeoutException.class, ConnectTimeoutException.class, RestClientException.class},
-        maxAttempts = 3,
-        backoff = @Backoff(delay = 10000, multiplier = 3),
+        maxAttempts = 5,
+        backoff = @Backoff(delay = 30_000, multiplier = 2),
         listeners = "rzdRetryListener"
     )
     public <T> T callPostRequest(
@@ -79,7 +79,8 @@ public class RestTemplateConnector implements RestConnector {
         Exception e, String baseUrl, String endpoint, MultiValueMap<String, String> params,
         Class<T> respClass, String requestBody
     ) {
-        log.error("Все попытки повторных запросов к {}/{} исчерпаны, ошибка: '{}'", baseUrl, endpoint, e.getMessage());
+        log.error("Все попытки повторных запросов к {}/{} исчерпаны, ошибка: '{}', "
+                  + "параметры: '{}', тело запроса: '{}'", baseUrl, endpoint, e.getMessage(), params, requestBody);
         throw new RuntimeException("API недоступен после нескольких попыток", e);
     }
 
