@@ -152,14 +152,14 @@ public abstract class AbstractTelegramCommand implements ITelegramCommand {
     }
 
     protected <T> void sendButtons(long chatId, String message, List<T> toButtons) {
-        sendButtons(chatId, message, toButtons, 3);
+        sendButtons(chatId, message, toButtons, 3, true);
     }
 
-    protected <T> void sendButtons(long chatId, String message, List<T> toButtons, int totalColumns) {
+    protected <T> void sendButtons(long chatId, String message, List<T> toButtons, int totalColumns, boolean setOneTimeKeyboard) {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setSelective(true);
         keyboardMarkup.setResizeKeyboard(true);
-        keyboardMarkup.setOneTimeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(setOneTimeKeyboard);
 
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow currentRow = new KeyboardRow();

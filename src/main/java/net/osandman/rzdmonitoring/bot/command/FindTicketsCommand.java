@@ -106,7 +106,10 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 // использовать данные даты отправления по МСК (departureDateTime)
                 command.state().setAdditionalObjects(Map.of(ROUTES, routesResult.routes()));
 
-                List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes());
+                List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes()).stream()
+                    .filter(s -> !s.contains("пригород"))
+                    .collect(Collectors.toList());
+
                 if (availableRoutes.isEmpty()) {
                     sendMessage(
                         command.chatId(),
@@ -213,7 +216,9 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
         }
 
         // Отправляем сообщение с выбранными опциями
-        sendMessage(command.chatId(), "Выбраны: " + multiSelect.getSelectedText());
+        String message = "Выбраны маршруты:" + System.lineSeparator()
+                         + String.join(System.lineSeparator(), multiSelect.getSelectedOptions());
+        sendMessage(command.chatId(), message);
 
         // ОБЯЗАТЕЛЬНО отвечаем на callback query
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(callbackQuery.getId());
@@ -236,7 +241,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
             .map(SeatFilter::getByButtonText)
             .collect(Collectors.toSet());
         String millis = String.valueOf(System.currentTimeMillis());
-        String taskId = millis.substring(5, millis.length() - 1);
+        String taskId = millis.substring(4, millis.length() - 1);
 
         Map<String, LocalDateTime> trainDepartureDateMap = state.getAdditionalObject(ROUTES, RouteDto.class).stream()
             .filter(route -> trainNumbers.contains(route.getTrainNumber()))

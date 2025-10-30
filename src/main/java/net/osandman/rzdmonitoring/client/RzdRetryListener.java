@@ -14,6 +14,7 @@ public class RzdRetryListener implements RetryListener {
     public <T, E extends Throwable> void onError(
         RetryContext context, RetryCallback<T, E> callback, Throwable throwable
     ) {
-        log.warn("Попытка №{} запроса не удалась: '{}'", context.getRetryCount(), throwable.getMessage());
+        log.warn("Попытка №{} запроса не удалась, ошибка: '{}', exception: '{}'",
+            context.getRetryCount(), throwable.getMessage(), throwable.getClass().getCanonicalName());
     }
 }

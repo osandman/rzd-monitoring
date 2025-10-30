@@ -54,7 +54,8 @@ public class TasksCommand extends AbstractTelegramCommand {
                         sendButtons(
                             command.chatId(), "Выберите задачу или '%s' для удаления:".formatted(DELETE_ALL),
                             taskNames,
-                            1
+                            1,
+                            false
                         );
                         command.state().setStep(3);
                     }
@@ -98,7 +99,7 @@ public class TasksCommand extends AbstractTelegramCommand {
             }
             sendMessage(command.chatId(), "Текущие задачи: \n" + tasks);
             List<String> buttons = buildButtons(taskMap);
-            sendButtons(command.chatId(), "Выберите действия с задачами:", buttons);
+            sendButtons(command.chatId(), "Выберите действия с задачами:", buttons, 3, false);
         } else {
             sendMessage(command.chatId(), EMPTY_ICON + " Задачи отсутствуют", true);
         }

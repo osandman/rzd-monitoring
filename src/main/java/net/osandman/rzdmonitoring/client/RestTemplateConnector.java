@@ -11,10 +11,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -63,9 +63,10 @@ public class RestTemplateConnector implements RestConnector {
     }
 
     @Retryable(
-        retryFor = {SocketTimeoutException.class, ConnectTimeoutException.class, RestClientException.class},
+        // TODO уточнить какие исключения нужно ретраить
+        retryFor = {SocketTimeoutException.class, ConnectTimeoutException.class, ResourceAccessException.class},
         maxAttempts = 5,
-        backoff = @Backoff(delay = 30_000, multiplier = 2),
+        backoff = @Backoff(delay = 30000, multiplier = 2),
         listeners = "rzdRetryListener"
     )
     public <T> T callPostRequest(
@@ -74,15 +75,15 @@ public class RestTemplateConnector implements RestConnector {
         return callExchange(baseUrl, endpoint, params, respClass, HttpMethod.POST, requestBody);
     }
 
-    @Recover
-    public <T> T recover(
-        Exception e, String baseUrl, String endpoint, MultiValueMap<String, String> params,
-        Class<T> respClass, String requestBody
-    ) {
-        log.error("Все попытки повторных запросов к {}/{} исчерпаны, ошибка: '{}', "
-                  + "параметры: '{}', тело запроса: '{}'", baseUrl, endpoint, e.getMessage(), params, requestBody);
-        throw new RuntimeException("API недоступен после нескольких попыток", e);
-    }
+//    @Recover
+//    public <T> T recover(
+//        Exception e, String baseUrl, String endpoint, MultiValueMap<String, String> params,
+//        Class<T> respClass, String requestBody
+//    ) {
+//        log.error("Все попытки повторных запросов к {}/{} исчерпаны, ошибка: '{}', "
+//                  + "параметры: '{}', тело запроса: '{}'", baseUrl, endpoint, e.getMessage(), params, requestBody);
+//        throw new RuntimeException("API недоступен после нескольких попыток", e);
+//    }
 
     private <T> T callExchange(
         String baseUrl,

@@ -79,7 +79,8 @@ public class AdminCommand extends AbstractTelegramCommand {
                         sendButtons(
                             command.chatId(), "Выберите задачу или '%s' для удаления:".formatted(DELETE_ALL),
                             taskNames,
-                            1
+                            1,
+                            false
                         );
                         command.state().setStep(3);
                     }
@@ -132,7 +133,7 @@ public class AdminCommand extends AbstractTelegramCommand {
         }
         sendMessage(command.chatId(), "Текущие задачи: \n" + tasks, true);
         List<String> buttons = buildButtons();
-        sendButtons(command.chatId(), "Выберите действия с задачами:", buttons);
+        sendButtons(command.chatId(), "Выберите действия с задачами:", buttons, 2, false);
     }
 
     private static List<String> buildButtons() {
