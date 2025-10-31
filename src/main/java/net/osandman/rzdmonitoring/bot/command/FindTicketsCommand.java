@@ -201,9 +201,9 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
     }
 
     private void handleComplete(
-        CommandContext command, MultiSelectType seatFilter, CallbackQuery callbackQuery, boolean hideButtons
+        CommandContext command, MultiSelectType selectType, CallbackQuery callbackQuery, boolean hideButtons
     ) {
-        UserState.MultiSelect multiSelect = command.state().getMultiSelectParam(seatFilter);
+        UserState.MultiSelect multiSelect = command.state().getMultiSelectParam(selectType);
 
         if (hideButtons) {
             // Удаляем inline keyboard
@@ -216,8 +216,8 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
         }
 
         // Отправляем сообщение с выбранными опциями
-        String message = "Выбраны маршруты:" + System.lineSeparator()
-                         + String.join(System.lineSeparator(), multiSelect.getSelectedOptions());
+        String message = "Выбраны " + selectType.getDescription() + ":" + System.lineSeparator()
+                         + String.join(System.lineSeparator(), "‣" + multiSelect.getSelectedOptions());
         sendMessage(command.chatId(), message);
 
         // ОБЯЗАТЕЛЬНО отвечаем на callback query

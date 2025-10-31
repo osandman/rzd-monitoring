@@ -66,7 +66,7 @@ public class RestTemplateConnector implements RestConnector {
         // TODO уточнить какие исключения нужно ретраить
         retryFor = {SocketTimeoutException.class, ConnectTimeoutException.class, ResourceAccessException.class},
         maxAttempts = 5,
-        backoff = @Backoff(delay = 30000, multiplier = 2),
+        backoff = @Backoff(delay = 30_000, multiplier = 2, maxDelay = 300_000),
         listeners = "rzdRetryListener"
     )
     public <T> T callPostRequest(

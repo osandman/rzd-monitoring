@@ -6,8 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MultiSelectType {
-    SEAT_FILTERS(2),
-    ROUTES(1);
+    SEAT_FILTERS(2, "фильтры поиска"),
+    ROUTES(1, "маршруты");
 
     private final int columnCount;
+    private final String description;
 }
