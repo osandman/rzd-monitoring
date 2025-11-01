@@ -3,6 +3,7 @@ package net.osandman.rzdmonitoring.jpa.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.jpa.entity.User;
+import net.osandman.rzdmonitoring.jpa.mapper.UserMapper;
 import net.osandman.rzdmonitoring.jpa.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,22 +17,25 @@ import java.time.ZonedDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Transactional
     public void createOrUpdate(Update update) {
         org.telegram.telegrambots.meta.api.objects.User telegramUser = extractUserFromUpdate(update);
         if (telegramUser == null) {
+            log.warn("Не удалось определить пользователя для update = '{}'", update);
             return;
         }
         Long chatId = telegramUser.getId();
         userRepository.findByChatId(chatId)
             .ifPresentOrElse(
                 entity -> {
+                    userMapper.updateByTelegramUser(entity, telegramUser);
                     entity.setUpdatedAt(ZonedDateTime.now());
                     userRepository.save(entity);
                 },
                 () -> {
-                    User newUser = createByTelegramUser(telegramUser);
+                    User newUser = userMapper.toEntity(telegramUser);
                     userRepository.save(newUser);
                     log.info("Создан новый пользователь с chatId={}, username={}", chatId, telegramUser.getUserName());
                 }
@@ -56,15 +60,5 @@ public class UserService {
             return update.getEditedMessage().getFrom();
         }
         return null;
-    }
-
-    private User createByTelegramUser(org.telegram.telegrambots.meta.api.objects.User telegramUser) {
-        return User.builder()
-            .chatId(telegramUser.getId())
-            .firstName(telegramUser.getFirstName())
-            .lastName(telegramUser.getLastName())
-            .username(telegramUser.getUserName())
-            .isActive(true)
-            .build();
     }
 }
