@@ -40,7 +40,16 @@ public class User {
 
     @Column(name = "is_active")
     @Builder.Default
-    private boolean isActive = true;
+    private boolean active = true;
+
+    @Column(name = "language_code")
+    private String languageCode;
+
+    @Column(name = "is_premium")
+    private Boolean isPremium;
+
+    @Column(name = "is_bot")
+    private Boolean isBot;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
