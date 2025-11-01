@@ -4,5 +4,6 @@ public enum TaskState {
     ACTIVE,
     PAUSED,
     ERROR,
-    CLOSED
+    CLOSED,
+    COMPLETED
 }

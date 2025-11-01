@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static io.github.dostonhamrakulov.InlineCalendarCommandUtil.isInlineCalendarClicked;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.stream.Collectors.toMap;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.DATE;
@@ -81,61 +82,16 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 command.state().incrementStep();
             }
             case 6 -> { // ввод даты и выбор маршрута поезда
-                LocalDate localDate = handleDate(update, command);
-                if (localDate == null) {
+                if (!setupRoutes(update, command)) {
                     return;
                 }
-                String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT));
-
-                sendMessage(command.chatId(), "Поиск поездов на %s".formatted(dateToSearch), true);
-                RoutesResult routesResult = routeService.findRoutes(
-                    command.state().getParam(FROM_STATION_CODE),
-                    command.state().getParam(TO_STATION_CODE),
-                    dateToSearch
-                );
-
-                // проверки что маршруты найдены
-                if (routesResult.error() != null) {
-                    sendMessage(
-                        command.chatId(),
-                        "⚠ Ошибка: '%s' при поиске маршрутов на дату %s, попробуйте выбрать другую дату"
-                            .formatted(routesResult.error(), dateToSearch)
-                    );
-                    return;
-                }
-                // сохраняем все маршруты чтобы при создании задания
-                // использовать данные даты отправления по МСК (departureDateTime)
-                command.state().setAdditionalObjects(Map.of(ROUTES, routesResult.routes()));
-
-                List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes()).stream()
-                    .filter(s -> !s.contains("пригород"))
-                    .collect(Collectors.toList());
-
-                if (availableRoutes.isEmpty()) {
-                    sendMessage(
-                        command.chatId(),
-                        "⚠ Не найдены поезда на дату %s, попробуйте выбрать другую дату"
-                            .formatted(dateToSearch)
-                    );
-                    return;
-                }
-                command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
-
-                sendMultiSelectButtons(
-                    command.chatId(),
-                    MultiSelectType.ROUTES,
-                    "Найдены маршруты (%d) [%s - %s] на %s, выберите поезд:".formatted(
-                        availableRoutes.size(),
-                        command.state().getParam(FROM_STATION),
-                        command.state().getParam(TO_STATION),
-                        dateToSearch
-                    ),
-                    availableRoutes
-                );
-
                 command.state().incrementStep();
             }
             case 7 -> { // выбор поездов и вывод фильтров
+                if (isInlineCalendarClicked(update)) {
+                    setupRoutes(update, command);
+                    return;
+                }
                 CallbackQuery callbackQuery = checkCallbackQuery(update, command, MultiSelectType.ROUTES);
                 if (callbackQuery == null) {
                     return;
@@ -181,6 +137,61 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 sendMessage(command.chatId(), "Шаг команды не найден, обратитесь к разработчику");
             }
         }
+    }
+
+    private boolean setupRoutes(Update update, CommandContext command) {
+        LocalDate localDate = handleDate(update, command);
+        if (localDate == null) {
+            return false;
+        }
+        command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
+        String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT));
+
+        sendMessage(command.chatId(), "Поиск маршрутов на %s...".formatted(dateToSearch), true);
+        RoutesResult routesResult = routeService.findRoutes(
+            command.state().getParam(FROM_STATION_CODE),
+            command.state().getParam(TO_STATION_CODE),
+            dateToSearch
+        );
+
+        // проверки что маршруты найдены
+        if (routesResult.error() != null) {
+            sendMessage(
+                command.chatId(),
+                "⚠ Ошибка: '%s' при поиске маршрутов на дату %s, попробуйте выбрать другую дату"
+                    .formatted(routesResult.error(), dateToSearch)
+            );
+            return false;
+        }
+        // сохраняем все маршруты чтобы при создании задания
+        // использовать данные даты отправления по МСК (departureDateTime)
+        command.state().setAdditionalObjects(Map.of(ROUTES, routesResult.routes()));
+
+        List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes()).stream()
+            .filter(s -> !s.contains("пригород"))
+            .collect(Collectors.toList());
+
+        if (availableRoutes.isEmpty()) {
+            sendMessage(
+                command.chatId(),
+                "⚠ Не найдены поезда на дату %s, попробуйте выбрать другую дату"
+                    .formatted(dateToSearch)
+            );
+            return false;
+        }
+
+        sendMultiSelectButtons(
+            command.chatId(),
+            MultiSelectType.ROUTES,
+            "Найдены маршруты (%d) [%s - %s] на %s, выберите поезд(а) или новую дату:".formatted(
+                availableRoutes.size(),
+                command.state().getParam(FROM_STATION),
+                command.state().getParam(TO_STATION),
+                dateToSearch
+            ),
+            availableRoutes
+        );
+        return true;
     }
 
     private CallbackQuery checkCallbackQuery(Update update, CommandContext command, MultiSelectType multiSelectType) {

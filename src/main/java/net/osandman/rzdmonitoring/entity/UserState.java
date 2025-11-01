@@ -39,7 +39,14 @@ public class UserState {
         private Map<MultiSelectType, MultiSelect> multiSelectParams = new ConcurrentHashMap<>();
 
         public MultiSelect getOrCreateMultiSelectParam(MultiSelectType type, String initialMessage) {
-            return multiSelectParams.computeIfAbsent(type, k -> new MultiSelect(initialMessage));
+            return multiSelectParams.compute(type, (key, existing) -> {
+                if (existing == null) {
+                    return new MultiSelect(initialMessage);
+                } else {
+                    existing.setInitialMessage(initialMessage);
+                    return existing;
+                }
+            });
         }
 
         public String getParam(ParamType type) {
