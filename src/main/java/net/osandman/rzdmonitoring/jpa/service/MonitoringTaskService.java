@@ -44,11 +44,6 @@ public class MonitoringTaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<MonitoringTask> findActiveTasksByChatId(Long chatId) {
-        return taskRepository.findByChatIdAndStateAndNotClosed(chatId, TaskState.ACTIVE);
-    }
-
-    @Transactional(readOnly = true)
     public List<MonitoringTask> findNotClosedTasksByChatId(Long chatId) {
         return taskRepository.findActiveByChatId(chatId);
     }
@@ -73,9 +68,16 @@ public class MonitoringTaskService {
     // Закрытие всех задач пользователя
     @Transactional
     public int closeAllTasksForChatId(Long chatId) {
-        int closed = taskRepository.closeAllTasksForChatId(chatId, ZonedDateTime.now());
+        int closed = taskRepository.closeAllTasksForChatId(chatId, ZonedDateTime.now(), TaskState.CLOSED);
         log.info("Закрыто {} задач для chatId: {}", closed, chatId);
         return closed;
+    }
+
+    @Transactional
+    public int closeAllTasks() {
+        int closedCount = taskRepository.closeAllTasks(ZonedDateTime.now(), TaskState.CLOSED);
+        log.info("В таблице закрыто {} задач", closedCount);
+        return closedCount;
     }
 
     @Transactional
@@ -144,12 +146,5 @@ public class MonitoringTaskService {
             .sorted(Comparator.comparing(MonitoringTask::getCreatedAt).reversed())
             .limit(limit)
             .toList();
-    }
-
-    @Transactional
-    public int closeAllTasks() {
-        int closedCount = taskRepository.closeAllTasks(ZonedDateTime.now());
-        log.info("В таблице закрыто {} задач", closedCount);
-        return closedCount;
     }
 }

@@ -34,7 +34,6 @@ public interface MonitoringTaskRepository extends JpaRepository<MonitoringTask, 
     @Query("SELECT t FROM MonitoringTask t WHERE t.chatId = :chatId AND t.state = :state AND t.closedAt IS NULL")
     List<MonitoringTask> findByChatIdAndStateAndNotClosed(@Param("chatId") Long chatId, @Param("state") TaskState state);
 
-    // Закрытие задачи
     @Modifying
     @Query("""
         UPDATE MonitoringTask t
@@ -47,24 +46,40 @@ public interface MonitoringTaskRepository extends JpaRepository<MonitoringTask, 
         @Param("state") TaskState taskState
     );
 
-    // Закрытие всех задач
     @Modifying
-    @Query("UPDATE MonitoringTask t SET t.closedAt = :closedAt WHERE t.closedAt IS NULL")
-    int closeAllTasks(@Param("closedAt") ZonedDateTime closedAt);
+    @Query("""
+        UPDATE MonitoringTask t
+        SET t.closedAt = :closedAt, t.state = :state
+        WHERE t.chatId = :chatId AND t.closedAt IS NULL
+        """)
+    int closeAllTasksForChatId(
+        @Param("chatId") Long chatId, @Param("closedAt") ZonedDateTime closedAt, @Param("state") TaskState taskState
+    );
 
-    // Закрытие всех задач пользователя
     @Modifying
-    @Query("UPDATE MonitoringTask t SET t.closedAt = :closedAt WHERE t.chatId = :chatId AND t.closedAt IS NULL")
-    int closeAllTasksForChatId(@Param("chatId") Long chatId, @Param("closedAt") ZonedDateTime closedAt);
+    @Query("""
+        UPDATE MonitoringTask t
+        SET t.closedAt = :closedAt, t.state = :state
+        WHERE t.closedAt IS NULL
+        """)
+    int closeAllTasks(@Param("closedAt") ZonedDateTime closedAt, @Param("state") TaskState taskState);
 
     // Обновление времени выполнения
     @Modifying
-    @Query("UPDATE MonitoringTask t SET t.lastExecutionAt = :executionTime, t.executionCount = t.executionCount + 1 WHERE t.taskId = :taskId")
+    @Query("""
+        UPDATE MonitoringTask t
+        SET t.lastExecutionAt = :executionTime, t.executionCount = t.executionCount + 1
+        WHERE t.taskId = :taskId
+        """)
     void updateLastExecution(@Param("taskId") String taskId, @Param("executionTime") ZonedDateTime executionTime);
 
     // Увеличение счетчика ошибок
     @Modifying
-    @Query("UPDATE MonitoringTask t SET t.errorCount = t.errorCount + 1, t.lastErrorMessage = :errorMessage WHERE t.taskId = :taskId")
+    @Query("""
+        UPDATE MonitoringTask t
+        SET t.errorCount = t.errorCount + 1, t.lastErrorMessage = :errorMessage
+        WHERE t.taskId = :taskId
+        """)
     void incrementErrorCount(@Param("taskId") String taskId, @Param("errorMessage") String errorMessage);
 
     // Статистика - количество закрытых задач
