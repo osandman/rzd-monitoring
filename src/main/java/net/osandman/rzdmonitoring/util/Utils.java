@@ -1,5 +1,6 @@
 package net.osandman.rzdmonitoring.util;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,5 +47,32 @@ public final class Utils {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Генерирует ID: 4 символа timestamp + 4 случайных символа
+     * Обеспечивает временную упорядоченность
+     * Примеры: "7A2KB9M2", "7A2KC3X8"
+     */
+    public static String generateTaskId() {
+        // Первые 4 символа - закодированный timestamp
+        long timestamp = System.currentTimeMillis() / 1000; // секунды
+        String timepart = Long.toString(timestamp, 36).toUpperCase();
+        if (timepart.length() > 4) {
+            timepart = timepart.substring(timepart.length() - 4);
+        }
+        while (timepart.length() < 4) {
+            timepart = "0" + timepart;
+        }
+
+        // Последние 4 символа - случайные
+        String CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        SecureRandom secureRandom = new SecureRandom();
+        StringBuilder random = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            random.append(CHARS.charAt(secureRandom.nextInt(CHARS.length())));
+        }
+
+        return timepart + random;
     }
 }

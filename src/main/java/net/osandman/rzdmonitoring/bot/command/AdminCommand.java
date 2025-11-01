@@ -172,10 +172,7 @@ public class AdminCommand extends AbstractTelegramCommand {
         }
 
         Boolean check = taskScheduler.removeTask(taskForRemove.chatId(), taskId);
-        if (check == null) {
-            sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
-            userStateRepository.get(command.chatId()).deleteCommand(getCommand());
-        } else if (check) {
+        if (check) {
             sendMessage(chatId, DELETE_ICON1 + " Задача с taskId=%s удалена".formatted(taskId));
             sendMessage(
                 taskForRemove.chatId(),

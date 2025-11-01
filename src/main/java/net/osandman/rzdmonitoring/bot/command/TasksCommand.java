@@ -1,8 +1,8 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
+import net.osandman.rzdmonitoring.jpa.entity.TaskState;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
-import net.osandman.rzdmonitoring.scheduler.State;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -60,12 +60,12 @@ public class TasksCommand extends AbstractTelegramCommand {
                         command.state().setStep(3);
                     }
                     case START_ALL, STOP_ALL -> {
-                        State toState = (taskMap.entrySet().iterator().next().getValue().getState() == State.ACTIVE)
-                            ? State.PAUSED
-                            : State.ACTIVE;
-                        taskScheduler.changeState(toState);
+                        TaskState toTaskState = (taskMap.entrySet().iterator().next().getValue().getState() == TaskState.ACTIVE)
+                            ? TaskState.PAUSED
+                            : TaskState.ACTIVE;
+                        taskScheduler.changeAllStates(command.chatId(), toTaskState);
                         List<String> buttons = buildButtons(taskMap);
-                        sendButtons(command.chatId(), "Текущий статус задач: '%s'".formatted(toState), buttons);
+                        sendButtons(command.chatId(), "Текущий статус задач: '%s'".formatted(toTaskState), buttons);
                     }
                     case CHANGE_INTERVAL -> {
                         List<Integer> buttons = List.of(5, 6, 7, 8, 9, 10, 15, 20, 30);
@@ -76,16 +76,6 @@ public class TasksCommand extends AbstractTelegramCommand {
             }
             case 3 -> { // удалить задачи
                 deleteTasks(command, taskMap);
-            }
-            case 4 -> { // изменить интервал
-                long newInterval = taskScheduler.changeInterval(
-                    command.chatId(), Long.parseLong(command.messageText())
-                );
-                List<String> buttons = buildButtons(taskMap);
-                sendButtons(
-                    command.chatId(), "Интервал мониторинга изменен на %d минут".formatted(newInterval), buttons
-                );
-                command.state().setStep(2);
             }
         }
     }
@@ -99,16 +89,16 @@ public class TasksCommand extends AbstractTelegramCommand {
             }
             sendMessage(command.chatId(), "Текущие задачи: \n" + tasks);
             List<String> buttons = buildButtons(taskMap);
-            sendButtons(command.chatId(), "Выберите действия с задачами:", buttons, 3, false);
+            sendButtons(command.chatId(), "Выберите действия с задачами:", buttons, 2, false);
         } else {
             sendMessage(command.chatId(), EMPTY_ICON + " Задачи отсутствуют", true);
         }
     }
 
     private static List<String> buildButtons(Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
-        String startOrStop = taskMap.entrySet().iterator().next().getValue().getState() == State.ACTIVE
+        String startOrStop = taskMap.entrySet().iterator().next().getValue().getState() == TaskState.ACTIVE
             ? STOP_ALL : START_ALL;
-        return List.of(DELETE, startOrStop, CHANGE_INTERVAL);
+        return List.of(DELETE, startOrStop);
     }
 
     private void deleteTasks(CommandContext command, Map<String, MultiTaskScheduler.TaskInfo> taskMap) {
@@ -119,7 +109,7 @@ public class TasksCommand extends AbstractTelegramCommand {
             if (removedCount == null || removedCount == 0) {
                 sendMessage(chatId, EMPTY_ICON + " Задачи отсутствуют");
             } else {
-                sendMessage(chatId, DELETE_ICON2 + " Все (%d) задачи удалены".formatted(removedCount));
+                sendMessage(chatId, DELETE_ICON2 + " Все (%d) задачи удалены".formatted(removedCount), true);
             }
             userStateRepository.get(command.chatId()).deleteCommand(getCommand());
             return;

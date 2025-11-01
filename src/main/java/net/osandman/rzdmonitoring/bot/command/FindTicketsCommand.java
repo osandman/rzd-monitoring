@@ -36,6 +36,7 @@ import static net.osandman.rzdmonitoring.bot.command.ParamType.ROUTES;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
 import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
+import static net.osandman.rzdmonitoring.util.Utils.generateTaskId;
 
 @Component
 @RequiredArgsConstructor
@@ -240,12 +241,11 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
             .getSelectedOptions().stream()
             .map(SeatFilter::getByButtonText)
             .collect(Collectors.toSet());
-        String millis = String.valueOf(System.currentTimeMillis());
-        String taskId = millis.substring(4, millis.length() - 1);
-
         Map<String, LocalDateTime> trainDepartureDateMap = state.getAdditionalObject(ROUTES, RouteDto.class).stream()
             .filter(route -> trainNumbers.contains(route.getTrainNumber()))
             .collect(toMap(RouteDto::getTrainNumber, RouteDto::getDepartureDateTime));
+
+        String taskId = generateTaskId();
 
         TicketsTask ticketsTask = TicketsTask.builder()
             .chatId(commandContext.chatId())
