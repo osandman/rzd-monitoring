@@ -23,8 +23,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -100,16 +102,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 handleComplete(command, MultiSelectType.ROUTES, callbackQuery, false);
 
                 // Отправляем кнопки для множественного выбора фильтров поиска билетов
-                List<String> trainNumbers = command.state().getMultiSelectParam(MultiSelectType.ROUTES).getSelectedOptions().stream()
-                    .map(Utils::getFirstWord)
-                    .toList();
-                List<String> availableCarTypes = command.state().getAdditionalObject(ROUTES, RouteDto.class).stream()
-                    .filter(routeDto -> trainNumbers.contains(routeDto.getTrainNumber()))
-                    .flatMap(routeDto -> routeDto.getCarriages().stream())
-                    .map(CarriageDto::getTypeName)
-                    .distinct()
-                    .toList();
-
+                List<String> availableCarTypes = resolveCarTypes(command);
                 String addStr = availableCarTypes.size() == 1
                     ? " (присутствуют только '%s' вагоны)".formatted(availableCarTypes.get(0))
                     : "";
@@ -151,6 +144,41 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 sendMessage(command.chatId(), "Шаг команды не найден, обратитесь к разработчику");
             }
         }
+    }
+
+    private List<String> resolveCarTypes(CommandContext command) {
+        List<String> trainNumbers = command.state().getMultiSelectParam(MultiSelectType.ROUTES).getSelectedOptions().stream()
+            .map(Utils::getFirstWord)
+            .toList();
+        List<RouteDto> selectedRoutes = command.state().getAdditionalObject(ROUTES, RouteDto.class).stream()
+            .filter(routeDto -> trainNumbers.contains(routeDto.getTrainNumber()))
+            .toList();
+
+        List<String> availableCarTypes = Collections.emptyList();
+
+        boolean allTrainsHaveCarriages = true;
+        for (RouteDto route : selectedRoutes) {
+            List<CarriageDto> carriages = route.getCarriages();
+            if (carriages == null || carriages.isEmpty()) {
+                allTrainsHaveCarriages = false;
+                break;
+            }
+        }
+
+        if (allTrainsHaveCarriages) {
+            // Собираем типы вагонов только если у всех поездов есть данные
+            availableCarTypes = selectedRoutes.stream()
+                .flatMap(routeDto -> routeDto.getCarriages().stream())
+                .map(CarriageDto::getTypeName)
+                .filter(Objects::nonNull)
+                .filter(type -> !type.trim().isEmpty())
+                .distinct()
+                .toList();
+            log.info("✅ Найдены типы вагонов: {}", availableCarTypes);
+        } else {
+            log.info("❌ Типы вагонов неизвестны - будут показаны все фильтры");
+        }
+        return availableCarTypes;
     }
 
     private boolean setupRoutes(Update update, CommandContext command) {

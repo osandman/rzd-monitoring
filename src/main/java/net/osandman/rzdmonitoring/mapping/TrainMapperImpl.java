@@ -7,6 +7,7 @@ import net.osandman.rzdmonitoring.dto.train.SeatDto;
 import net.osandman.rzdmonitoring.dto.train.TrainDto;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,7 +51,13 @@ public class TrainMapperImpl implements TrainMapper {
     }
 
     private List<SeatDto> mapCarsToSeats(List<CarDto> cars) {
+        if (CollectionUtils.isEmpty(cars)) {
+            return List.of();
+        }
         return cars.stream()
+            .filter(carDto -> // фильтруем по признаку если нет карт оплаты - продажи еще не начались,
+                // либо через признак IsThreeHoursReservationAvailable = false ?
+                !CollectionUtils.isEmpty(carDto.getRzhdCardTypes()))
             .map(this::convertCarToSeat)
             .collect(Collectors.toList());
     }
