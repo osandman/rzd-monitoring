@@ -14,7 +14,7 @@ public class RouteDto {
     private String toStation;
     private String fromStationCode;
     private String toStationCode;
-    private LocalDateTime departureDateTime;
+    private LocalDateTime departureDateTime; // время МСК для запроса билетов
     private LocalDateTime localDepartureDateTime;
     private LocalDateTime localArrivalDateTime;
     private Boolean isSuburban;

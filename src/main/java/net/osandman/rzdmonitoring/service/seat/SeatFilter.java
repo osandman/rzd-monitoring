@@ -6,7 +6,9 @@ import net.osandman.rzdmonitoring.dto.train.SeatDto;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -15,11 +17,12 @@ public enum SeatFilter {
     // Типы мест (категория: SEAT_TYPE) - работают по ИЛИ
     UP_SEATS(seatDto -> seatDto.seatLabel().toLowerCase().contains("верх"), "Верхние", FilterGroup.SEAT_TYPE),
     DOWN_SEATS(seatDto -> seatDto.seatLabel().toLowerCase().contains("ниж"), "Нижние", FilterGroup.SEAT_TYPE),
-    SEATING_SEATS(seatDto -> seatDto.seatLabel().toLowerCase().contains("сид"), "Сидячие", FilterGroup.SEAT_TYPE),
 
     // Типы вагонов (категория: CAR_TYPE) - работают по ИЛИ
+    SEATING(seatDto -> seatDto.seatLabel().toLowerCase().contains("сид"), "Сидячий", FilterGroup.CAR_TYPE),
     COMPARTMENT(seatDto -> seatDto.carType().toLowerCase().contains("купе"), "Купе", FilterGroup.CAR_TYPE),
     PLATZKART(seatDto -> seatDto.carType().toLowerCase().contains("плац"), "Плацкарт", FilterGroup.CAR_TYPE),
+    SV(seatDto -> seatDto.carType().toLowerCase().contains("св"), "СВ", FilterGroup.CAR_TYPE),
 
     // Специальные требования (категория: SPECIAL) - работают по И
     FOR_INVALID(seatDto -> seatDto.seatLabel().toLowerCase().contains("инвалид"), "Для инвалидов", FilterGroup.SPECIAL),
@@ -64,6 +67,50 @@ public enum SeatFilter {
 
     public static List<String> getButtons() {
         return Arrays.stream(SeatFilter.values())
+            .map(SeatFilter::getButtonText)
+            .toList();
+    }
+
+    public static List<String> getButtonsForAvailableCarTypes(List<String> availableCarTypes) {
+        if (availableCarTypes == null || availableCarTypes.isEmpty()) {
+            return getButtons();
+        }
+
+        Set<String> lowerCaseTypes = availableCarTypes.stream()
+            .map(String::toLowerCase)
+            .collect(Collectors.toSet());
+
+        // Анализируем доступные типы
+        boolean hasCoupe = lowerCaseTypes.stream().anyMatch(type -> type.contains("купе"));
+        boolean hasPlatz = lowerCaseTypes.stream().anyMatch(type -> type.contains("плац"));
+        boolean hasSV = lowerCaseTypes.stream().anyMatch(type -> type.contains("св"));
+        boolean hasSeating = lowerCaseTypes.stream().anyMatch(type -> type.contains("сид"));
+
+        boolean hasCouchettes = hasCoupe || hasPlatz || hasSV;  // Есть спальные места
+        int carTypeCount = (hasCoupe ? 1 : 0) + (hasPlatz ? 1 : 0) + (hasSV ? 1 : 0) + (hasSeating ? 1 : 0);
+
+        return Arrays.stream(SeatFilter.values())
+            .filter(filter -> {
+                return switch (filter) {
+                    // Типы вагонов - только если есть выбор
+                    case COMPARTMENT -> carTypeCount > 1 && hasCoupe;
+                    case PLATZKART -> carTypeCount > 1 && hasPlatz;
+                    case SV -> carTypeCount > 1 && hasSV;
+                    case SEATING -> carTypeCount > 1 && hasSeating;
+
+                    // Позиции мест - только для спальных вагонов
+                    case UP_SEATS, DOWN_SEATS -> hasCouchettes;
+
+                    // Боковые места - только для плацкарта
+                    case NOT_SIDE -> hasPlatz;
+
+                    // Мужские/женские купе - только для купе/СВ
+                    case NOT_FOR_WOMAN, NOT_FOR_MAN -> hasCoupe || hasSV;
+
+                    // Все остальные фильтры показываем всегда
+                    default -> true;
+                };
+            })
             .map(SeatFilter::getButtonText)
             .toList();
     }

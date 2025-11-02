@@ -2,6 +2,7 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.TaskResult;
+import net.osandman.rzdmonitoring.dto.route.CarriageDto;
 import net.osandman.rzdmonitoring.dto.route.RouteDto;
 import net.osandman.rzdmonitoring.dto.route.RoutesResult;
 import net.osandman.rzdmonitoring.entity.MultiSelectType;
@@ -99,11 +100,24 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 handleComplete(command, MultiSelectType.ROUTES, callbackQuery, false);
 
                 // Отправляем кнопки для множественного выбора фильтров поиска билетов
+                List<String> trainNumbers = command.state().getMultiSelectParam(MultiSelectType.ROUTES).getSelectedOptions().stream()
+                    .map(Utils::getFirstWord)
+                    .toList();
+                List<String> availableCarTypes = command.state().getAdditionalObject(ROUTES, RouteDto.class).stream()
+                    .filter(routeDto -> trainNumbers.contains(routeDto.getTrainNumber()))
+                    .flatMap(routeDto -> routeDto.getCarriages().stream())
+                    .map(CarriageDto::getTypeName)
+                    .distinct()
+                    .toList();
+
+                String addStr = availableCarTypes.size() == 1
+                    ? " (присутствуют только '%s' вагоны)".formatted(availableCarTypes.get(0))
+                    : "";
                 sendMultiSelectButtons(
                     command.chatId(),
                     MultiSelectType.SEAT_FILTERS,
-                    "Выберите фильтры поиска билетов:",
-                    SeatFilter.getButtons()
+                    "Выберите фильтры поиска билетов" + addStr + ":",
+                    SeatFilter.getButtonsForAvailableCarTypes(availableCarTypes)
                 );
                 command.state().incrementStep();
             }

@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -63,6 +64,7 @@ public class RouteMapperImpl implements RouteMapper {
             route.setCarriages(carriages);
             routes.add(route);
         }
+        routes.sort(Comparator.comparing(RouteDto::getLocalDepartureDateTime));
         return routes;
     }
 
