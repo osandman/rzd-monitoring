@@ -7,6 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
+import static net.osandman.rzdmonitoring.config.Constant.JSON_DATE_FORMAT_PATTERN;
+
 public final class Utils {
 
     public static String detectLang(String text) {
@@ -74,5 +78,17 @@ public final class Utils {
         }
 
         return timepart + random;
+    }
+
+    public static LocalDate parseDate(String dateStr) {
+        String[] patterns = {JSON_DATE_FORMAT_PATTERN, DATE_FORMAT_PATTERN_SHORT, DATE_FORMAT_PATTERN};
+        for (String pattern : patterns) {
+            try {
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
+            } catch (DateTimeParseException noop) {
+                // next pattern
+            }
+        }
+        throw new IllegalArgumentException("Invalid date format: " + dateStr);
     }
 }

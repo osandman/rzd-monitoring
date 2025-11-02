@@ -4,10 +4,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
-import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
+import static net.osandman.rzdmonitoring.util.Utils.parseDate;
 
 @Component
 public class Validator {
@@ -15,13 +13,14 @@ public class Validator {
     private static final long maxDaysAllowToBuy = 120L;
 
     public CheckDateResult dateValidate(String dateStr) {
-        LocalDate localDate = parseDate(dateStr);
-        if (localDate == null) {
+        try {
+            LocalDate localDate = parseDate(dateStr);
+            return dateValidate(localDate);
+        } catch (Exception e) {
             return new CheckDateResult(
                 false, "Некорректный формат даты '%s', введите заново".formatted(dateStr), null
             );
         }
-        return dateValidate(localDate);
     }
 
     public CheckDateResult dateValidate(@NonNull LocalDate localDate) {
@@ -36,13 +35,5 @@ public class Validator {
             valid = false;
         }
         return new CheckDateResult(valid, message, localDate);
-    }
-
-    private LocalDate parseDate(String dateStr) {
-        try {
-            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT));
-        } catch (DateTimeParseException e) {
-            return null;
-        }
     }
 }

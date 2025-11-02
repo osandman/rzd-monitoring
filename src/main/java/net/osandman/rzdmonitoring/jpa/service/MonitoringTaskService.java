@@ -39,8 +39,8 @@ public class MonitoringTaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<MonitoringTask> findActiveTasks() {
-        return taskRepository.findByStateAndNotClosed(TaskState.ACTIVE);
+    public List<MonitoringTask> findAvailableTasks() {
+        return taskRepository.findByStateInAndNotClosed(List.of(TaskState.ACTIVE, TaskState.PAUSED));
     }
 
     @Transactional(readOnly = true)

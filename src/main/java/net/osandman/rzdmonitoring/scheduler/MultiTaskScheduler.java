@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.osandman.rzdmonitoring.jpa.entity.MonitoringTask;
 import net.osandman.rzdmonitoring.jpa.entity.TaskState;
 import net.osandman.rzdmonitoring.jpa.service.MonitoringTaskService;
+import net.osandman.rzdmonitoring.service.notifier.Notifier;
 import net.osandman.rzdmonitoring.service.seat.SeatFilter;
 import net.osandman.rzdmonitoring.service.seat.TicketService;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
     private final ScheduleConfig scheduleConfig;
     private final TicketService ticketService;
     private final MonitoringTaskService taskService;
+    private final Notifier notifier;
 
     @Getter
     private final Map<Long, Map<String, TaskInfo>> scheduledTasks = new ConcurrentHashMap<>();
@@ -67,17 +69,25 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
 
         // Восстанавливаем активные НЕ закрытые задачи из БД
         restoreTasksFromDatabase();
+        scheduledTasks.forEach((chatId, tasks) -> {
+            if (tasks.isEmpty()) {
+                return;
+            }
+            notifier.sendMessage(
+                "Задачи (%s шт.) восстановлены после рестарта приложения".formatted(tasks.size()), chatId
+            );
+        });
     }
 
     // Восстановление только активных НЕ закрытых задач
     private void restoreTasksFromDatabase() {
-        List<MonitoringTask> activeTasks = taskService.findActiveTasks();
+        List<MonitoringTask> activeTasks = taskService.findAvailableTasks();
         if (activeTasks.isEmpty()) {
-            log.info("Нет активных задач для восстановления");
+            log.info("Нет действующих задач для восстановления");
             return;
         }
 
-        log.info("Восстанавливаем {} активных задач из БД", activeTasks.size());
+        log.info("Восстанавливаем {} действующих задач из БД", activeTasks.size());
         for (MonitoringTask dbTask : activeTasks) {
             try {
                 TicketsTask ticketsTask = dbTask.toTicketsTask();
@@ -90,15 +100,15 @@ public class MultiTaskScheduler implements SchedulingConfigurer {
                     ScheduledFuture<?> scheduledTask = scheduler.scheduleWithFixedDelay(
                         task, Duration.ofMinutes(dbTask.getIntervalMinutes())
                     );
-
-                    Map<String, TaskInfo> taskMap = scheduledTasks.getOrDefault(ticketsTask.chatId(), new ConcurrentHashMap<>());
+                    Map<String, TaskInfo> taskMap = scheduledTasks.getOrDefault(
+                        ticketsTask.chatId(), new ConcurrentHashMap<>()
+                    );
                     TaskInfo taskInfo = new TaskInfo(
-                        ticketsTask, task, scheduledTask, TaskState.ACTIVE, dbTask.getIntervalMinutes()
+                        ticketsTask, task, scheduledTask, dbTask.getState(), dbTask.getIntervalMinutes()
                     );
                     taskMap.put(ticketsTask.taskId(), taskInfo);
                     scheduledTasks.putIfAbsent(ticketsTask.chatId(), taskMap);
                 }
-
                 log.info("Восстановлена задача: {}", dbTask.getTaskId());
             } catch (Exception e) {
                 log.error("Ошибка восстановления задачи {}: {}", dbTask.getTaskId(), e.getMessage());

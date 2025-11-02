@@ -1,6 +1,8 @@
 package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
+import net.osandman.rzdmonitoring.client.dto.v2.train.CarDto;
+import net.osandman.rzdmonitoring.client.dto.v2.train.RootTrainDto;
 import net.osandman.rzdmonitoring.dto.TaskResult;
 import net.osandman.rzdmonitoring.dto.route.CarriageDto;
 import net.osandman.rzdmonitoring.dto.route.RouteDto;
@@ -9,12 +11,14 @@ import net.osandman.rzdmonitoring.entity.MultiSelectType;
 import net.osandman.rzdmonitoring.entity.UserState;
 import net.osandman.rzdmonitoring.mapping.RouteMapper;
 import net.osandman.rzdmonitoring.scheduler.MultiTaskScheduler;
-import net.osandman.rzdmonitoring.scheduler.ScheduleConfig;
 import net.osandman.rzdmonitoring.scheduler.TicketsTask;
 import net.osandman.rzdmonitoring.service.route.RouteService;
 import net.osandman.rzdmonitoring.service.seat.SeatFilter;
+import net.osandman.rzdmonitoring.service.seat.TicketService;
 import net.osandman.rzdmonitoring.util.Utils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -23,10 +27,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,8 @@ import static net.osandman.rzdmonitoring.bot.command.ParamType.ROUTES;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION;
 import static net.osandman.rzdmonitoring.bot.command.ParamType.TO_STATION_CODE;
 import static net.osandman.rzdmonitoring.config.Constant.DATE_FORMAT_PATTERN_SHORT;
+import static net.osandman.rzdmonitoring.config.Constant.JSON_DATE_FORMAT_PATTERN;
+import static net.osandman.rzdmonitoring.util.Utils.dateToString;
 import static net.osandman.rzdmonitoring.util.Utils.generateTaskId;
 
 @Component
@@ -47,9 +52,9 @@ import static net.osandman.rzdmonitoring.util.Utils.generateTaskId;
 public class FindTicketsCommand extends AbstractTelegramCommand {
 
     private final MultiTaskScheduler multiTaskScheduler;
-    private final ScheduleConfig scheduleConfig;
     private final RouteService routeService;
     private final RouteMapper routeMapper;
+    private final TicketService ticketService;
 
     @Override
     public Command getCommand() {
@@ -102,9 +107,10 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 handleComplete(command, MultiSelectType.ROUTES, callbackQuery, false);
 
                 // Отправляем кнопки для множественного выбора фильтров поиска билетов
-                List<String> availableCarTypes = resolveCarTypes(command);
+                sendMessage(command.chatId(), "Определяем доступные фильтры ...", true);
+                Set<String> availableCarTypes = resolveCarTypes(command);
                 String addStr = availableCarTypes.size() == 1
-                    ? " (присутствуют только '%s' вагоны)".formatted(availableCarTypes.get(0))
+                    ? " (присутствуют только '%s' вагоны)".formatted(availableCarTypes.iterator().next())
                     : "";
                 sendMultiSelectButtons(
                     command.chatId(),
@@ -146,38 +152,45 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
         }
     }
 
-    private List<String> resolveCarTypes(CommandContext command) {
-        List<String> trainNumbers = command.state().getMultiSelectParam(MultiSelectType.ROUTES).getSelectedOptions().stream()
+    // TODO подумать как можно этот процесс оптимизировать или убрать вообще проверку типов вагонов
+    private Set<String> resolveCarTypes(CommandContext command) {
+        Set<String> trainNumbers = command.state().getMultiSelectParam(MultiSelectType.ROUTES).getSelectedOptions().stream()
             .map(Utils::getFirstWord)
-            .toList();
-        List<RouteDto> selectedRoutes = command.state().getAdditionalObject(ROUTES, RouteDto.class).stream()
+            .collect(Collectors.toSet());
+
+        Set<String> availableCarTypes = command.state().getAdditionalObject(ROUTES, RouteDto.class).stream()
             .filter(routeDto -> trainNumbers.contains(routeDto.getTrainNumber()))
-            .toList();
+            .filter(routeDto -> !CollectionUtils.isEmpty(routeDto.getCarriages()))
+            .flatMap(routeDto -> routeDto.getCarriages().stream())
+            .map(CarriageDto::getTypeName)
+            .filter(StringUtils::hasText)
+            .collect(Collectors.toCollection(HashSet::new));
+        if (SeatFilter.checkAllCarTypesExist(availableCarTypes)) {
+            return availableCarTypes;
+        }
 
-        List<String> availableCarTypes = Collections.emptyList();
-
-        boolean allTrainsHaveCarriages = true;
-        for (RouteDto route : selectedRoutes) {
-            List<CarriageDto> carriages = route.getCarriages();
-            if (carriages == null || carriages.isEmpty()) {
-                allTrainsHaveCarriages = false;
-                break;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        for (String trainNumber : trainNumbers) {
+            for (int i = 1; i <= 4; i++) {
+                try {
+                    RootTrainDto rootTrainDto = ticketService.getRootTrainDto(
+                        command.state().getParam(FROM_STATION_CODE),
+                        command.state().getParam(TO_STATION_CODE),
+                        dateToString(localDateTime.plusDays((i + 1) * 5), JSON_DATE_FORMAT_PATTERN),
+                        trainNumber
+                    );
+                    availableCarTypes.addAll(
+                        rootTrainDto.getCars().stream().map(CarDto::getCarTypeName).distinct().toList()
+                    );
+                    if (SeatFilter.checkAllCarTypesExist(availableCarTypes)) {
+                        return availableCarTypes;
+                    }
+                } catch (Exception e) {
+                    log.warn("Попытка получить данные маршрута {} для определения типов вагонов не удалась", trainNumber);
+                }
             }
         }
-
-        if (allTrainsHaveCarriages) {
-            // Собираем типы вагонов только если у всех поездов есть данные
-            availableCarTypes = selectedRoutes.stream()
-                .flatMap(routeDto -> routeDto.getCarriages().stream())
-                .map(CarriageDto::getTypeName)
-                .filter(Objects::nonNull)
-                .filter(type -> !type.trim().isEmpty())
-                .distinct()
-                .toList();
-            log.info("✅ Найдены типы вагонов: {}", availableCarTypes);
-        } else {
-            log.info("❌ Типы вагонов неизвестны - будут показаны все фильтры");
-        }
+        log.info("✅ Определены типы вагонов: {}", availableCarTypes);
         return availableCarTypes;
     }
 
@@ -187,41 +200,13 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
             return false;
         }
         command.state().addKey(DATE, localDate.format(ISO_LOCAL_DATE));
-        String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT));
+        String dateForShow = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN_SHORT));
 
-        sendMessage(command.chatId(), "Поиск маршрутов на %s...".formatted(dateToSearch), true);
-        RoutesResult routesResult = routeService.findRoutes(
-            command.state().getParam(FROM_STATION_CODE),
-            command.state().getParam(TO_STATION_CODE),
-            dateToSearch
-        );
-
-        // проверки что маршруты найдены
-        if (routesResult.error() != null) {
-            sendMessage(
-                command.chatId(),
-                "⚠ Ошибка: '%s' при поиске маршрутов на дату %s, попробуйте выбрать другую дату"
-                    .formatted(routesResult.error(), dateToSearch)
-            );
+        sendMessage(command.chatId(), "Поиск маршрутов на %s ...".formatted(dateForShow), true);
+        List<String> availableRoutes = getAvailableRoutes(command, localDate);
+        if (CollectionUtils.isEmpty(availableRoutes)) {
             return false;
         }
-        // сохраняем все маршруты чтобы при создании задания
-        // использовать данные даты отправления по МСК (departureDateTime)
-        command.state().setAdditionalObjects(Map.of(ROUTES, routesResult.routes()));
-
-        List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes()).stream()
-            .filter(s -> !s.contains("пригород"))
-            .collect(Collectors.toList());
-
-        if (availableRoutes.isEmpty()) {
-            sendMessage(
-                command.chatId(),
-                "⚠ Не найдены поезда на дату %s, попробуйте выбрать другую дату"
-                    .formatted(dateToSearch)
-            );
-            return false;
-        }
-
         sendMultiSelectButtons(
             command.chatId(),
             MultiSelectType.ROUTES,
@@ -229,11 +214,43 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 availableRoutes.size(),
                 command.state().getParam(FROM_STATION),
                 command.state().getParam(TO_STATION),
-                dateToSearch
+                dateForShow
             ),
             availableRoutes
         );
         return true;
+    }
+
+    private List<String> getAvailableRoutes(CommandContext command, LocalDate localDate) {
+        String dateToSearch = localDate.format(DateTimeFormatter.ofPattern(JSON_DATE_FORMAT_PATTERN));
+        RoutesResult routesResult = routeService.findRoutes(
+            command.state().getParam(FROM_STATION_CODE),
+            command.state().getParam(TO_STATION_CODE),
+            dateToSearch
+        );
+        // проверки что маршруты найдены
+        if (routesResult.error() != null) {
+            sendMessage(
+                command.chatId(),
+                "⚠ Ошибка: '%s' при поиске маршрутов на дату %s, попробуйте выбрать другую дату"
+                    .formatted(routesResult.error(), dateToSearch)
+            );
+            return List.of();
+        }
+        // сохраняем все маршруты чтобы при создании задания
+        // использовать данные даты отправления по МСК (departureDateTime)
+        command.state().setAdditionalObjects(Map.of(ROUTES, routesResult.routes()));
+
+        List<String> availableRoutes = routeMapper.toFindTicketsList(routesResult.routes());
+
+        if (availableRoutes.isEmpty()) {
+            sendMessage(
+                command.chatId(),
+                "⚠ Не найдены поезда на дату %s, попробуйте выбрать другую дату".formatted(dateToSearch)
+            );
+            return List.of();
+        }
+        return availableRoutes;
     }
 
     private CallbackQuery checkCallbackQuery(Update update, CommandContext command, MultiSelectType multiSelectType) {

@@ -23,9 +23,9 @@ public interface MonitoringTaskRepository extends JpaRepository<MonitoringTask, 
     @Query("SELECT t FROM MonitoringTask t WHERE t.chatId = :chatId AND t.closedAt IS NULL")
     List<MonitoringTask> findActiveByChatId(@Param("chatId") Long chatId);
 
-    // Поиск активных задач (НЕ закрытые И со статусом ACTIVE)
-    @Query("SELECT t FROM MonitoringTask t WHERE t.closedAt IS NULL AND t.state = :state")
-    List<MonitoringTask> findByStateAndNotClosed(@Param("state") TaskState state);
+    // Поиск активных задач (НЕ закрытые)
+    @Query("SELECT t FROM MonitoringTask t WHERE t.closedAt IS NULL AND t.state IN :states")
+    List<MonitoringTask> findByStateInAndNotClosed(@Param("states") List<TaskState> states);
 
     // Все задачи по chatId (включая закрытые) - для статистики
     List<MonitoringTask> findByChatId(Long chatId);

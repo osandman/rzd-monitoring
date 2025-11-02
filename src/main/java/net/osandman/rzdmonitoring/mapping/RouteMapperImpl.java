@@ -97,7 +97,9 @@ public class RouteMapperImpl implements RouteMapper {
         if (routes == null || routes.isEmpty()) {
             return List.of();
         }
-        return getSmallInfo(routes);
+        return getSmallInfo(routes).stream()
+            .filter(routeStr -> !routeStr.contains("пригород"))
+            .toList();
     }
 
     private static List<String> getFullInfo(String prefix, List<RouteDto> routes) {

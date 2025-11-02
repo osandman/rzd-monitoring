@@ -49,42 +49,23 @@ public class TicketServiceImpl implements TicketService {
     public static final String TRAIN_ICON2 = "\uD83D\uDE89"; // 🚉
     public static final String NOT_FOUND_ICON = "\uD83D\uDE1E"; // 😞
 
+    private final static MultiValueMap<String, String> PARAMS = new LinkedMultiValueMap<>() {{
+        put("service_provider", List.of("B2B_RZD"));
+        put("isBonusPurchase", List.of("false"));
+    }};
+
     @Override
     public TicketsResult monitoringProcess(TicketsTask ticketsTask, Set<SeatFilter> seatFilters) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>() {{
-            put("service_provider", List.of("B2B_RZD"));
-            put("isBonusPurchase", List.of("false"));
-        }};
         List<TrainDto> trains = new ArrayList<>();
         int errorCountForDate = 0;
         for (String routNumber : ticketsTask.trainDepartureDateMap().keySet()) {
-            String body = """
-                {
-                  "OriginCode": "%s",
-                  "DestinationCode": "%s",
-                  "Provider": "P1",
-                  "DepartureDate": "%s",
-                  "TrainNumber": "%s",
-                  "SpecialPlacesDemand": "StandardPlacesAndForDisabledPersons",
-                  "OnlyFpkBranded": false,
-                  "HasPlacesForLargeFamily": false,
-                  "CarIssuingType": "All"
-                }
-                """.formatted(
-                ticketsTask.fromCode(),
-                ticketsTask.toCode(),
-                dateToString(ticketsTask.trainDepartureDateMap().get(routNumber), JSON_DATE_FORMAT_PATTERN), // "2024-01-01"
-                routNumber
-            );
-
             RootTrainDto root;
             try {
-                root = restTemplateConnector.callPostRequest(
-                    "https://ticket.rzd.ru",
-                    "apib2b/p/Railway/V1/Search/CarPricing",
-                    params,
-                    RootTrainDto.class,
-                    body
+                root = getRootTrainDto(
+                    ticketsTask.fromCode(),
+                    ticketsTask.toCode(),
+                    dateToString(ticketsTask.trainDepartureDateMap().get(routNumber), JSON_DATE_FORMAT_PATTERN), // "2024-01-01"
+                    routNumber
                 );
             } catch (Exception e) {
                 log.error("Произошло исключение {} при получении данных для поезда {}, error message='{}'",
@@ -154,6 +135,30 @@ public class TicketServiceImpl implements TicketService {
                 .formatted(ticketsTask.trainDepartureDateMap(), seatFilters))
             .trains(trains)
             .build();
+    }
+
+    @Override
+    public RootTrainDto getRootTrainDto(String fromCode, String toCode, String departureDate, String trainNumber) {
+        String body = """
+            {
+              "OriginCode": "%s",
+              "DestinationCode": "%s",
+              "Provider": "P1",
+              "DepartureDate": "%s",
+              "TrainNumber": "%s",
+              "SpecialPlacesDemand": "StandardPlacesAndForDisabledPersons",
+              "OnlyFpkBranded": false,
+              "HasPlacesForLargeFamily": false,
+              "CarIssuingType": "All"
+            }
+            """.formatted(fromCode, toCode, departureDate, trainNumber);
+        return restTemplateConnector.callPostRequest(
+            "https://ticket.rzd.ru",
+            "apib2b/p/Railway/V1/Search/CarPricing",
+            PARAMS,
+            RootTrainDto.class,
+            body
+        );
     }
 
     public List<SeatDto> filterSeats(List<SeatDto> seats, Set<SeatFilter> seatFilters) {

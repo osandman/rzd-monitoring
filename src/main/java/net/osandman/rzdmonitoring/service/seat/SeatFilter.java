@@ -71,7 +71,7 @@ public enum SeatFilter {
             .toList();
     }
 
-    public static List<String> getButtonsForAvailableCarTypes(List<String> availableCarTypes) {
+    public static List<String> getButtonsForAvailableCarTypes(Set<String> availableCarTypes) {
         if (availableCarTypes == null || availableCarTypes.isEmpty()) {
             return getButtons();
         }
@@ -113,6 +113,14 @@ public enum SeatFilter {
             })
             .map(SeatFilter::getButtonText)
             .toList();
+    }
+
+    public static boolean checkAllCarTypesExist(Set<String> carTypes) {
+        if (carTypes == null || carTypes.isEmpty()) {
+            return true;
+        }
+        Set<String> allCarTypes = Set.of("СИД", "ПЛАЦ", "КУПЕ", "СВ");
+        return carTypes.containsAll(allCarTypes);
     }
 
     @Override
