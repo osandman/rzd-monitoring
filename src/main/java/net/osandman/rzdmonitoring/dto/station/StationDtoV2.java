@@ -32,14 +32,19 @@ public record StationDtoV2(
 
     @Override
     public String printStr() {
-        return "%s код=%s%s; регион=%s%s%s"
-            .formatted(
-                name(),
-                code(),
-                hasText(suburbanCode) ? " (пригород.код=" + suburbanCode + ")" : "",
-                region(),
-                hasText(regionIso) ? "; region iso=" + regionIso : "",
-                hasText(countryIso) ? "; country iso=" + countryIso : ""
-            );
+        return "%s, регион: %s".formatted(name(), region());
     }
+
+//    @Override
+//    public String printStr() {
+//        return "%s код=%s%s; регион=%s%s%s"
+//            .formatted(
+//                name(),
+//                code(),
+//                hasText(suburbanCode) ? " (пригород.код=" + suburbanCode + ")" : "",
+//                region(),
+//                hasText(regionIso) ? "; region iso=" + regionIso : "",
+//                hasText(countryIso) ? "; country iso=" + countryIso : ""
+//            );
+//    }
 }

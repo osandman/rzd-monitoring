@@ -2,6 +2,7 @@ package net.osandman.rzdmonitoring.bot.command;
 
 import lombok.RequiredArgsConstructor;
 import net.osandman.rzdmonitoring.dto.station.StationDto;
+import net.osandman.rzdmonitoring.service.AI.ChatService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -10,6 +11,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class FindStationsCommand extends AbstractTelegramCommand {
+
+    private final ChatService chatService;
 
     @Override
     public Command getCommand() {
@@ -39,7 +42,9 @@ public class FindStationsCommand extends AbstractTelegramCommand {
                     command.state().decrementStep();
                     return;
                 }
-                sendMessage(command.chatId(), stationDto.printStr());
+                String message = stationDto.printStr();
+                String answer = chatService.getStationAnswer(message);
+                sendMessage(command.chatId(), message + System.lineSeparator() + answer);
             }
         }
     }
