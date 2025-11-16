@@ -3,28 +3,26 @@ param(
     [string]$imageName = "rzd-monitoring"
 )
 
-Write-Host "🛑 Останавливаю контейнер $containerName (если он существует)..."
+Write-Host "Stopping container $containerName if it exists..."
 docker stop $containerName 2> $null
 docker rm $containerName 2> $null
 
-Write-Host "🗑 Удаляю образ $imageName (если он существует)..."
+Write-Host "Removing image $imageName if it exists..."
 docker rmi $imageName 2> $null
 
-Write-Host "🔄 Пересборка и запуск..."
+Write-Host "Rebuilding and starting..."
 docker compose -f docker/docker-compose.yaml up -d --build --force-recreate
 
 Start-Sleep -Seconds 3
 
 $status = docker inspect -f '{{.State.Status}}' $containerName 2> $null
 
-if ($status -eq "running")
-{
-    Write-Host "✔️ Контейнер $containerName успешно запущен"
+if ($status -eq "running") {
+    Write-Host "Container $containerName started successfully"
 }
-else
-{
-    Write-Host "❌ Ошибка: контейнер $containerName не запустился!"
-    Write-Host "---- Последние логи контейнера ----"
+else {
+    Write-Host "ERROR: Container $containerName failed to start!"
+    Write-Host "---- Container logs ----"
     docker logs $containerName
     exit 1
 }
