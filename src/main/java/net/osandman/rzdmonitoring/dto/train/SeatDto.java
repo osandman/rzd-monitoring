@@ -1,5 +1,8 @@
 package net.osandman.rzdmonitoring.dto.train;
 
+import lombok.Builder;
+
+@Builder
 public record SeatDto(
     String carNumber,
     String carType,

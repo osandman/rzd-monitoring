@@ -22,11 +22,8 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static net.osandman.rzdmonitoring.config.Constant.DATE_TIME_FORMAT_PATTERN;
 import static net.osandman.rzdmonitoring.config.Constant.JSON_DATE_FORMAT_PATTERN;
@@ -44,6 +41,7 @@ public class TicketServiceImpl implements TicketService {
     private final ObjectMapper objectMapper;
     @Lazy
     private final MultiTaskScheduler taskScheduler;
+    private final FilterService filterService;
 
     public static final String TRAIN_ICON1 = "\uD83D\uDE86"; // 🚆
     public static final String TRAIN_ICON2 = "\uD83D\uDE89"; // 🚉
@@ -108,7 +106,7 @@ public class TicketServiceImpl implements TicketService {
             }
 
             // фильтруем найденные билеты
-            List<SeatDto> filteredSeats = filterSeats(trainDto.getSeats(), seatFilters);
+            List<SeatDto> filteredSeats = filterService.filterSeats(trainDto.getSeats(), seatFilters);
             trainDto.setSeats(filteredSeats);
             trains.add(trainDto);
 
@@ -159,37 +157,6 @@ public class TicketServiceImpl implements TicketService {
             RootTrainDto.class,
             body
         );
-    }
-
-    public List<SeatDto> filterSeats(List<SeatDto> seats, Set<SeatFilter> seatFilters) {
-        if (seatFilters.isEmpty()) {
-            return seats;
-        }
-        // Группируем фильтры по категориям
-        Map<SeatFilter.FilterGroup, List<SeatFilter>> groupedFilters = seatFilters.stream()
-            .collect(Collectors.groupingBy(SeatFilter::getGroup));
-        return seats.stream()
-            .filter(seatDto -> {
-                // Проверяем каждую группу фильтров
-                for (Map.Entry<SeatFilter.FilterGroup, List<SeatFilter>> entry : groupedFilters.entrySet()) {
-                    SeatFilter.FilterGroup group = entry.getKey();
-                    List<SeatFilter> filters = entry.getValue();
-                    boolean passesGroupFilter = switch (group) {
-                        // Для этих групп применяем логику ИЛИ (любой фильтр должен пройти)
-                        case CAR_TYPE, SEAT_TYPE, GENDER ->
-                            filters.stream().anyMatch(filter -> filter.getPredicate().test(seatDto));
-                        // Для этих групп применяем логику И (все фильтры должны пройти)
-                        case SPECIAL, POSITION, UNIVERSAL ->
-                            filters.stream().allMatch(filter -> filter.getPredicate().test(seatDto));
-                    };
-                    if (!passesGroupFilter) {
-                        return false; // Если не прошел проверку хотя бы одной группы
-                    }
-                }
-                return true;
-            })
-            .sorted(Comparator.comparing(SeatDto::carNumber).thenComparing(SeatDto::seatLabel))
-            .toList();
     }
 
     private static String getFormattedTrain(TrainDto trainDto) {

@@ -19,7 +19,7 @@ public enum SeatFilter {
     DOWN_SEATS(seatDto -> seatDto.seatLabel().toLowerCase().contains("ниж"), "Нижние", FilterGroup.SEAT_TYPE),
 
     // Типы вагонов (категория: CAR_TYPE) - работают по ИЛИ
-    SEATING(seatDto -> seatDto.seatLabel().toLowerCase().contains("сид"), "Сидячий", FilterGroup.CAR_TYPE),
+    SEATING(seatDto -> seatDto.carType().toLowerCase().contains("сид"), "Сидячий", FilterGroup.CAR_TYPE),
     COMPARTMENT(seatDto -> seatDto.carType().toLowerCase().contains("купе"), "Купе", FilterGroup.CAR_TYPE),
     PLATZKART(seatDto -> seatDto.carType().toLowerCase().contains("плац"), "Плацкарт", FilterGroup.CAR_TYPE),
     SV(seatDto -> seatDto.carType().toLowerCase().contains("св"), "СВ", FilterGroup.CAR_TYPE),
@@ -30,10 +30,24 @@ public enum SeatFilter {
     NOT_WITH_CHILDREN(seatDto -> !seatDto.seatLabel().toLowerCase().contains("детьми"), "Без детей", FilterGroup.SPECIAL),
 
     // Пол (категория: GENDER) - работают по ИЛИ
-    NOT_FOR_WOMAN(seatDto -> seatDto.seatLabel().toLowerCase().contains("женское")
-                             && !seatDto.seatLabel().toLowerCase().contains("мужское"), "Женское купе", FilterGroup.GENDER),
-    NOT_FOR_MAN(seatDto -> seatDto.seatLabel().toLowerCase().contains("мужское")
-                           && !seatDto.seatLabel().toLowerCase().contains("женское"), "Мужское купе", FilterGroup.GENDER),
+    FOR_WOMAN(
+        seatDto -> {
+            String label = seatDto.seatLabel().toLowerCase();
+            String places = seatDto.seatPlaces() != null ? seatDto.seatPlaces().toLowerCase() : "";
+            return label.contains("женское") || places.contains("ж");
+        },
+        "Женское купе",
+        FilterGroup.GENDER
+    ),
+    FOR_MAN(
+        seatDto -> {
+            String label = seatDto.seatLabel().toLowerCase();
+            String places = seatDto.seatPlaces() != null ? seatDto.seatPlaces().toLowerCase() : "";
+            return label.contains("мужское") || places.contains("м");
+        },
+        "Мужское купе",
+        FilterGroup.GENDER
+    ),
 
     // Позиция (категория: POSITION) - работают по И
     NOT_SIDE(seatDto -> !seatDto.seatLabel().toLowerCase().contains("боковое"), "Не боковое", FilterGroup.POSITION),
@@ -105,7 +119,7 @@ public enum SeatFilter {
                     case NOT_SIDE -> hasPlatz;
 
                     // Мужские/женские купе - только для купе/СВ
-                    case NOT_FOR_WOMAN, NOT_FOR_MAN -> hasCoupe || hasSV;
+                    case FOR_WOMAN, FOR_MAN -> hasCoupe || hasSV;
 
                     // Все остальные фильтры показываем всегда
                     default -> true;
