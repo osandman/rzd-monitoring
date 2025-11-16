@@ -18,6 +18,7 @@ import java.time.ZonedDateTime;
 )
 public interface UserMapper {
 
+    @Mapping(target = "status", ignore = true)
     @Mapping(target = "username", source = "userName")
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "active", ignore = true)
@@ -25,6 +26,7 @@ public interface UserMapper {
     @Mapping(target = "chatId", source = "id")
     User toEntity(org.telegram.telegrambots.meta.api.objects.User telegramUser);
 
+    @Mapping(target = "status", ignore = true)
     @Mapping(target = "username", source = "userName")
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "active", ignore = true)
