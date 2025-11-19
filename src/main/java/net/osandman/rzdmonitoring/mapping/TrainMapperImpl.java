@@ -57,7 +57,10 @@ public class TrainMapperImpl implements TrainMapper {
         return cars.stream()
             .filter(carDto -> // фильтруем по признаку если нет карт оплаты - продажи еще не начались,
                 // либо через признак IsThreeHoursReservationAvailable = false ?
-                !CollectionUtils.isEmpty(carDto.getRzhdCardTypes()))
+                // !CollectionUtils.isEmpty(carDto.getRzhdCardTypes())
+                // carDto.getIsThreeHoursReservationAvailable() == false
+                carDto.getIsSaleForbidden() != null && !carDto.getIsSaleForbidden()
+            )
             .map(this::convertCarToSeat)
             .collect(Collectors.toList());
     }

@@ -107,7 +107,7 @@ public class FindTicketsCommand extends AbstractTelegramCommand {
                 handleComplete(command, MultiSelectType.ROUTES, callbackQuery, false);
 
                 // Отправляем кнопки для множественного выбора фильтров поиска билетов
-                sendMessage(command.chatId(), "Определяем доступные типы вагоны для фильтров ...", true);
+                sendMessage(command.chatId(), "Определяем доступные типы вагонов для фильтров ...", true);
                 Set<String> availableCarTypes = resolveCarTypes(command);
                 String addStr = availableCarTypes.size() == 1
                     ? " (присутствуют только '%s' вагоны)".formatted(availableCarTypes.iterator().next())

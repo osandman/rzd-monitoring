@@ -104,17 +104,26 @@ public class TicketServiceImpl implements TicketService {
                 trains.add(trainDto);
                 continue;
             }
-
+            log.info(
+                "Найдены свободные места {} в вагонах: {} для поезда {}, задача {}",
+                trainDto.getSeats().stream().mapToInt(SeatDto::seatFree).sum(),
+                trainDto.getSeats().stream().map(SeatDto::carNumber).toList(),
+                routNumber, ticketsTask
+            );
+            log.debug("Найдены свободные места для поезда {}, задача {}, места: '{}'",
+                routNumber, ticketsTask, String.join(System.lineSeparator(), trainDto.getSeats().stream()
+                    .map(SeatDto::toShortString).toList())
+            );
             // фильтруем найденные билеты
             List<SeatDto> filteredSeats = filterService.filterSeats(trainDto.getSeats(), seatFilters);
             trainDto.setSeats(filteredSeats);
             trains.add(trainDto);
 
             if (filteredSeats.isEmpty()) {
-                log.info("Не найдено свободных мест, задача {}, поезд {}", ticketsTask, routNumber);
+                log.info("После фильтрации не найдено свободных мест, задача {}, поезд {}", ticketsTask, routNumber);
                 continue;
             }
-            log.info("Найдено {} свободных мест, задача {}, поезд {}",
+            log.info("Отфильтровано {} свободных мест, задача {}, поезд {}",
                 filteredSeats.size(), ticketsTask, trainDto.getTrainNumber());
 
             List<String> foundSeats = filteredSeats.stream()

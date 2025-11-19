@@ -16,4 +16,9 @@ public record SeatDto(
         return "вагон " + carNumber + " (" + carType.toLowerCase() + ")"
                + " - " + seatFree + " (" + seatLabel.toLowerCase() + ") " + seatTariff + "р";
     }
+
+    public String toShortString() {
+        return carNumber + " (" + carType.toLowerCase() + ")"
+               + " - " + seatFree + " (" + seatLabel.toLowerCase() + ")";
+    }
 }
