@@ -8,7 +8,7 @@ services:
       - POSTGRES_USER=osandman
       - POSTGRES_PASSWORD=password
     ports:
-      - "5402:5432"
+      - "127.0.0.1:5402:5432"
     volumes:
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
       - rzd_db_data:/var/lib/postgresql/data
@@ -38,7 +38,7 @@ services:
       DB_USERNAME: osandman
       DB_PASSWORD: password
     ports:
-      - "8088:8088"
+      - "127.0.0.1:8088:8088"
     networks:
       - rzd-network
 
